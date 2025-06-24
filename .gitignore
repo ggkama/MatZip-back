@@ -20,3 +20,4 @@ Thumbs.db
 .uploads/
 
 application-private.yml
+application.yml

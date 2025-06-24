@@ -5,7 +5,6 @@
 <mapper namespace="com.kh.matzip.notice.model.dao.NoticeMapper">
 
     
-    <insert>
-    </insert>
-
+    
+    
 </mapper>

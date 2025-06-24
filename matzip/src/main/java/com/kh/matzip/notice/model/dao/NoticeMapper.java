@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.matzip.notice.model.dto.NoticeDTO;
+import com.kh.matzip.notice.vo.Notice;
 
 @Mapper
 public interface NoticeMapper {
@@ -20,7 +21,10 @@ public interface NoticeMapper {
     void insertNotice(Notice notice);
     Long selectAuthBoardNo(Long userNo);
 
+    // 글수정
     void updateNotice(Notice notice);
+
+    // 글수정
     void deleteNotice(Long notice_no);
     
 }

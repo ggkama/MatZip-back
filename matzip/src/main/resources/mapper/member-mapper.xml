@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.matzip.notice.model.dao.NoticeMapper">
 
-    <select id="existByUserId" resultType="int">
+    <select id="selectNoticeList" resultType="int">
         SELECT
             COUNT(*)
         FROM
