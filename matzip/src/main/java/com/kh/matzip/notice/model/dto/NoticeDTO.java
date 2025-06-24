@@ -18,6 +18,7 @@ public class NoticeDTO {
     
     private Long noticeNo;
     private Long memberNo;
+    @NotBlank
     private String noticeTitle;
     @NotBlank
     private String noticeContent;

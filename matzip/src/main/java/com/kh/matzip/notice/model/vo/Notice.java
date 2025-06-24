@@ -1,4 +1,4 @@
-package com.kh.matzip.notice.vo;
+package com.kh.matzip.notice.model.vo;
 
 import java.sql.Date;
 
