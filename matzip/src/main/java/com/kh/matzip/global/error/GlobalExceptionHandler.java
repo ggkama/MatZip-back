@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.kh.matzip.global.enums.ResponseCode;
 import com.kh.matzip.global.error.exceptions.InvalidFormatException;
+import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
 import com.kh.matzip.global.response.ApiResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<ApiResponse<Void>> handleInvalidFormatException(InvalidFormatException e) {
         return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoticeNotFoundException.class)
+    public ResponseEntity<ApiResponse<void>> handleInvalidFormatException(NoticeNotFoundException e) {
+        return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 }
