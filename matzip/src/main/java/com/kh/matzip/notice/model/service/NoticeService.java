@@ -1,5 +1,6 @@
 package com.kh.matzip.notice.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.kh.matzip.notice.model.dto.NoticeDTO;
@@ -10,7 +11,7 @@ public interface NoticeService {
 
     Map<String, Object> selectNoticeList(int pageNo, int size);
 
-    NoticeDTO selectNoticeDetail(Long noticeNo);
+    List<NoticeDTO> selectNoticeDetail(Long noticeNo);
 
     void insertNotice(NoticeWriteFormDTO form);
     

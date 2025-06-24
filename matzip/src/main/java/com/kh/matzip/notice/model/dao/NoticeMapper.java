@@ -18,12 +18,15 @@ public interface NoticeMapper {
     List<NoticeDTO> selectNoticeDetail(Long noticeNo);
 
     // 글작성
-    void insertNotice(Notice notice);
+    int insertNotice(Notice notice);
 
     // 글수정
-    void updateNotice(Notice notice);
+    int updateNotice(Notice notice);
 
     // 글수정
-    void deleteNotice(Long notice_no);
+    int deleteNotice(Long noticeNo);
+
+    // 글 전체 개수조회
+    int selectNoticeCount(Map<String, String> pageInfo);
     
 }
