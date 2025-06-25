@@ -32,7 +32,7 @@ public class GlobalController {
     
     @GetMapping("/error")
     public ResponseEntity<ApiResponse<Void>> getError() {
-        throw new InvalidFormatException(ResponseCode.BAD_REQUEST, "입력한 값이 유효하지 않습니다.");
+        throw new InvalidFormatException(ResponseCode.SERVER_ERROR, "에러 발생");
     }
 
 }

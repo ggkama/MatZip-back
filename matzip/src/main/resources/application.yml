@@ -1,3 +1,26 @@
 spring:
   application:
     name:  matzip
+  profiles:
+    active: private
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          timeout: 5000
+          writetimeout: 5000
+          connectiontimeout: 5000
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    jdbc-type-for-null: VARCHAR
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.kh.matzip.member.model.vo

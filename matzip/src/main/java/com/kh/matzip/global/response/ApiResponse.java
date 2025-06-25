@@ -24,11 +24,11 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> success(ResponseCode responseCode, String message) {
-        return new ApiResponse<T>(true, responseCode, null, message);
+        return new ApiResponse<>(true, responseCode, null, message);
     }
 
     public static <T> ApiResponse<T> error(ResponseCode responseCode, String message) {
-        return new ApiResponse<T>(false, responseCode, null, message);
+        return new ApiResponse<>(false, responseCode, null, message);
     }
 
 }
