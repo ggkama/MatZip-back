@@ -13,9 +13,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ReviewFormDTO {
+public class ReviewWriteFormDTO {
     
-    // 작성자는 토큰
+    // 작성자는 토큰으로 인증
     public Long reviewNo;
     public Long reservationNo;
 
