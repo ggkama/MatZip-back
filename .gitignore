@@ -19,5 +19,10 @@ Thumbs.db
 
 .uploads/
 
+<<<<<<< HEAD
+application-private.yml
+application.yml
+=======
 application.yml
 application-private.yml
+>>>>>>> c02e982299f8ebfaec45a579a69135422629b722
