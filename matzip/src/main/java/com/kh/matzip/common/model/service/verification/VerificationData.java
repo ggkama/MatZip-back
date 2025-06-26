@@ -12,6 +12,5 @@ public class VerificationData {
 	private final String code;
 	private final LocalDateTime createTime;
 	
-	
 }
 
