@@ -97,7 +97,7 @@ public class NoticeServiceImpl implements NoticeService {
             throw new NoticeNotFoundException(ResponseCode.NOT_FOUND, "수정 대상 공지사항이 존재하지 않습니다.");
         }
 
-        log.info("공지사항 수정 완료 (noticeId={})", noticeNo);
+        log.info("공지사항 수정 완료", noticeNo);
     }
 
     @Transactional
@@ -112,7 +112,7 @@ public class NoticeServiceImpl implements NoticeService {
             throw new NoticeNotFoundException(ResponseCode.NOT_FOUND, "삭제 대상 공지사항이 존재하지 않습니다.");
         }
 
-        log.info("공지사항 삭제 완료 (noticeId={})", noticeNo);
+        log.info("공지사항 삭제 완료", noticeNo);
     }
 }
 
