@@ -23,7 +23,7 @@ public interface NoticeMapper {
     // 글수정
     int updateNotice(Notice notice);
 
-    // 글수정
+    // 글삭제
     int deleteNotice(Long noticeNo);
 
     // 글 전체 개수조회
