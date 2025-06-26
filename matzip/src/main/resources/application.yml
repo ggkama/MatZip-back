@@ -1,6 +1,6 @@
 spring:
   application:
-    name: matzip
+    name:  matzip
   profiles:
     active: private
 
@@ -16,8 +16,6 @@ spring:
           timeout: 5000
           writetimeout: 5000
           connectiontimeout: 5000
-server:
-  port: 80
 
 mybatis:
   configuration:

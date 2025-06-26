@@ -1,94 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kh.matzip.notice.model.dao.NoticeMapper">
+<mapper namespace="com.kh.matzip.member.model.dao.MemberMapper">
+
+	<select id="existByUserId" parameterType="String" resultType="int">
+    	SELECT 
+    		COUNT(*) 
+    	FROM 
+    		TB_USER
+    	WHERE 
+    		USER_ID = #{userId}
+	</select>
+
+	<select id="existByUserNickName" parameterType="String" resultType="int">
+   		SELECT 
+   			COUNT(*) 
+    	FROM 
+    		TB_USER
+    	WHERE 
+    		USER_NICKNAME = #{userNickName}
+	</select>
 
 
-    <resultMap id="noticeResultMap" type="com.kh.matzip.notice.model.dto.NoticeDTO">
-        <id     property="noticeNo"    column="NOTICE_NO" />
-        <result property="userNo"    column="USER_NO"   /> 
-        <result property="noticeTitle" column="NOTICE_TITLE" />
-        <result property="noticeContent" column="NOTICE_CONTENT" />
-        <result property="createDate"  column="CREATE_DATE" />
-    </resultMap>
+    <insert id="signUp" parameterType="com.kh.matzip.member.model.dto.MemberDTO">
+    	INSERT INTO 
+        	TB_USER (
+				USER_NO,
+            	USER_ID,
+            	USER_PW,
+            	USER_NAME,
+            	USER_NICKNAME,
+            	USER_PHONE
+        	) VALUES (
+				SEQ_USER_NO.NEXTVAL,
+            	#{userId},
+            	#{userPw},
+            	#{userName},
+            	#{userNickName},
+            	#{userPhone}
+        	)
+	</insert>
+	
+	<select id="findByUserId" parameterType="String" resultType="com.kh.matzip.member.model.dto.MemberDTO">
+		SELECT
+			USER_NO,
+			USER_ID,
+			USER_PW,
+			USER_NAME,
+			USER_NICKNAME,
+			USER_ROLE,
+			IS_DELETED,
+			ENROLL_DATE
+		FROM
+			TB_USER
+		WHERE
+			USER_ID = #{userId}
+			
+	</select>
 
-
-    <select id="selectNoticeList"
-            parameterType="map"
-            resultMap="noticeResultMap">
-        SELECT *
-        FROM (
-            SELECT inner_tbl.*, ROWNUM AS RNUM
-            FROM (
-                SELECT
-                    NOTICE_NO,
-                    USER_NO,
-                    NOTICE_TITLE,
-                    NOTICE_CONTENT,
-                    CREATE_DATE
-                FROM TB_NOTICE
-                ORDER BY NOTICE_NO DESC   
-            ) inner_tbl
-            WHERE ROWNUM &lt;= (#{startIndex} + #{size})
-        )
-        WHERE RNUM &gt; #{startIndex}
-    </select>
-
-    <select id="selectNoticeDetail"
-            parameterType="long"
-            resultMap="noticeResultMap">
-        SELECT
-            NOTICE_NO,
-            USER_NO,
-            NOTICE_TITLE,
-            NOTICE_CONTENT,
-            CREATE_DATE
-        FROM TB_NOTICE
-        WHERE NOTICE_NO = #{noticeNo}
-    </select>
-
-    <select id="selectNoticeCount"
-            parameterType="map"
-            resultType="int">
-        SELECT COUNT(*)
-        FROM TB_NOTICE
-    </select>
-
-
-    <insert id="insertNotice"
-            parameterType="com.kh.matzip.notice.model.vo.Notice">
-
-        <selectKey keyProperty="noticeNo" order="BEFORE" resultType="long">
-            SELECT SEQ_NOTICE_NO.NEXTVAL FROM DUAL
-        </selectKey>
-
-        INSERT INTO TB_NOTICE
-            (NOTICE_NO, USER_NO, NOTICE_TITLE, NOTICE_CONTENT, CREATE_DATE)
-        VALUES
-            (#{noticeNo}, #{userNo}, #{noticeTitle}, #{noticeContent}, SYSDATE)
-    </insert>
-
-
-    <update id="updateNotice"
-            parameterType="com.kh.matzip.notice.model.vo.Notice">
-        UPDATE TB_NOTICE
-        <set>
-            <if test="noticeTitle != null">
-                NOTICE_TITLE = #{noticeTitle},
-            </if>
-            <if test="noticeContent != null">
-                NOTICE_CONTENT = #{noticeContent},
-            </if>
-        </set>
-        WHERE NOTICE_NO = #{noticeNo}
-    </update>
-
-
-    <delete id="deleteNotice" parameterType="long">
-        DELETE FROM TB_NOTICE
-        WHERE NOTICE_NO = #{noticeNo}
-    </delete>
+    
 
 </mapper>

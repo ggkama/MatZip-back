@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.matzip.member.model.dao.TokenMapper">
+	
+	<insert id="saveToken" parameterType="com.kh.matzip.member.model.vo.RefreshToken">
+		INSERT INTO
+			TB_TOKEN(
+				TOKEN_NO,
+				USER_NO,
+				REFRESH_TOKEN,
+				EXPIRED_DATE
+			) VALUES(
+				SEQ_TOKEN_NO.NEXTVAL,
+				#{userNo},
+				#{refreshToken},
+				#{expiredDate}
+			)
+	</insert>
+	
+	<select id="selectByToken" parameterType="com.kh.matzip.member.model.vo.RefreshToken" resultType="com.kh.matzip.member.model.vo.RefreshToken">
+		SELECT
+			TOKEN_NO,
+			USER_NO,
+			REFRESH_TOKEN,
+			EXPIRED_DATE
+		FROM
+			TB_TOKEN
+		WHERE
+			REFRESH_TOKEN = #{refreshToken}
+	</select>
+
+</mapper>
