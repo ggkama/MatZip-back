@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.matzip.global.enums.ResponseCode;
 import com.kh.matzip.global.response.ApiResponse;
+import com.kh.matzip.member.model.dto.LoginDTO;
 import com.kh.matzip.member.model.dto.MemberDTO;
 import com.kh.matzip.member.model.service.MemberService;
 
@@ -40,11 +41,13 @@ public class MemberController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<Map<String, String>>> login(@RequestBody MemberDTO member){
-    	Map<String, String> tokens = memberService.login(member);
-    	
-    	log.info("로그인 성공 : {}", member.getUserId());
-    	return ResponseEntity.ok(ApiResponse.success(ResponseCode.LOGIN_SUCCESS, tokens, "로그인이 성공적으로 완료되었습니다."));
+    public ResponseEntity<ApiResponse<LoginDTO>> login(@RequestBody MemberDTO member) {
+        LoginDTO loginUser = memberService.login(member);
+
+        log.info("로그인 성공 : {}", member.getUserId());
+
+        return ResponseEntity.ok(ApiResponse.success(ResponseCode.LOGIN_SUCCESS, loginUser, "로그인이 성공적으로 완료되었습니다."));
     }
+
     
 }

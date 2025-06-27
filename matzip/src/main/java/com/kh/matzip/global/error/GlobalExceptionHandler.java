@@ -8,15 +8,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
 import com.kh.matzip.global.enums.ResponseCode;
 import com.kh.matzip.global.error.exceptions.AuthenticateFailException;
 import com.kh.matzip.global.error.exceptions.AuthenticateTimeOutException;
 import com.kh.matzip.global.error.exceptions.DataAccessException;
 import com.kh.matzip.global.error.exceptions.DuplicateDataException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
-import com.kh.matzip.global.error.exceptions.InvalidFormatException;
 import com.kh.matzip.global.error.exceptions.InvalidValueException;
+import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
+import com.kh.matzip.global.error.exceptions.StoreAlreadyExistsException;
+import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
 import com.kh.matzip.global.response.ApiResponse;
 
 import jakarta.validation.ConstraintViolationException;
@@ -72,24 +73,45 @@ public class GlobalExceptionHandler {
     // Valid가 발생시키는 Exception(@Pattern, @NotBlank)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponse<Void>> handleConstraintViolationException(ConstraintViolationException e) {
-        return makeResponseEntity(ResponseCode.INVALID_VALUE, e.getMessage(), HttpStatus.BAD_REQUEST);
+        return makeResponseEntity(ResponseCode.BAD_REQUEST, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     // @Valid @RequestBody 에서 발생시키는 Exception
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return makeResponseEntity(ResponseCode.INVALID_VALUE, e.getMessage(), HttpStatus.BAD_REQUEST);
+        return makeResponseEntity(ResponseCode.BAD_REQUEST, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     // @Valid @ModelAttribute 에서 발생시키는 Exception
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ApiResponse<Void>> handleBindException(BindException e) {
-        return makeResponseEntity(ResponseCode.INVALID_VALUE, e.getMessage(), HttpStatus.BAD_REQUEST);
+        return makeResponseEntity(ResponseCode.BAD_REQUEST, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    //
+    // 연결실패 Exception
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException e) {
         return makeResponseEntity(ResponseCode.SERVER_ERROR, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // 삭제된 공지사항 조회 Exception
+    @ExceptionHandler(NoticeNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidFormatException(NoticeNotFoundException e) {
+        return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    // 가게 정보 중복
+    @ExceptionHandler(StoreAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStoreAlreadyExistsException(StoreAlreadyExistsException e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(ResponseCode.STORE_DUPLICATED, e.getMessage()));
+    }
+    // 매장 저장 실패 Exception
+   @ExceptionHandler(StoreSaveFailedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStoreSaveFailedException(StoreSaveFailedException e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error(e.getResponseCode(), e.getMessage()));
     }
 }

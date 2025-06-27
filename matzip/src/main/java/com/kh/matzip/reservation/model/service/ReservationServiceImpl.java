@@ -1,6 +1,5 @@
 package com.kh.matzip.reservation.model.service;
 
-import com.kh.matzip.reservation.model.dao.ReservationMapper;
 import com.kh.matzip.reservation.model.dto.ReservationDTO;
 
 public class ReservationServiceImpl implements ReservationService {

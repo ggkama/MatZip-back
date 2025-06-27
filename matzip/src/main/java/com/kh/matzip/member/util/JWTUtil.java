@@ -33,7 +33,7 @@ public class JWTUtil {
 	}
 	
 	/* AccessToken 생성 */
-	public String createAccessToken(Long userNo, String userId, String userRole) {
+	public String createAccessToken(String userNo, String userId, String userRole) {
 		return Jwts.builder()
 				.subject(userNo.toString())
 				.claim("userId", userId)
@@ -52,6 +52,23 @@ public class JWTUtil {
 				.expiration(new Date(System.currentTimeMillis() + refreshTokenDeadLine))
 				.signWith(key)
 				.compact();
+	}
+
+	/* token에서 ownerNo 가져오기 */
+	
+	public Long getUserNoFromToken(String token) {
+		if (token.startsWith("Bearer ")) {
+			token = token.substring(7);
+		}
+		
+		String subject = Jwts.parser()
+				.verifyWith(key)
+				.build()
+				.parseSignedClaims(token)
+				.getPayload()
+				.getSubject(); // → userNo 들어있음
+
+		return Long.valueOf(subject);
 	}
 	
 	

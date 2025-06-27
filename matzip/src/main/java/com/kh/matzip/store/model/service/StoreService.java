@@ -6,6 +6,6 @@ import com.kh.matzip.store.model.dto.StoreDTO;
 
 public interface StoreService {
     
-    void createStore(StoreDTO storeDto, MultipartFile[] images, String token);
+    void createStore(StoreDTO storeDto, MultipartFile[] images);
 
 }

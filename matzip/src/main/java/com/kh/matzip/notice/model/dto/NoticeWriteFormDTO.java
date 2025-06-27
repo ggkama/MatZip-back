@@ -1,7 +1,5 @@
 package com.kh.matzip.notice.model.dto;
 
-import java.sql.Date;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,14 +12,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class NoticeDTO {
+public class NoticeWriteFormDTO {
     
-    private Long noticeNo;
-    private Long userNo;
+    public Long noticeNo;
+    public Long userNo;
+
     @NotBlank
-    private String noticeTitle;
+    public String noticeTitle;
     @NotBlank
-    private String noticeContent;
-    private Date createDate;
-    
+    public String noticeContent;
 }

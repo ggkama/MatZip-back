@@ -32,12 +32,12 @@
                 USER_NO = #{userNo}
     </update>
 
-    <update>
+   <!--  <update>
         UPDATE 
               TB_USER
            SET 
               USER_PW = # {encodePw}
          WHERE 
               USER_NO = #{userNo}
-    </update>
+    </update> -->
 </mapper>

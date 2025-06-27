@@ -2,6 +2,10 @@ package com.kh.matzip.member.model.service;
 
 import java.util.Map;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +15,9 @@ import com.kh.matzip.global.error.exceptions.AuthenticateFailException;
 import com.kh.matzip.global.error.exceptions.DuplicateDataException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
 import com.kh.matzip.member.model.dao.MemberMapper;
+import com.kh.matzip.member.model.dto.LoginDTO;
 import com.kh.matzip.member.model.dto.MemberDTO;
+import com.kh.matzip.member.model.vo.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +31,8 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationService verificationService;
     private final TokenService tokenService;
+    private final AuthenticationManager authenticationManager;
+    
     
     @Override
     public void signUp(MemberDTO member) {
@@ -55,22 +63,36 @@ public class MemberServiceImpl implements MemberService {
 
     
 	@Override
-	public Map<String, String> login(MemberDTO memberDTO) {
+	public LoginDTO login(MemberDTO memberDTO) {
 		MemberDTO findUser = memberMapper.findByUserId(memberDTO.getUserId());
 		
-		if (findUser == null) {
-	        throw new InvalidAccessException(ResponseCode.INVALID_USERDATA, "아이디가 존재하지 않습니다.");
-	    }
+		Authentication authentication = null;
+		
+		try {
+			authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(memberDTO.getUserId(),
+												            memberDTO.getUserPw())
+					);
+			
+		} catch(AuthenticationException e) {
+			throw new InvalidAccessException(ResponseCode.INVALID_USERDATA, "아이디 또는 비밀번호를 잘못 입력하셨습니다.");
+		}
+		
+	    CustomUserDetails user = (CustomUserDetails)authentication.getPrincipal();
 
-	    if (!passwordEncoder.matches(memberDTO.getUserPw(), findUser.getUserPw())) {
-	        throw new InvalidAccessException(ResponseCode.INVALID_USERDATA, "비밀번호가 일치하지 않습니다.");
-	    }
+	    log.info("user 정보 : {}", user);
+	    
+	    LoginDTO loginUser = LoginDTO.builder()
+	            .userNo(findUser.getUserNo())
+	            .userId(findUser.getUserId())
+	            .userRole(findUser.getUserRole())
+	            .userName(findUser.getUserName())
+	            .userNickName(findUser.getUserNickName())
+	            .isDeleted(findUser.getIsDeleted())
+	            .modifiedDate(findUser.getModifiedDate())
+	            .build();
 
-	    return tokenService.generateToken(
-	        findUser.getUserNo(),
-	        findUser.getUserId(),
-	        findUser.getUserRole()
-	    );
+	    return tokenService.generateToken(loginUser);
 
 	}
     
