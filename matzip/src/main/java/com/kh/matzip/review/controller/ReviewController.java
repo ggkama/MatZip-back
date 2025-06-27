@@ -93,7 +93,6 @@ public class ReviewController {
 
         
     // 리뷰뷰 수정정
-    // ✅ 리뷰 수정
     @PutMapping("/{reviewNo}")
     public ResponseEntity<String> updateReview(
         @AuthenticationPrincipal CustomUserDetails user,
