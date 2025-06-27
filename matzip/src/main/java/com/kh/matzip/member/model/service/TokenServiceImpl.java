@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.kh.matzip.member.model.dao.TokenMapper;
+import com.kh.matzip.member.model.dto.LoginDTO;
 import com.kh.matzip.member.model.vo.RefreshToken;
 import com.kh.matzip.member.util.JWTUtil;
 
@@ -20,25 +21,26 @@ public class TokenServiceImpl implements TokenService {
 	private final TokenMapper tokenMapper;
 	
 	@Override
-	public Map<String, String> generateToken(Long userNo, String userId, String userRole) {
+	public LoginDTO generateToken(LoginDTO loginUser) {
 		
-		String accessToken = jwtUtil.createAccessToken(userNo, userId, userRole);
+		String accessToken = jwtUtil.createAccessToken(
+				String.valueOf(loginUser.getUserNo()), loginUser.getUserId(), loginUser.getUserRole());
 		String refreshToken = jwtUtil.createRefreshToken();
 		
 		Date refreshTokenDeadLine = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7);
 		
 		RefreshToken token = RefreshToken.builder()
-				.userNo(userNo)
+				.userNo(loginUser.getUserNo())
                 .refreshToken(refreshToken)
                 .expiredDate(refreshTokenDeadLine)
                 .build();
 
         tokenMapper.saveToken(token);
         
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", accessToken);
-        tokens.put("refreshToken", refreshToken);
-        return tokens;
+        loginUser.setAccessToken(accessToken);
+        loginUser.setRefreshToken(refreshToken);
+        
+        return loginUser;
 	}
 
 	@Override

@@ -7,7 +7,7 @@
 
 	<select id="existByUserId" parameterType="String" resultType="int">
     	SELECT 
-    		COUNT(*) 
+    		COUNT(USER_ID) 
     	FROM 
     		TB_USER
     	WHERE 
@@ -16,7 +16,7 @@
 
 	<select id="existByUserNickName" parameterType="String" resultType="int">
    		SELECT 
-   			COUNT(*) 
+   			COUNT(USER_NICKNAME) 
     	FROM 
     		TB_USER
     	WHERE 
@@ -24,7 +24,7 @@
 	</select>
 
 
-    <insert id="signUp" parameterType="com.kh.matzip.member.model.dto.MemberDTO">
+    <insert id="signUp" parameterType="MemberDTO">
     	INSERT INTO 
         	TB_USER (
 				USER_NO,
@@ -43,7 +43,7 @@
         	)
 	</insert>
 	
-	<select id="findByUserId" parameterType="String" resultType="com.kh.matzip.member.model.dto.MemberDTO">
+	<select id="findByUserId" parameterType="String" resultType="MemberDTO">
 		SELECT
 			USER_NO,
 			USER_ID,
@@ -57,7 +57,6 @@
 			TB_USER
 		WHERE
 			USER_ID = #{userId}
-			
 	</select>
 
     

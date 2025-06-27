@@ -8,19 +8,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
 import com.kh.matzip.global.enums.ResponseCode;
 import com.kh.matzip.global.error.exceptions.AuthenticateFailException;
 import com.kh.matzip.global.error.exceptions.AuthenticateTimeOutException;
 import com.kh.matzip.global.error.exceptions.DataAccessException;
 import com.kh.matzip.global.error.exceptions.DuplicateDataException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
-import com.kh.matzip.global.error.exceptions.InvalidFormatException;
-<<<<<<< HEAD
-import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
-=======
 import com.kh.matzip.global.error.exceptions.InvalidValueException;
->>>>>>> c02e982299f8ebfaec45a579a69135422629b722
+import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
 import com.kh.matzip.global.response.ApiResponse;
 
 import jakarta.validation.ConstraintViolationException;
@@ -61,13 +56,6 @@ public class GlobalExceptionHandler {
         return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-<<<<<<< HEAD
-    @ExceptionHandler(NoticeNotFoundException.class)
-    public ResponseEntity<ApiResponse<void>> handleInvalidFormatException(NoticeNotFoundException e) {
-        return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-=======
     // 중복 검사 오류
     @ExceptionHandler(DuplicateDataException.class)
     public ResponseEntity<ApiResponse<Void>> handleDuplicateDataException(DuplicateDataException e) {
@@ -98,10 +86,15 @@ public class GlobalExceptionHandler {
         return makeResponseEntity(ResponseCode.INVALID_VALUE, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    //
+    // 연결실패 Exception
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException e) {
         return makeResponseEntity(ResponseCode.SERVER_ERROR, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
->>>>>>> c02e982299f8ebfaec45a579a69135422629b722
+
+    // 삭제된 공지사항 조회 Exception
+    @ExceptionHandler(NoticeNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidFormatException(NoticeNotFoundException e) {
+        return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
