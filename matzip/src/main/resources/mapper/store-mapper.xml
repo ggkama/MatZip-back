@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.matzip.member.model.dao.StoreMapper">
+<!-- 매장 등록 -->
+  <insert id="insertStore" parameterType="com.kh.matzip.store.model.dto.StoreDTO">
+    
+    <selectKey keyProperty="storeNo" order="BEFORE" resultType="long">
+      SELECT SEQ_STORE_NO.NEXTVAL FROM DUAL
+    </selectKey>
+
+    INSERT INTO TB_STORE (
+      STORE_NO,
+      OWNER_NO,
+      STORE_NAME,
+      STORE_PHONE,
+      STORE_ADDRESS1,
+      STORE_ADDRESS2,
+      CATEGORY_ADDRESS,
+      CATEGORY_FOODTYPE,
+      OPEN_TIME,
+      CLOSE_TIME,
+      CREATE_DATE,
+      MODIFY_DATE,
+      IS_DELETE,
+      COUNT,
+      STORE_IMG
+    ) VALUES (
+      #{storeNo},
+      #{ownerNo},
+      #{storeName},
+      #{storePhone},
+      #{storeAddress1},
+      #{storeAddress2},
+      #{categoryAddress},
+      #{categoryFoodtype},
+      #{openTime},
+      #{closeTime},
+      SYSDATE,
+      SYSDATE,
+      'N',
+      #{count},
+      #{storeImg}
+    )
+  </insert>
+</mapper>

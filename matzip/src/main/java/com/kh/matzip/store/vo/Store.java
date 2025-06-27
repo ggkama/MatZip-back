@@ -1,11 +1,13 @@
-package com.kh.matzip.store.model.dto;
+package com.kh.matzip.store.vo;
 
 import java.util.Date;
 
-public class StoreDTO {
-    private Long storeNo;
-    private Long ownerNo;
-    private String storeName;
+import lombok.Builder;
+import lombok.Value;
+
+@Value
+@Builder
+public class Store {
     private String storePhone;
     private String storeAddress1;
     private String storeAddress2;
