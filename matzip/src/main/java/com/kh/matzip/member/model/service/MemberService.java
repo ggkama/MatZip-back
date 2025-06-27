@@ -12,4 +12,5 @@ public interface MemberService {
     /* 로그인 */
     Map<String, String> login(MemberDTO memberDTO);
 
+    
 }
