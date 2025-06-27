@@ -1,4 +1,4 @@
-package com.kh.util.pagenation;
+package com.kh.matzip.util.pagenation;
 
 import org.springframework.stereotype.Service;
 

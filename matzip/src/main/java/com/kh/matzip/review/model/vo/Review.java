@@ -2,12 +2,7 @@ package com.kh.matzip.review.model.vo;
 
 import java.sql.Date;
 
-import lombok.Builder;
-import lombok.Value;
 
-
-@Value
-@Builder
 public class Review {
 
     private Long reviewNo;

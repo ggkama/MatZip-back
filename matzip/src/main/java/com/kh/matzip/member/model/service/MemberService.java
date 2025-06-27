@@ -11,5 +11,5 @@ public interface MemberService {
     /* 로그인 */
     LoginDTO login(MemberDTO memberDTO);
 
-    
+
 }
