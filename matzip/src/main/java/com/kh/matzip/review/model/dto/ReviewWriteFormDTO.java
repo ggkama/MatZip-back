@@ -16,13 +16,16 @@ import lombok.ToString;
 public class ReviewWriteFormDTO {
     
     // 작성자는 토큰으로 인증
-    public Long reviewNo;
-    public Long reservationNo;
+    private Long reviewNo;
+    private Long reservationNo;
 
     @NotBlank
-    public String reviewContent;
+    private String reviewContent;
     @NotBlank
-    public double storeGrade;
+    private double storeGrade;
 
+    private String image;
+    private Long imageNo;
+    
 
 }

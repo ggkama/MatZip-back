@@ -16,13 +16,16 @@ import lombok.ToString;
 @ToString
 public class ReviewDTO {
 
-    public Long reviewNo;
-    public Long reservationNo;
-    public Long userNo;
+    private  Long reviewNo;
+    private  Long reservationNo;
+    private Long userNo;
 
     @NotBlank
-    public String reviewContent;
+    private String reviewContent;
     @NotBlank
-    public double storeGrade;
-    public Date createDate;
+    private double storeGrade;
+    private Date createDate;
+
+    private String image;
+    private Long imageNo;
 }
