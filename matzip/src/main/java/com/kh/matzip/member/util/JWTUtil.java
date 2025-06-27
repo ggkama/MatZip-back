@@ -33,7 +33,7 @@ public class JWTUtil {
 	}
 	
 	/* AccessToken 생성 */
-	public String createAccessToken(Long userNo, String userId, String userRole) {
+	public String createAccessToken(String userNo, String userId, String userRole) {
 		return Jwts.builder()
 				.subject(userNo.toString())
 				.claim("userId", userId)

@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kh.matzip.member.model.dao.TokenMapper">
 	
-	<insert id="saveToken" parameterType="com.kh.matzip.member.model.vo.RefreshToken">
+	<insert id="saveToken" parameterType="RefreshToken">
 		INSERT INTO
 			TB_TOKEN(
 				TOKEN_NO,
@@ -20,7 +20,7 @@
 			)
 	</insert>
 	
-	<select id="selectByToken" parameterType="com.kh.matzip.member.model.vo.RefreshToken" resultType="com.kh.matzip.member.model.vo.RefreshToken">
+	<select id="selectByToken" parameterType="RefreshToken" resultType="RefreshToken">
 		SELECT
 			TOKEN_NO,
 			USER_NO,
