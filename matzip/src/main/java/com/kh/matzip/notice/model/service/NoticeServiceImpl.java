@@ -13,7 +13,7 @@ import com.kh.matzip.notice.model.dao.NoticeMapper;
 import com.kh.matzip.notice.model.dto.NoticeDTO;
 import com.kh.matzip.notice.model.dto.NoticeWriteFormDTO;
 import com.kh.matzip.notice.model.vo.Notice;
-import com.kh.util.pagenation.PagenationService;
+import com.kh.matzip.util.pagenation.PagenationService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,6 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeMapper noticeMapper;
     //private final authService authService;
     private final PagenationService pagenation;
-    private final NoticeService noticeService;
 
 
     @Override
@@ -37,7 +36,7 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         int startIndex = pagenation.getStartIndex(pageNo, size);
-
+        
         Map<String, String> pageInfo = new HashMap<>();
         pageInfo.put("startIndex", String.valueOf(startIndex));
         pageInfo.put("size", String.valueOf(size));

@@ -13,6 +13,5 @@ public interface TokenService {
 	
 	/* 리프레시 토큰 -> 토큰 정보 조회 */
 	RefreshToken findByRefreshToken(String token);
-
 		
 }
