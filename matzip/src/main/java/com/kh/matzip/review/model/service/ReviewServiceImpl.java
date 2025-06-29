@@ -1,6 +1,5 @@
 package com.kh.matzip.review.model.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewMapper.updateReview(review);
 
-
+        // 기존 이미지 끌고오기
         List<String> oldImages = reviewMapper.selectReviewImageUrls(reviewNo);
         for (String imageUrl : oldImages) {
             fileService.deleteFile(imageUrl);
@@ -109,16 +108,16 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(Long userNo, Long reviewNo) {
-        // 1. 이미지 파일 삭제
+        // 기존 이미지 파일 삭제
         List<String> urls = reviewMapper.selectReviewImageUrls(reviewNo);
         for (String url : urls) {
             fileService.deleteFile(url);
         }
 
-        // 2. DB에서 이미지 삭제
+        // DB로 가서 이미지 날리기
         reviewMapper.deleteReviewImages(reviewNo);
 
-        // 3. 리뷰 삭제
+        // 리뷰 삭제
         reviewMapper.deleteReview(reviewNo);
     }
 }

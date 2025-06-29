@@ -15,7 +15,7 @@ public interface ReviewMapper {
     // 내 리뷰 리스트 조회
     List<ReviewDTO> selectMyReviewList(Map<String, String> pageInfo);
 
-    // 내 리뷰 상세 조회
+    // 내 리뷰 상세 조회 
     List<ReviewDTO> selectMyReviewDetail(Long reviewNo);
 
     // 맛집페이지 리뷰 출력
@@ -36,9 +36,9 @@ public interface ReviewMapper {
     // 이미지 등록
     int insertReviewImage(ReviewImage image);
 
-    // reviewNo 이미지 삭제
-    int deleteImagesByReviewNo(Long reviewNo);
+    // 기존 이미지 삭제
+    int deleteReviewImages(Long reviewNo);
 
-    // reviewNo 이미지 리스트 조회
-    List<String> selectImageListByReviewNo(Long reviewNo);
+    // 기존 이미지 URL 조회 하기(삭제용)
+    List<String> selectReviewImageUrls(Long reviewNo);
 }
