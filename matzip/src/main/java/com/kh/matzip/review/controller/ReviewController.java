@@ -37,7 +37,7 @@ public class ReviewController {
     private final FileService fileService;
 
     //내 리뷰 리스트 조회
-    @GetMapping("/my")
+    @GetMapping("/myreview")
     public ResponseEntity<Map<String, Object>> getMyReviews(
         @AuthenticationPrincipal CustomUserDetails user,
         @RequestParam(name = "page", defaultValue = "0") int page,
@@ -48,7 +48,7 @@ public class ReviewController {
     }
 
     //내 리뷰 상세 조회
-    @GetMapping("/my/{reviewNo}")
+    @GetMapping("/myreview/{reviewNo}")
     public ResponseEntity<List<ReviewDTO>> getMyReviewDetail(
         @AuthenticationPrincipal CustomUserDetails user,
         @PathVariable Long reviewNo
