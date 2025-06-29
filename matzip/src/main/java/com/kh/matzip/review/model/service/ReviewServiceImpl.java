@@ -77,9 +77,10 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+
+    
     @Override
     public void updateReview(Long userNo, Long reviewNo, ReviewWriteFormDTO form, List<MultipartFile> files) {
-        // 1. 기존 리뷰 수정
         Review review = new Review();
         review.setReviewNo(reviewNo);
         review.setReviewContent(form.getReviewContent());
@@ -87,14 +88,14 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewMapper.updateReview(review);
 
-        // 2. 기존 이미지 삭제
+
         List<String> oldImages = reviewMapper.selectReviewImageUrls(reviewNo);
         for (String imageUrl : oldImages) {
             fileService.deleteFile(imageUrl);
         }
         reviewMapper.deleteReviewImages(reviewNo);
 
-        // 3. 새 이미지 저장
+
         if (files != null) {
             for (MultipartFile file : files) {
                 String url = fileService.store(file);
