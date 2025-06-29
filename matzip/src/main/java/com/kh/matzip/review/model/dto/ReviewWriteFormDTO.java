@@ -1,5 +1,7 @@
 package com.kh.matzip.review.model.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,8 +26,7 @@ public class ReviewWriteFormDTO {
     @NotBlank
     private double storeGrade;
 
-    private String image;
-    private Long imageNo;
+    private List<String> imageUrls;
     
 
 }

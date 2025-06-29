@@ -1,6 +1,7 @@
 package com.kh.matzip.review.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -22,10 +23,7 @@ public class ReviewDTO {
 
     @NotBlank
     private String reviewContent;
-    @NotBlank
     private double storeGrade;
     private Date createDate;
-
-    private String image;
-    private Long imageNo;
+    private List<String> imageUrls; 
 }

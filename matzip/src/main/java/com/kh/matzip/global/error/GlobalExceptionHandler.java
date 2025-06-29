@@ -1,7 +1,6 @@
 package com.kh.matzip.global.error;
 
 import java.net.BindException;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -124,13 +123,13 @@ public class GlobalExceptionHandler {
 
     // 파일명/확장자추출/저장오류/삭제 예외처리
     @ExceptionHandler(FileStreamException.class)
-	public ResponseEntity<Map<String, String>> handleFileStreamException(FileStreamException e) {
-		return makeResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+    public ResponseEntity<ApiResponse<Void>> handleFileStreamException(FileStreamException e) {
+    return makeResponseEntity(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     // .jpg 확장자 이외 확장자 업로드
     @ExceptionHandler(FileTypeNotAllowedException.class)
-	public ResponseEntity<Map<String, String>> handleFileTypeNotAllowedException(FileTypeNotAllowedException e) {
-		return makeResponseEntity(e, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-	}
+    public ResponseEntity<ApiResponse<Void>> handleFileTypeNotAllowedException(FileTypeNotAllowedException e) {
+    return makeResponseEntity(ResponseCode.UNSUPPORTED_MEDIA_TYPE, e.getMessage(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
 }
