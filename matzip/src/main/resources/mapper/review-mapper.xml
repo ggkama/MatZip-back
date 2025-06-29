@@ -105,12 +105,12 @@
         WHERE REVIEW_NO = #{reviewNo}
     </delete>
 
-    <!-- 기존 이미지 URL 조회 -->
+    <!-- 기존 이미지 URL 조회  . -->
     <select id="selectImageListByReviewNo"
             parameterType="long"
             resultType="string">
         SELECT IMAGE
-        FROM TB_REVIEW_IMAGE
+        FROM TB_REVIEW_IMAGE 
         WHERE REVIEW_NO = #{reviewNo}
     </select>
 
