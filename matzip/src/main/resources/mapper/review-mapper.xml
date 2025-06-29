@@ -5,10 +5,12 @@
 
 <mapper namespace="com.kh.matzip.review.model.dao.ReviewMapper">
 
+    <!-- 공통 셀렉문 -->
     <sql id="reviewSelect">
         SELECT
             R.REVIEW_NO      reviewNo,
             R.RESERVATION_NO reservationNo,
+            R.STORE_NO       storeNo,
             R.USER_NO        userNo,
             R.REVIEW_CONTENT reviewContent,
             R.STORE_GRADE    storeGrade,
@@ -20,7 +22,7 @@
         ON R.REVIEW_NO = RI.REVIEW_NO
     </sql>
 
-    <!-- 내 리뷰 리스트 -->
+    <!--  리뷰 리스트 -->
     <select id="selectMyReviewList"
             parameterType="map"
             resultType="com.kh.matzip.review.model.dto.ReviewDTO">
@@ -30,7 +32,7 @@
         OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
 
-    <!-- 내 리뷰 상세조회 -->
+    <!-- 내 리뷰 상세 조회 -->
     <select id="selectMyReviewDetail"
             parameterType="long"
             resultType="com.kh.matzip.review.model.dto.ReviewDTO">
@@ -38,21 +40,16 @@
         WHERE R.REVIEW_NO = #{reviewNo}
     </select>
 
-    <!-- storeDetial 리뷰 리스트 -->
+    <!-- 스토어 상세 페이지 리뷰 리스트 -->
     <select id="selectReviewDetail"
             parameterType="long"
             resultType="com.kh.matzip.review.model.dto.ReviewDTO">
         <include refid="reviewSelect"/>
-        WHERE R.RESERVATION_NO IN (
-            SELECT RESERVATION_NO
-            FROM TB_RESERVATION
-            WHERE STORE_NO = #{storeNo}
-              AND STATUS = 'Y'
-        )
+        WHERE R.STORE_NO = #{storeNo}
         ORDER BY R.REVIEW_DATE DESC
     </select>
 
-    <!-- 리뷰 개수 조회 -->
+    <!-- 리뷰 개수 조회 (페이지네이션 용) -->
     <select id="selectReviewCount"
             parameterType="map"
             resultType="long">
@@ -68,15 +65,15 @@
             SELECT SEQ_REVIEW_NO.NEXTVAL FROM DUAL
         </selectKey>
         INSERT INTO TB_REVIEW (
-            REVIEW_NO, RESERVATION_NO, USER_NO,
+            REVIEW_NO, RESERVATION_NO, STORE_NO, USER_NO,
             REVIEW_CONTENT, STORE_GRADE, REVIEW_DATE
         ) VALUES (
-            #{reviewNo}, #{reservationNo}, #{userNo},
+            #{reviewNo}, #{reservationNo}, #{storeNo}, #{userNo},
             #{reviewContent}, #{storeGrade}, SYSDATE
         )
     </insert>
 
-    <!-- 이미지 삽입 -->
+    <!-- 리뷰 이미지 삽입 -->
     <insert id="insertReviewImage"
             parameterType="com.kh.matzip.review.model.vo.ReviewImage">
         <selectKey keyProperty="imageNo" resultType="long" order="BEFORE">
@@ -94,8 +91,8 @@
             parameterType="com.kh.matzip.review.model.vo.Review">
         UPDATE TB_REVIEW
         SET REVIEW_CONTENT = #{reviewContent},
-            STORE_GRADE = #{storeGrade}
-        WHERE REVIEW_NO = #{reviewNo}
+            STORE_GRADE    = #{storeGrade}
+        WHERE REVIEW_NO   = #{reviewNo}
     </update>
 
     <!-- 리뷰 삭제 -->
@@ -105,12 +102,12 @@
         WHERE REVIEW_NO = #{reviewNo}
     </delete>
 
-    <!-- 기존 이미지 URL 조회  . -->
+    <!-- 기존 이미지 리스트 (삭제용) -->
     <select id="selectImageListByReviewNo"
             parameterType="long"
             resultType="string">
         SELECT IMAGE
-        FROM TB_REVIEW_IMAGE 
+        FROM TB_REVIEW_IMAGE
         WHERE REVIEW_NO = #{reviewNo}
     </select>
 
