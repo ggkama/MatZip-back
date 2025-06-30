@@ -22,7 +22,5 @@
             userNickName = #{userNickName}
     </select>
 
-    <insert>
-    </insert>
 
 </mapper>
