@@ -4,6 +4,10 @@ public enum ResponseCode {
     SUCCESS("200"),
     NOT_FOUND("404"),
     BAD_REQUEST("400"),
+    FORBIDDEN("405"),
+    INTERNAL_SERVER_ERROR("406"),
+    UNSUPPORTED_MEDIA_TYPE("407"),
+    
 
     MAIL_CODE_SEND_SUCCESS("S200"),
     MAIL_CODE_SUCCESS("S201"),
@@ -20,11 +24,9 @@ public enum ResponseCode {
     VERIFIED_TIMEOUT("E106"),
     VERIFIED_FAIL("E107"),
     
-    STORE_INSERT("S300"),
-    STORE_DUPLICATED("E300"),
-    STORE_SAVE_FAIL("E301"),
-    
-    SERVER_ERROR("500");
+    SERVER_ERROR("500"),
+
+    STORE_SAVE_FAIL("S500"); // 매장 저장 실패를 위한 코드 추가
    
     private final String code;
 

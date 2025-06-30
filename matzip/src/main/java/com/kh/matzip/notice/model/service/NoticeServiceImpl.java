@@ -25,10 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeMapper noticeMapper;
-    //private final authService authService;
     private final PagenationService pagenation;
-    // private final NoticeService noticeService;
-
 
     @Override
     public Map<String, Object> selectNoticeList(int pageNo, int size) {
@@ -115,4 +112,3 @@ public class NoticeServiceImpl implements NoticeService {
         log.info("공지사항 삭제 완료", noticeNo);
     }
 }
-

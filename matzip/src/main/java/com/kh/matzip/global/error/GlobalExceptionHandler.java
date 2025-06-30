@@ -13,11 +13,14 @@ import com.kh.matzip.global.error.exceptions.AuthenticateFailException;
 import com.kh.matzip.global.error.exceptions.AuthenticateTimeOutException;
 import com.kh.matzip.global.error.exceptions.DataAccessException;
 import com.kh.matzip.global.error.exceptions.DuplicateDataException;
+import com.kh.matzip.global.error.exceptions.FileStreamException;
+import com.kh.matzip.global.error.exceptions.FileTypeNotAllowedException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
 import com.kh.matzip.global.error.exceptions.InvalidValueException;
 import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
-import com.kh.matzip.global.error.exceptions.StoreAlreadyExistsException;
-import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
+import com.kh.matzip.global.error.exceptions.ReviewAccessDeniedException;
+import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
+import com.kh.matzip.global.error.exceptions.ReviewNotFoundException;
 import com.kh.matzip.global.response.ApiResponse;
 
 import jakarta.validation.ConstraintViolationException;
@@ -91,7 +94,6 @@ public class GlobalExceptionHandler {
     // 연결실패 Exception
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException e) {
-        log.error("Unhandled RuntimeException 발생", e); // 이거 추가!!!
         return makeResponseEntity(ResponseCode.SERVER_ERROR, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -101,26 +103,33 @@ public class GlobalExceptionHandler {
         return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // 가게 정보 중복
-   @ExceptionHandler(StoreAlreadyExistsException.class)
-    public ResponseEntity<ApiResponse<Void>> handleStoreAlreadyExistsException(StoreAlreadyExistsException e) {
-        log.error("StoreAlreadyExistsException 발생", e); // ← 로그 추가
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(ApiResponse.error(ResponseCode.STORE_DUPLICATED, e.getMessage()));
-    }
-    // 매장 저장 실패 Exception
-   @ExceptionHandler(StoreSaveFailedException.class)
-    public ResponseEntity<ApiResponse<Void>> handleStoreSaveFailedException(StoreSaveFailedException e) {
-        log.error("StoreSaveFailedException 발생", e); // ← 로그 추가
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error(e.getResponseCode(), e.getMessage()));
+    // 리뷰 작성 불가
+    @ExceptionHandler(ReviewNotAllowedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleReviewNotAllowedException(ReviewNotAllowedException e) {
+        return makeResponseEntity(ResponseCode.FORBIDDEN, e.getMessage(), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception e) {
-        log.error("Exception 발생", e);  // 전부 catch
-        return makeResponseEntity(ResponseCode.SERVER_ERROR, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    // 리뷰 접근 권한 없음
+    @ExceptionHandler(ReviewAccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleReviewAccessDeniedException(ReviewAccessDeniedException e) {
+        return makeResponseEntity(ResponseCode.FORBIDDEN, e.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    // 존재하지 않는 리뷰
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleReviewNotFoundException(ReviewNotFoundException e) {
+        return makeResponseEntity(ResponseCode.NOT_FOUND, e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    // 파일명/확장자추출/저장오류/삭제 예외처리
+    @ExceptionHandler(FileStreamException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFileStreamException(FileStreamException e) {
+    return makeResponseEntity(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // .jpg 확장자 이외 확장자 업로드
+    @ExceptionHandler(FileTypeNotAllowedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFileTypeNotAllowedException(FileTypeNotAllowedException e) {
+    return makeResponseEntity(ResponseCode.UNSUPPORTED_MEDIA_TYPE, e.getMessage(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 }

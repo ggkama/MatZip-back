@@ -1,1 +1,1 @@
-{"resources":{"Scripts/Script.sql":{"default-datasource":"oracle_thin-1979a95852f-1cf012eb6e6860b2","default-schema":"C##MATZIP"}}}
+{"resources":{"Scripts/Script.sql":{"default-schema":"C##MATZIP","default-datasource":"oracle_thin-1979a95852f-1cf012eb6e6860b2"}}}
