@@ -14,11 +14,11 @@ import lombok.ToString;
 @ToString
 public class NoticeWriteFormDTO {
     
-    public Long noticeNo;
-    public Long userNo;
+    private Long noticeNo;
+    private Long userNo;
 
     @NotBlank
-    public String noticeTitle;
+    private String noticeTitle;
     @NotBlank
-    public String noticeContent;
+    private String noticeContent;
 }

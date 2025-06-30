@@ -2,16 +2,18 @@ package com.kh.matzip.global.enums;
 
 public enum ResponseCode {
     SUCCESS("200"),
-<<<<<<< HEAD
     NOT_FOUND("404"),
     BAD_REQUEST("400"),
-=======
+    FORBIDDEN("405"),
+    INTERNAL_SERVER_ERROR("406"),
+    UNSUPPORTED_MEDIA_TYPE("407"),
+    
+
     MAIL_CODE_SEND_SUCCESS("S200"),
     MAIL_CODE_SUCCESS("S201"),
     USER_INSERT("S202"),
     LOGIN_SUCCESS("S203"),
     
-    INVALID_VALUE("400"),
     DUPLICATED_ID("E100"),
     DUPLICATED_NICKNAME("E101"),
     MAIL_CODE_SEND_FAIL("E102"),
@@ -22,7 +24,6 @@ public enum ResponseCode {
     VERIFIED_TIMEOUT("E106"),
     VERIFIED_FAIL("E107"),
     
->>>>>>> c02e982299f8ebfaec45a579a69135422629b722
     SERVER_ERROR("500");
    
     private final String code;
