@@ -1,7 +1,9 @@
 package com.kh.matzip.store.model.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.kh.matzip.global.error.exceptions.StoreAlreadyExistsException;
 import com.kh.matzip.member.model.vo.CustomUserDetails;
@@ -50,29 +52,29 @@ public class StoreServiceImpl implements StoreService {
             // 이미지 저장
             if (images == null || images.length == 0) {
                 log.error("이미지 파일이 없습니다.");
-                throw new IllegalArgumentException("이미지는 최소 1장 이상 등록해야 합니다.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지는 최소 1장 이상 등록해야 합니다.");
             }
             log.info("이미지 개수 확인: 등록된 이미지 개수 = {}", images.length);
             if (images.length > 5) {
                 log.error("이미지 파일 개수가 5개를 초과했습니다. 등록된 이미지 개수: {}", images.length);
-                throw new IllegalArgumentException("이미지는 최대 5장까지 등록할 수 있습니다.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지는 최대 5장까지 등록할 수 있습니다.");
             }
 
             // 이미지 저장 처리
             for (MultipartFile image : images) {
-                log.info("이미지 파일 처리 시작: 파일 이름 = {}", image.getOriginalFilename());
+                log.debug("이미지 파일 처리 시작: 파일 이름 = {}", image.getOriginalFilename());
                 if (image.isEmpty()) {
                     log.error("빈 이미지 파일을 업로드하려고 했습니다.");
-                    throw new IllegalArgumentException("빈 이미지는 업로드할 수 없습니다.");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "빈 이미지는 업로드할 수 없습니다.");
                 }
 
                 // 파일 경로 저장
                 String savedPath = fileService.store(image);
                 if (savedPath == null || savedPath.isEmpty()) {
                     log.error("이미지 저장에 실패했습니다. 파일: {}", image.getOriginalFilename());
-                    throw new IllegalArgumentException("이미지 저장에 실패했습니다.");
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 저장에 실패했습니다.");
                 }
-                log.info("이미지 저장 성공: 저장된 경로 = {}", savedPath);
+                log.debug("이미지 저장 성공: 저장된 경로 = {}", savedPath);
                 storeMapper.insertStoreImage(storeNo, savedPath);
             }
 
@@ -92,9 +94,12 @@ public class StoreServiceImpl implements StoreService {
                 }
             }
 
+        } catch (ResponseStatusException e) {
+            log.error("잘못된 요청이 발생했습니다: ", e);
+            throw e;  // 클라이언트에 적절한 오류 응답 반환
         } catch (Exception e) {
-            log.error("매장 등록 중 예외 발생: ", e);  // 예외 발생 시 로그를 남깁니다.
-            throw e;  // 예외를 그대로 던져서 Spring의 기본 에러 처리 메커니즘에 맡깁니다.
+            log.error("매장 등록 중 예외 발생: ", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "매장 등록에 실패했습니다.");
         }
     }
 }

@@ -10,14 +10,23 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.kh.matzip.configuration.filter.JwtFilter;
+
+import lombok.RequiredArgsConstructor;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfigure {
+	
+	private final JwtFilter jwtFilter;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -37,7 +46,6 @@ public class SecurityConfigure {
                 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated());
 	    return http.build();
 	}

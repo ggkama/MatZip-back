@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.matzip.admin.manageUser.model.dao.ManageUserMapper">
+
+	<select id="selectUserList" resultType="com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO">
+		SELECT 
+			USER_NO,
+			USER_ID,
+			USER_NAME,
+			USER_ROLE,
+			IS_DELETED,
+			ENROLL_DATE
+		FROM
+			TB_USER
+		ORDER BY
+			ENROLL_DATE DESC
+		OFFSET
+			#{startIndex}
+		  ROWS FETCH NEXT
+			#{size}
+			ROWS ONLY
+	</select>
+	
+	<select id="selectOwnerList" resultType="com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO">
+		SELECT 
+			U.USER_NO,
+			U.USER_ID,
+			U.USER_NAME,
+			U.USER_ROLE,
+			U.IS_DELETED,
+			U.ENROLL_DATE
+		FROM
+			TB_USER U
+		  INNER JOIN
+		  	TB_OWNER O
+		  ON
+		  	U.USER_NO = O.USER_NO
+		ORDER BY
+			U.ENROLL_DATE DESC
+		OFFSET
+			#{startIndex}
+		  ROWS FETCH NEXT
+			#{size}
+			ROWS ONLY
+	</select>
+	
+	<update id="updateStatusUser">
+		UPDATE
+			TB_USER
+		SET
+			IS_DELETED = 'Y'
+		WHERE
+			USER_NO = #{userNo}
+	</update>
+
+
+</mapper>
