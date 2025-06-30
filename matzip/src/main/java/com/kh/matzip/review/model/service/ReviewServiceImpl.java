@@ -55,7 +55,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void insertReview(Long userNo, ReviewWriteFormDTO form, List<MultipartFile> files) {
-        // 1. Review insert
+        // Review insert
         Review review = new Review();
         review.setReservationNo(form.getReservationNo());
         review.setUserNo(userNo);
@@ -64,7 +64,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewMapper.insertReview(review); // review_no는 DB에서 시퀀스로 생성됨
 
-        // 2. 이미지 insert
+        // 이미지 insert
         if (files != null) {
             for (MultipartFile file : files) {
                 String url = fileService.store(file);

@@ -35,6 +35,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final FileService fileService;
+    
 
     //내 리뷰 리스트 조회
     @GetMapping("/myreview")
