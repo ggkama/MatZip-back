@@ -1,8 +1,6 @@
 package com.kh.matzip.common.model.service.verification;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
@@ -45,6 +43,7 @@ public class VerificationServiceImpl implements VerificationService {
         return code;
 	}
 	
+	
 	private boolean codeExpired(LocalDateTime createTime) {
 	    return createTime.plusMinutes(VERIFICATION_CODE_EXPIRY_TIME)
 	                     .isBefore(LocalDateTime.now());
@@ -54,7 +53,6 @@ public class VerificationServiceImpl implements VerificationService {
 	public boolean verifyCode(String email, String code) {
 		VerificationData data = emailMapper.selectByEmail(email);
 		log.info("인증 코드 : {}", data);
-		
 		
 		if(data == null) {
 			throw new AuthenticateFailException(ResponseCode.MAIL_CODE_NULL, "인증 코드가 존재하지 않음");
@@ -68,7 +66,6 @@ public class VerificationServiceImpl implements VerificationService {
 			throw new AuthenticateFailException(ResponseCode.MAIL_CODE_FAIL, "이메일 인증 실패");
 		}
 		
-		log.info("인증 코드 일치");
 		return true;
 	}
 
