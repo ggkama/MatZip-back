@@ -7,6 +7,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,7 +27,6 @@ public class JWTUtil {
 	private final long accessTokenDeadLine = 1000 * 60 * 60 * 2;   // accessToken 유효시간 : 2시간
 	private final long refreshTokenDeadLine = 1000 * 60 * 60 * 24 * 7;  // refreshToken 유효시간 : 7일
 	
-	// signWith에 사용되는 key 초기화
 	@PostConstruct
 	public void init() {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -54,7 +55,35 @@ public class JWTUtil {
 				.compact();
 	}
 	
-	
+	public String extractUserId(String token) {
+	    return extractAllClaims(token).get("userId", String.class);
+	}
+
+	public String extractUserRole(String token) {
+	    return extractAllClaims(token).get("userRole", String.class);
+	}
+
+	public String extractUserNo(String token) {
+	    return extractAllClaims(token).getSubject();
+	}
+
+	public boolean isTokenValid(String token) {
+	    try {
+	        extractAllClaims(token);
+	        return true;
+	    } catch (JwtException e) {
+	        log.error("유효하지 않은 토큰입니다: {}", e.getMessage());
+	        return false;
+	    }
+	}
+
+	private Claims extractAllClaims(String token) {
+	    return Jwts.parser()
+	            .verifyWith(key)
+	            .build()
+	            .parseSignedClaims(token)
+	            .getPayload();
+	}
 	
 	
 }
