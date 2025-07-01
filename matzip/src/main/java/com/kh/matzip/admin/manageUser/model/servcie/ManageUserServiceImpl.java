@@ -47,15 +47,17 @@ public class ManageUserServiceImpl implements ManageUserService {
 		param.put("startIndex", startIndex);
 		param.put("size", size);
 		
-		List<ManageUserDTO> userList = manageuserMapper.selectUserList(param);
+		List<ManageUserDTO> ownerList = manageuserMapper.selectOwnerList(param);
 		
 		Map<String, Object> resultList = new HashMap<>();
-		resultList.put("userList", userList);
+		resultList.put("ownerList", ownerList);
 		resultList.put("pageNo", pageNo);
 		resultList.put("size", size);
 		
 		return resultList;
 	}
+	
+	
     
 	
 }

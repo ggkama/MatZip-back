@@ -18,8 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private final MemberMapper memberMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberDTO member = memberMapper.findByUserId(username);
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+    	
+        MemberDTO member = memberMapper.findByUserId(userId);
 
         if (member == null) {
             throw new UsernameNotFoundException("해당 유저가 존재하지 않습니다.");
