@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,20 +67,30 @@ public class ReviewController {
     }
 
     //리뷰 작성
-    @PostMapping
+    //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/write")
     public ResponseEntity<String> writeReview(
         @AuthenticationPrincipal CustomUserDetails user,
-    //@RequestPart("data") -> JSON 형태의 작성formDTO를 multipart/form-data에서 받음
-        @RequestPart("data") @Valid ReviewWriteFormDTO form,
-        @RequestPart(name = "files", required = false) List<MultipartFile> files
-    ) {
-        if (files != null && files.size() > 5) {
-            return ResponseEntity.badRequest().body("이미지는 최대 5장까지 업로드 가능합니다.");
-        }
-
-        reviewService.insertReview(user.getUserNo(), form, files);
-        return ResponseEntity.status(HttpStatus.CREATED).body("리뷰 작성 완료");
+        @RequestParam("reservationNo") Long reservationNo,
+        @RequestParam("reviewContent") String reviewContent,
+        @RequestParam("storeGrade") Double storeGrade,
+        @RequestParam(name = "files", required = false) List<MultipartFile> files
+        ) {
+    if (files != null && files.size() > 5) {
+        return ResponseEntity.badRequest().body("이미지는 최대 5장까지 업로드 가능합니다.");
     }
+
+    ReviewWriteFormDTO form = ReviewWriteFormDTO.builder()
+        .reservationNo(reservationNo)
+        .reviewContent(reviewContent)
+        .storeGrade(storeGrade)
+        .build();
+
+    reviewService.insertReview(user.getUserNo(), form, files);
+    return ResponseEntity.status(HttpStatus.CREATED).body("리뷰 작성 완료");
+}
+
 
     //리뷰 수정
     @PutMapping("/{reviewNo}")

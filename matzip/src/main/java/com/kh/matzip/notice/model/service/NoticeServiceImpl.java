@@ -88,7 +88,7 @@ public Map<String, Object> selectNoticeList(int pageNo, int size) {
         }
 
         Notice notice = Notice.builder()
-                .noticeNo(form.getNoticeNo())
+                .noticeNo(noticeNo)
                 .noticeTitle(form.getNoticeTitle())
                 .noticeContent(form.getNoticeContent())
                 .build();

@@ -2,7 +2,6 @@ package com.kh.matzip.configuration.filter;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,8 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.kh.matzip.member.model.dao.MemberMapper;
 import com.kh.matzip.member.model.dto.MemberDTO;
-import com.kh.matzip.member.model.service.TokenService;
-import com.kh.matzip.member.model.vo.CustomUserDetails;
 import com.kh.matzip.member.util.JWTUtil;
 
 import io.jsonwebtoken.Claims;
@@ -43,6 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
+        //System.err.println("방가룽");
 
         if (authorization != null && authorization.startsWith("Bearer ")) {
             String token = authorization.substring(7);
@@ -67,7 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     UsernamePasswordAuthenticationToken authentication =
                     		new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, Collections.singletonList(new SimpleGrantedAuthority(userRole)));
+                                    userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
 
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);

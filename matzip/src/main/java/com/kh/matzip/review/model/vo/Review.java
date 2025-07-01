@@ -18,6 +18,7 @@ import lombok.ToString;
 @Builder
 public class Review {
 
+    private Long storeNo;
     private Long reviewNo;
     private Long reservationNo;
     private Long userNo;
