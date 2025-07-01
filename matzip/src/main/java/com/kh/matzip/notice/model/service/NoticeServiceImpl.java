@@ -25,11 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeMapper noticeMapper;
+    //private final authService authService;
     private final PagenationService pagenation;
-<<<<<<< HEAD
-=======
+    
 
->>>>>>> 0b10a6bd80b4f06b68407943fe001f219ccfbad6
 
     @Override
     public Map<String, Object> selectNoticeList(int pageNo, int size) {
@@ -38,7 +37,7 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         int startIndex = pagenation.getStartIndex(pageNo, size);
-        
+
         Map<String, String> pageInfo = new HashMap<>();
         pageInfo.put("startIndex", String.valueOf(startIndex));
         pageInfo.put("size", String.valueOf(size));
@@ -70,15 +69,16 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public void insertNotice(NoticeWriteFormDTO form) {
-        Notice notice = Notice.builder()
+            Notice notice = Notice.builder()
                 .noticeNo(form.getNoticeNo())
+                .userNo(form.getUserNo()) // 추가
                 .noticeTitle(form.getNoticeTitle())
                 .noticeContent(form.getNoticeContent())
                 .build();
 
-        noticeMapper.insertNotice(notice);
-        log.info("공지사항 등록 완료");
-    }
+    noticeMapper.insertNotice(notice);
+    log.info("공지사항 등록 완료");
+}
 
     @Transactional
     @Override
