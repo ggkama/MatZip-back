@@ -8,4 +8,6 @@ import com.kh.matzip.store.model.dto.StoreDTO;
 public interface StoreService {
     
     void insertStore(CustomUserDetails user, StoreDTO storeDto, MultipartFile[] images);
+
+    boolean existsStoreByUserNo(Long userNo);
 }

@@ -26,6 +26,10 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeMapper noticeMapper;
     private final PagenationService pagenation;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0b10a6bd80b4f06b68407943fe001f219ccfbad6
 
     @Override
     public Map<String, Object> selectNoticeList(int pageNo, int size) {
@@ -34,7 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         int startIndex = pagenation.getStartIndex(pageNo, size);
-
+        
         Map<String, String> pageInfo = new HashMap<>();
         pageInfo.put("startIndex", String.valueOf(startIndex));
         pageInfo.put("size", String.valueOf(size));

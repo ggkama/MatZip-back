@@ -36,10 +36,10 @@ public class StoreController {
         return ResponseEntity.ok("매장이 등록되었습니다.");
     }
 
-    @GetMapping("/api/owner/store/check")
+   @GetMapping("/api/owner/store/check")
     public ResponseEntity<Boolean> checkStoreExists(@RequestParam Long userNo) {
-        int count = storeService.countStoreByUserNo(userNo); // TB_STORE에 같은 userNo 존재 여부
-        return ResponseEntity.ok(count > 0);
+        boolean exists = storeService.existsStoreByUserNo(userNo);
+        return ResponseEntity.ok(exists);
     }
     
 

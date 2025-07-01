@@ -120,11 +120,11 @@ public class StoreServiceImpl implements StoreService {
             // 메뉴 저장
             if (storeDto.getMenuList() != null) {
                for (String menuName : storeDto.getMenuList()) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("storeNo", storeDto.getStoreNo());
-                map.put("menuName", menuName);
-                storeMapper.insertMenu(map);
-            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("storeNo", storeDto.getStoreNo());
+            map.put("menuName", menuName);
+            storeMapper.insertMenu(map);
+        }
 
             }
 
@@ -135,5 +135,11 @@ public class StoreServiceImpl implements StoreService {
             log.error("매장 등록 중 예외 발생: ", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "매장 등록에 실패했습니다.");
         }
+    }
+
+    // 기존 등록된 가게가 있는지
+    @Override
+    public boolean existsStoreByUserNo(Long userNo) {
+        return storeMapper.existsStoreByUserNo(userNo);
     }
 }

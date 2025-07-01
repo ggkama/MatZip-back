@@ -95,22 +95,38 @@
     )
 </insert>
 
-
+   <!-- 매장 중복확인 -->
+  <select id="countStoreByOwnerAndName" resultType="int">
+    SELECT COUNT(STORE_NO)
+    FROM TB_STORE
+    WHERE USER_NO = #{userNo}
+      AND STORE_NAME = #{storeName}
+      AND IS_DELETED = 'N' 
+  </select>
 
   <!-- 메뉴 등록 -->
  <insert id="insertMenu" parameterType="map">
-    <selectKey keyProperty="menuNo" resultType="long" order="BEFORE">
-      SELECT SEQ_MENU_NO.NEXTVAL FROM DUAL
-    </selectKey>
-    INSERT INTO TB_MENU (
-      MENU_NO,
-      STORE_NO,
-      MENU
-    ) VALUES (
-      #{menuNo},
-      #{storeNo},
-      #{menuName}
-    )
-  </insert>
+  <selectKey keyProperty="menuNo" resultType="long" order="BEFORE">
+    SELECT SEQ_MENU_NO.NEXTVAL FROM DUAL
+  </selectKey>
+  INSERT INTO TB_MENU (
+    MENU_NO,
+    STORE_NO,
+    MENU
+  ) VALUES (
+    #{menuNo},
+    #{storeNo},
+    #{menuName}
+  )
+</insert>
+
+<!-- userNo로 등록된 매장이 있는지  -->
+<select id="existsStoreByUserNo" resultType="boolean">
+  SELECT EXISTS (
+    SELECT 1 FROM TB_STORE
+    WHERE USER_NO = #{userNo}
+      AND IS_DELETED = 'N'
+  )
+</select>
 
 </mapper>
