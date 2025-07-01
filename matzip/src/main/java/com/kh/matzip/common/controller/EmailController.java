@@ -1,5 +1,7 @@
 package com.kh.matzip.common.controller;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,7 @@ public class EmailController {
 	@PostMapping("/send-code")
 	public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> request) {
 		String email = request.get("userId");
-		String code = verificationService.createVerificationCode(email);
+		String code = verificationService.createVerificationCode(email, LocalDateTime.now());
 		emailService.sendSignUpByEmail(email, "[Matzip] 이메일 인증", code);		
 		
 		return ResponseEntity.ok(ApiResponse.success(ResponseCode.MAIL_CODE_SEND_SUCCESS, "인증 코드 전송 성공"));

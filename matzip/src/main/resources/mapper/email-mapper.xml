@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.matzip.common.model.dao.EmailMapper">
+
+	<insert id="insertEmailCode" parameterType="com.kh.matzip.common.model.service.verification.VerificationData">
+		INSERT INTO
+			TB_EMAIL_CODE(
+				EMAIL_NO,
+				EMAIL,
+				EMAIL_CODE,
+				CREATE_TIME
+			) VALUES (
+				SEQ_EMAIL_NO.NEXTVAL,
+				#{email},
+				#{emailCode},
+				#{createTime}
+			)
+	</insert>
+	
+	<select id="selectByEmail" resultType="com.kh.matzip.common.model.service.verification.VerificationData">
+    	SELECT 
+        	EMAIL_NO,
+        	EMAIL,
+        	EMAIL_CODE,
+        	CREATE_TIME
+    	FROM 
+        	TB_EMAIL_CODE
+    	WHERE 
+        	EMAIL = #{email}
+    	ORDER BY 
+    		CREATE_TIME DESC
+    	FETCH FIRST 1 ROWS ONLY
+</select>
+
+</mapper>

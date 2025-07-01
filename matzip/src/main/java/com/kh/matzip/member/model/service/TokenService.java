@@ -1,14 +1,8 @@
 package com.kh.matzip.member.model.service;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
 import com.kh.matzip.member.model.dto.LoginDTO;
 import com.kh.matzip.member.model.vo.RefreshToken;
 
-@Service
 public interface TokenService {
 
 	/* 토큰 생성 */
@@ -19,6 +13,5 @@ public interface TokenService {
 	
 	/* 리프레시 토큰 -> 토큰 정보 조회 */
 	RefreshToken findByRefreshToken(String token);
-
 		
 }
