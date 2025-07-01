@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.matzip.review.model.dao.ReviewMapper">
+
+    <!-- 공통 셀렉문 -->
+    <sql id="reviewSelect">
+        SELECT
+            R.REVIEW_NO      reviewNo,
+            R.RESERVATION_NO reservationNo,
+            R.STORE_NO       storeNo,
+            R.USER_NO        userNo,
+            R.REVIEW_CONTENT reviewContent,
+            R.STORE_GRADE    storeGrade,
+            R.REVIEW_DATE    createDate,
+            RI.IMAGE         image,
+            RI.IMAGE_NO      imageNo
+        FROM TB_REVIEW R
+        LEFT JOIN TB_REVIEW_IMAGE RI
+        ON R.REVIEW_NO = RI.REVIEW_NO
+    </sql>
+
+    <!--  리뷰 리스트 -->
+    <select id="selectMyReviewList"
+            parameterType="map"
+            resultType="com.kh.matzip.review.model.dto.ReviewDTO">
+        <include refid="reviewSelect"/>
+        WHERE R.USER_NO = #{userNo}
+        ORDER BY R.REVIEW_DATE DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <!-- 내 리뷰 상세 조회 -->
+    <select id="selectMyReviewDetail"
+            parameterType="long"
+            resultType="com.kh.matzip.review.model.dto.ReviewDTO">
+        <include refid="reviewSelect"/>
+        WHERE R.REVIEW_NO = #{reviewNo}
+    </select>
+
+    <!-- 스토어 상세 페이지 리뷰 리스트 -->
+    <select id="selectReviewDetail"
+            parameterType="long"
+            resultType="com.kh.matzip.review.model.dto.ReviewDTO">
+        <include refid="reviewSelect"/>
+        WHERE R.STORE_NO = #{storeNo}
+        ORDER BY R.REVIEW_DATE DESC
+    </select>
+
+    <!-- 리뷰 개수 조회 (페이지네이션 용) -->
+    <select id="selectReviewCount"
+            parameterType="map"
+            resultType="long">
+        SELECT COUNT(*)
+        FROM TB_REVIEW
+        WHERE USER_NO = #{userNo}
+    </select>
+
+    <!-- 리뷰 작성 -->
+    <insert id="insertReview"
+            parameterType="com.kh.matzip.review.model.vo.Review">
+        <selectKey keyProperty="reviewNo" resultType="long" order="BEFORE">
+            SELECT SEQ_REVIEW_NO.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_REVIEW (
+            REVIEW_NO, RESERVATION_NO, STORE_NO, USER_NO,
+            REVIEW_CONTENT, STORE_GRADE, REVIEW_DATE
+        ) VALUES (
+            #{reviewNo}, #{reservationNo}, #{storeNo}, #{userNo},
+            #{reviewContent}, #{storeGrade}, SYSDATE
+        )
+    </insert>
+
+    <!-- 리뷰 이미지 삽입 -->
+    <insert id="insertReviewImage"
+            parameterType="com.kh.matzip.review.model.vo.ReviewImage">
+        <selectKey keyProperty="imageNo" resultType="long" order="BEFORE">
+            SELECT SEQ_REVIEW_IMAGE_NO.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TB_REVIEW_IMAGE (
+            IMAGE_NO, REVIEW_NO, IMAGE
+        ) VALUES (
+            #{imageNo}, #{reviewNo}, #{image}
+        )
+    </insert>
+
+    <!-- 리뷰 수정 -->
+    <update id="updateReview"
+            parameterType="com.kh.matzip.review.model.vo.Review">
+        UPDATE TB_REVIEW
+        SET REVIEW_CONTENT = #{reviewContent},
+            STORE_GRADE    = #{storeGrade}
+        WHERE REVIEW_NO   = #{reviewNo}
+    </update>
+
+    <!-- 리뷰 삭제 -->
+    <delete id="deleteReview"
+            parameterType="long">
+        DELETE FROM TB_REVIEW
+        WHERE REVIEW_NO = #{reviewNo}
+    </delete>
+
+    <!-- 기존 이미지 리스트 (삭제용) -->
+    <select id="selectImageListByReviewNo"
+            parameterType="long"
+            resultType="string">
+        SELECT IMAGE
+        FROM TB_REVIEW_IMAGE
+        WHERE REVIEW_NO = #{reviewNo}
+    </select>
+
+    <!-- 기존 이미지 삭제 -->
+    <delete id="deleteImagesByReviewNo"
+            parameterType="long">
+        DELETE FROM TB_REVIEW_IMAGE
+        WHERE REVIEW_NO = #{reviewNo}
+    </delete>
+
+</mapper>

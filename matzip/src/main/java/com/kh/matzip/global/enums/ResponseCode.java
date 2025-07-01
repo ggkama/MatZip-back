@@ -4,6 +4,10 @@ public enum ResponseCode {
     SUCCESS("200"),
     NOT_FOUND("404"),
     BAD_REQUEST("400"),
+    FORBIDDEN("405"),
+    INTERNAL_SERVER_ERROR("406"),
+    UNSUPPORTED_MEDIA_TYPE("407"),
+    
 
     MAIL_CODE_SEND_SUCCESS("S200"),
     MAIL_CODE_SUCCESS("S201"),

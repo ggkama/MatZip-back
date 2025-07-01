@@ -68,15 +68,16 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     @Override
     public void insertNotice(NoticeWriteFormDTO form) {
-        Notice notice = Notice.builder()
+            Notice notice = Notice.builder()
                 .noticeNo(form.getNoticeNo())
+                .userNo(form.getUserNo()) // 추가
                 .noticeTitle(form.getNoticeTitle())
                 .noticeContent(form.getNoticeContent())
                 .build();
 
-        noticeMapper.insertNotice(notice);
-        log.info("공지사항 등록 완료");
-    }
+    noticeMapper.insertNotice(notice);
+    log.info("공지사항 등록 완료");
+}
 
     @Transactional
     @Override

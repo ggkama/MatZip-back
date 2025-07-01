@@ -1,6 +1,5 @@
 package com.kh.matzip.review.model.dto;
 
-import java.sql.Date;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -10,20 +9,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ReviewDTO {
-
-    private  Long reviewNo;
-    private  Long reservationNo;
-    private Long userNo;
+public class ReviewWriteFormDTO {
+    
+    // 작성자는 토큰으로 인증
+    private Long reviewNo;
+    private Long reservationNo;
 
     @NotBlank
     private String reviewContent;
+    @NotBlank
     private double storeGrade;
-    private Date createDate;
-    private List<String> imageUrls; 
+
+    private List<String> imageUrls;
+    
+
 }
