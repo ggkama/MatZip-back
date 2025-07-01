@@ -33,17 +33,26 @@
 			U.ENROLL_DATE
 		FROM
 			TB_USER U
-		  INNER JOIN
+		  LEFT JOIN
 		  	TB_OWNER O
 		  ON
 		  	U.USER_NO = O.USER_NO
 		ORDER BY
-			U.ENROLL_DATE DESC
+			O.REQUEST_DATE DESC
 		OFFSET
 			#{startIndex}
 		  ROWS FETCH NEXT
 			#{size}
-			ROWS ONLY
+		  ROWS ONLY
+	</select>
+	
+	<select id="selectOwner" resultType="int">
+		SELECT
+			COUNT(USER_NO)
+		FROM
+			TB_USER
+		WHERE
+			USER_ROLE = ROLE_OWNER
 	</select>
 	
 	<update id="updateStatusUser">
