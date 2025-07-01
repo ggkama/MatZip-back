@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,8 +19,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.kh.matzip.configuration.filter.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
@@ -45,10 +44,11 @@ public class SecurityConfigure {
                 .cors(withDefaults())
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/notice/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-	    return http.build();
+	return http.build();
 	}
 	
 	@Bean

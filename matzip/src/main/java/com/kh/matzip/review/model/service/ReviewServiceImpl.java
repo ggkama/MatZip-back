@@ -89,8 +89,8 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 기존 이미지 끌고오기
         List<String> oldImages = reviewMapper.selectReviewImageUrls(reviewNo);
-        for (String imageUrl : oldImages) {
-            fileService.deleteFile(imageUrl);
+        for (String url : oldImages) {
+            fileService.delete(url);
         }
         reviewMapper.deleteReviewImages(reviewNo);
 
@@ -111,7 +111,7 @@ public class ReviewServiceImpl implements ReviewService {
         // 기존 이미지 파일 삭제
         List<String> urls = reviewMapper.selectReviewImageUrls(reviewNo);
         for (String url : urls) {
-            fileService.deleteFile(url);
+            fileService.delete(url);
         }
 
         // DB로 가서 이미지 날리기

@@ -17,7 +17,7 @@ spring:
           writetimeout: 5000
           connectiontimeout: 5000
 server:
-  port: 80
+  port: 8080
 
 mybatis:
   configuration:
