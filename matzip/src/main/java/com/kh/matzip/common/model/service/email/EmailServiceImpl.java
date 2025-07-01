@@ -6,7 +6,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.kh.matzip.global.enums.ResponseCode;
-import com.kh.matzip.global.error.exceptions.AuthenticateFailException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
 
 import lombok.RequiredArgsConstructor;

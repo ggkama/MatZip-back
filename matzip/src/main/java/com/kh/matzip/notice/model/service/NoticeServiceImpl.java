@@ -116,4 +116,3 @@ public Map<String, Object> selectNoticeList(int pageNo, int size) {
         log.info("공지사항 삭제 완료", noticeNo);
     }
 }
-

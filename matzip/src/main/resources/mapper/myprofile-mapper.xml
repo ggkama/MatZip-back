@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.matzip.member.model.dao.MyProfileMapper">
+    <select id="selectMyProfile" resultType="MyProfileDTO">
+        SELECT 
+               USER_NO
+             , USER_ID
+             , USER_PW
+             , USER_NAME
+             , USER_NICKNAME
+             , USER_PHONE
+             , USER_ROLE
+        FROM 
+             TB_USER
+        WHERE
+             USER_NO = #{userNo}
+
+
+    </select>
+
+    <update id="updateMyProfile" parameterType="MyProfileDTO">
+        UPDATE 
+               TB_USER
+            SET 
+                  USER_NAME = #{userName}
+                , USER_NICKNAME = #{userNickname}
+                , USER_PHONE = #{userPhone}
+            WHERE 
+                USER_NO = #{userNo}
+    </update>
+
+   <!--  <update>
+        UPDATE 
+              TB_USER
+           SET 
+              USER_PW = # {encodePw}
+         WHERE 
+              USER_NO = #{userNo}
+    </update> -->
+</mapper>

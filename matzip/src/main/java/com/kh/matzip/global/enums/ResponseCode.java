@@ -24,7 +24,9 @@ public enum ResponseCode {
     VERIFIED_TIMEOUT("E106"),
     VERIFIED_FAIL("E107"),
     
-    SERVER_ERROR("500");
+    SERVER_ERROR("500"),
+
+    STORE_SAVE_FAIL("S500"); // 매장 저장 실패를 위한 코드 추가
    
     private final String code;
 

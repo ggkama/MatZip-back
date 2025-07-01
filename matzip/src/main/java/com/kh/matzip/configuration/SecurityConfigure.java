@@ -5,8 +5,8 @@ import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfigure {
 	
 	private final JwtFilter jwtFilter;
@@ -40,18 +41,17 @@ public class SecurityConfigure {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(withDefaults())
-                .authorizeHttpRequests(requests -> requests
-                            // 인증 없이 접근 가능한 경로
-                            .requestMatchers("/api/auth/**").permitAll()
-                            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(requests -> requests
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/owner/**").hasRole("OWNER")
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 삽입
 
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-	return http.build();
-	}
+        return http.build();
+    }
 	
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
