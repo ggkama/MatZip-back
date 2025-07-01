@@ -25,7 +25,7 @@ public class StoreDTO {
     private String categoryFoodtype;
     private List<String> categoryConvenience;  // 편의시설 여러 개
     private List<String> dayOff;               // 휴무일 여러 개
-
+    private List<String> menuList; //메뉴리스트
     private String openTime;
     private String closeTime;
 

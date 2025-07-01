@@ -1,17 +1,18 @@
 package com.kh.matzip.store.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+import com.kh.matzip.member.model.vo.CustomUserDetails;
 import com.kh.matzip.store.model.dto.StoreDTO;
 import com.kh.matzip.store.model.service.StoreService;
-import com.kh.matzip.member.model.vo.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +23,7 @@ public class StoreController {
 
  private final StoreService storeService;
     
-    @PreAuthorize("hasRole('ROLE_OWNER')")  // OWNER 역할만 접근 가능
+    // @PreAuthorize("hasRole('ROLE_OWNER')")  // OWNER 역할만 접근 가능
     @PostMapping
     public ResponseEntity<String> insertStore(
             @AuthenticationPrincipal CustomUserDetails user,  // 인증된 사용자 정보
@@ -30,9 +31,17 @@ public class StoreController {
             @RequestPart("images") MultipartFile[] images  // 파일 배열 받기 (FormData)
     ) {
         // 서비스로 전달하여 매장 등록
+        System.out.println("먼디");
         storeService.insertStore(user, storeDto, images);
         return ResponseEntity.ok("매장이 등록되었습니다.");
     }
+
+    @GetMapping("/api/owner/store/check")
+    public ResponseEntity<Boolean> checkStoreExists(@RequestParam Long userNo) {
+        int count = storeService.countStoreByUserNo(userNo); // TB_STORE에 같은 userNo 존재 여부
+        return ResponseEntity.ok(count > 0);
+    }
+    
 
 
 }

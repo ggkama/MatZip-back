@@ -1,5 +1,8 @@
 package com.kh.matzip.store.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,12 +35,19 @@ public class StoreServiceImpl implements StoreService {
     @Transactional
     public void insertStore(CustomUserDetails user, StoreDTO storeDto, MultipartFile[] images) {
 
-        Long userNo = user.getUserNo();  // CustomUserDetails에서 userNo를 가져옴
+        Long userNo = 22L; // 임의로 userNo 설정, 실제로는 user.getUserNo()로 설정해야 함
+        storeDto.setUserNo(userNo);  // StoreDTO에 userNo 값을 설정
+
         log.info("매장 등록 시작: 사용자 번호 = {}, 매장 이름 = {}", userNo, storeDto.getStoreName());
 
         try {
+            // Map에 파라미터를 담아서 전달
+            Map<String, Object> params = new HashMap<>();
+            params.put("userNo", userNo);
+            params.put("storeName", storeDto.getStoreName());
+
             // 중복 매장 체크
-            int count = storeMapper.countStoreByOwnerAndName(userNo, storeDto.getStoreName());
+            int count = storeMapper.countStoreByOwnerAndName(params); // Map을 전달
             log.info("중복 매장 체크: 매장 이름 = {}, 중복 여부 = {}", storeDto.getStoreName(), count > 0 ? "중복됨" : "중복 안됨");
             if (count > 0) {
                 log.error("중복된 매장 이름: {}", storeDto.getStoreName());
@@ -75,13 +85,22 @@ public class StoreServiceImpl implements StoreService {
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 저장에 실패했습니다.");
                 }
                 log.debug("이미지 저장 성공: 저장된 경로 = {}", savedPath);
-                storeMapper.insertStoreImage(storeNo, savedPath);
+
+                // 이미지 등록을 위한 Map 파라미터 준비
+                Map<String, Object> imageParams = new HashMap<>();
+                imageParams.put("storeNo", storeNo);
+                imageParams.put("image", savedPath);
+                storeMapper.insertStoreImage(imageParams); // Map으로 전달
             }
 
             // 편의시설 저장
             if (storeDto.getCategoryConvenience() != null) {
                 for (String convenience : storeDto.getCategoryConvenience()) {
-                    storeMapper.insertStoreConvenience(storeNo, convenience);
+                    // 편의시설 등록을 위한 Map 파라미터 준비
+                    Map<String, Object> convenienceParams = new HashMap<>();
+                    convenienceParams.put("storeNo", storeNo);
+                    convenienceParams.put("convenience", convenience);
+                    storeMapper.insertStoreConvenience(convenienceParams); // Map으로 전달
                     log.info("편의시설 저장: {}", convenience);
                 }
             }
@@ -89,9 +108,24 @@ public class StoreServiceImpl implements StoreService {
             // 휴무일 저장
             if (storeDto.getDayOff() != null) {
                 for (String offDay : storeDto.getDayOff()) {
-                    storeMapper.insertDayOff(storeNo, offDay);
+                    // 휴무일 등록을 위한 Map 파라미터 준비
+                    Map<String, Object> dayOffParams = new HashMap<>();
+                    dayOffParams.put("storeNo", storeNo);
+                    dayOffParams.put("offDay", offDay);
+                    storeMapper.insertDayOff(dayOffParams); // Map으로 전달
                     log.info("휴무일 저장: {}", offDay);
                 }
+            }
+
+            // 메뉴 저장
+            if (storeDto.getMenuList() != null) {
+               for (String menuName : storeDto.getMenuList()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("storeNo", storeDto.getStoreNo());
+                map.put("menuName", menuName);
+                storeMapper.insertMenu(map);
+            }
+
             }
 
         } catch (ResponseStatusException e) {
