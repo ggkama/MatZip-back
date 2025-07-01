@@ -23,8 +23,8 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	public LoginDTO generateToken(LoginDTO loginUser) {
 		
-		String accessToken = jwtUtil.createAccessToken(
-				String.valueOf(loginUser.getUserNo()), loginUser.getUserId(), loginUser.getUserRole());
+		String accessToken = jwtUtil.createAccessToken(loginUser.getUserId(), loginUser.getUserRole());
+		
 		String refreshToken = jwtUtil.createRefreshToken();
 		
 		Date refreshTokenDeadLine = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7);

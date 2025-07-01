@@ -34,10 +34,9 @@ public class JWTUtil {
 	}
 	
 	/* AccessToken 생성 */
-	public String createAccessToken(String userNo, String userId, String userRole) {
+	public String createAccessToken(String userId, String userRole) {
 		return Jwts.builder()
-				.subject(userNo.toString())
-				.claim("userId", userId)
+				.subject(userId)
 				.claim("userRole", userRole)
 				.issuedAt(new Date())
 				.expiration(new Date(System.currentTimeMillis() + accessTokenDeadLine))
@@ -56,20 +55,20 @@ public class JWTUtil {
 	}
 	
 	public String extractUserId(String token) {
-	    return extractAllClaims(token).get("userId", String.class);
+	    return parseJwt(token).get("userId", String.class);
 	}
 
 	public String extractUserRole(String token) {
-	    return extractAllClaims(token).get("userRole", String.class);
+	    return parseJwt(token).get("userRole", String.class);
 	}
 
 	public String extractUserNo(String token) {
-	    return extractAllClaims(token).getSubject();
+	    return parseJwt(token).getSubject();
 	}
 
 	public boolean isTokenValid(String token) {
 	    try {
-	        extractAllClaims(token);
+	    	parseJwt(token);
 	        return true;
 	    } catch (JwtException e) {
 	        log.error("유효하지 않은 토큰입니다: {}", e.getMessage());
@@ -77,7 +76,7 @@ public class JWTUtil {
 	    }
 	}
 
-	private Claims extractAllClaims(String token) {
+	public Claims parseJwt(String token) {
 	    return Jwts.parser()
 	            .verifyWith(key)
 	            .build()
