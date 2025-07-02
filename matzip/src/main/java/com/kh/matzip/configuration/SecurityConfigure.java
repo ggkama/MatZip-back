@@ -46,6 +46,7 @@ public class SecurityConfigure {
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
+                .requestMatchers("/uploads/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 삽입

@@ -57,8 +57,6 @@ public class NoticeController {
     public ResponseEntity<String> insertNotice(
         @AuthenticationPrincipal CustomUserDetails user,
         @RequestBody @Valid NoticeWriteFormDTO form) {
-
-
         form.setUserNo(user.getUserNo());
 
         noticeService.insertNotice(form);
