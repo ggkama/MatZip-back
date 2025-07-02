@@ -14,6 +14,7 @@ import com.kh.matzip.global.enums.ResponseCode;
 import com.kh.matzip.global.error.exceptions.AuthenticateFailException;
 import com.kh.matzip.global.error.exceptions.DuplicateDataException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
+import com.kh.matzip.global.error.exceptions.UserAlreadyDeletedException;
 import com.kh.matzip.member.model.dao.MemberMapper;
 import com.kh.matzip.member.model.dto.LoginDTO;
 import com.kh.matzip.member.model.dto.MemberDTO;
@@ -65,6 +66,14 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public LoginDTO login(MemberDTO memberDTO) {
 		MemberDTO findUser = memberMapper.findByUserId(memberDTO.getUserId());
+		
+		if (findUser == null) {
+	        throw new InvalidAccessException(ResponseCode.INVALID_USERDATA, "아이디 또는 비밀번호를 잘못 입력하셨습니다.");
+	    }
+
+	    if ("Y".equals(findUser.getIsDeleted())) {
+	        throw new UserAlreadyDeletedException(ResponseCode.USER_IS_DELETED, "이미 탈퇴 처리된 회원입니다.");
+	    }
 		
 		Authentication authentication = null;
 		

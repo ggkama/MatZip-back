@@ -21,6 +21,7 @@ import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
 import com.kh.matzip.global.error.exceptions.ReviewAccessDeniedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotFoundException;
+import com.kh.matzip.global.error.exceptions.UserAlreadyDeletedException;
 import com.kh.matzip.global.response.ApiResponse;
 
 import jakarta.validation.ConstraintViolationException;
@@ -132,4 +133,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleFileTypeNotAllowedException(FileTypeNotAllowedException e) {
     return makeResponseEntity(ResponseCode.UNSUPPORTED_MEDIA_TYPE, e.getMessage(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
+    
+    // 이미 탈퇴한 사용자
+    @ExceptionHandler(UserAlreadyDeletedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserAlreadyDeletedException(UserAlreadyDeletedException e) {
+        return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+   
+
+    
 }

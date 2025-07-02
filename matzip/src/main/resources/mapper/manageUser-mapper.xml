@@ -4,6 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.matzip.admin.manageUser.model.dao.ManageUserMapper">
 
+	<!-- 회원 리스트 조회 -> 회원 상세 페이지 -> 회원 탈퇴 처리 -->
 	<select id="selectUserList" resultType="com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO">
 		SELECT 
 			USER_NO,
@@ -23,6 +24,33 @@
 			ROWS ONLY
 	</select>
 	
+	<select id="selectUserDetail" resultType="com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO">
+		SELECT 
+			USER_NO,
+			USER_ID,
+			USER_NAME,
+			USER_NICKNAME,
+			USER_PHONE,
+			USER_ROLE,
+			IS_DELETED,
+			ENROLL_DATE
+		FROM
+			TB_USER
+		WHERE
+			USER_NO = #{userNo}
+	</select>
+	
+	<update id="updateStatusUser" parameterType="Long">
+		UPDATE
+			TB_USER
+		SET
+			IS_DELETED = 'Y',
+			MODIFIED_DATE = SYSDATE
+		WHERE
+			USER_NO = #{userNo}
+	</update>
+	
+	<!-- 사장님 권한 신청 리스트 조회 -> 사장님 신청 항목 상세 조회 -> 권한 변경 -->
 	<select id="selectOwnerList" resultType="com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO">
 		SELECT 
 			U.USER_NO,
@@ -46,6 +74,26 @@
 		  ROWS ONLY
 	</select>
 	
+	<select id="selectOwnerDetail" resultType="com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO">
+		SELECT 
+			U.USER_NO,
+			U.USER_ID,
+			U.USER_NAME,
+			U.USER_ROLE,
+			U.IS_DELETED,
+			U.ENROLL_DATE
+		FROM
+			TB_USER U
+		  LEFT JOIN
+		  	TB_OWNER O
+		  ON
+		  	U.USER_NO = O.USER_NO
+		ORDER BY
+			O.REQUEST_DATE DESC
+		WHERE
+			USER_NO = #{userNo}
+	</select>
+	
 	<select id="selectOwner" resultType="int">
 		SELECT
 			COUNT(USER_NO)
@@ -54,15 +102,6 @@
 		WHERE
 			USER_ROLE = ROLE_OWNER
 	</select>
-	
-	<update id="updateStatusUser">
-		UPDATE
-			TB_USER
-		SET
-			IS_DELETED = 'Y'
-		WHERE
-			USER_NO = #{userNo}
-	</update>
 
 
 </mapper>

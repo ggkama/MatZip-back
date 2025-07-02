@@ -1,8 +1,6 @@
 package com.kh.matzip.member.model.service;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -12,7 +10,9 @@ import com.kh.matzip.member.model.vo.RefreshToken;
 import com.kh.matzip.member.util.JWTUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
@@ -25,17 +25,26 @@ public class TokenServiceImpl implements TokenService {
 		
 		String accessToken = jwtUtil.createAccessToken(loginUser.getUserId(), loginUser.getUserRole());
 		
-		String refreshToken = jwtUtil.createRefreshToken();
+		// refreshToken이 있는지 확인 후 생성하기 위함
+		RefreshToken existToken = tokenMapper.selectByUserNo(loginUser.getUserNo());
+		String refreshToken = null;
 		
-		Date refreshTokenDeadLine = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7);
-		
-		RefreshToken token = RefreshToken.builder()
-				.userNo(loginUser.getUserNo())
-                .refreshToken(refreshToken)
-                .expiredDate(refreshTokenDeadLine)
-                .build();
+		if(existToken == null) {
+			refreshToken = jwtUtil.createRefreshToken();
+			
+			Date refreshTokenDeadLine = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7);
+			
+			RefreshToken token = RefreshToken.builder()
+					.userNo(loginUser.getUserNo())
+	                .refreshToken(refreshToken)
+	                .expiredDate(refreshTokenDeadLine)
+	                .build();
 
-        tokenMapper.saveToken(token);
+			tokenMapper.saveToken(token);
+			
+		} else {
+			refreshToken = existToken.getRefreshToken();
+		}
         
         loginUser.setAccessToken(accessToken);
         loginUser.setRefreshToken(refreshToken);
@@ -51,6 +60,16 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	public RefreshToken findByRefreshToken(String token) {
 		return tokenMapper.selectByToken(token);
+	}
+
+	@Override
+	public void deleteToken(Long userNo) {
+		tokenMapper.deleteToken(userNo);
+	}
+
+	@Override
+	public void deleteRefreshToken(Date expiredDate) {
+		tokenMapper.deleteRefreshToken(expiredDate);
 	}
 
 }
