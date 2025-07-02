@@ -3,6 +3,8 @@ package com.kh.matzip.store.model.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,12 @@ public class StoreDTO {
     private List<String> menuList; //메뉴리스트
     private String openTime;
     private String closeTime;
+
+    private List<String> imageList;
+    
+
+    private Date startDate;
+    private Date endDate;
 
     private Date createDate;
     private Date modifyDate;

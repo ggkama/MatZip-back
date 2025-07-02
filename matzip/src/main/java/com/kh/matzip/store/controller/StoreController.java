@@ -1,11 +1,17 @@
 package com.kh.matzip.store.controller;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,26 +29,50 @@ public class StoreController {
 
  private final StoreService storeService;
     
-    
-    @PostMapping
+   @PostMapping("/write")
     public ResponseEntity<String> insertStore(
-            @AuthenticationPrincipal CustomUserDetails user,  // 인증된 사용자 정보
-            @RequestPart("storeDto") StoreDTO storeDto,  // JSON 데이터 받기 (FormData)
-            @RequestPart("images") MultipartFile[] images  // 파일 배열 받기 (FormData)
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestPart("storeDto") StoreDTO storeDto,
+            @RequestPart(value = "images", required = false) MultipartFile[] images
     ) {
         // 서비스로 전달하여 매장 등록
-
-        CustomUserDetails user = null;
-        storeService.insertStore(user, storeDto, images);
+        storeService.insertStore(user, storeDto, images != null ? images : new MultipartFile[0]);
         return ResponseEntity.ok("매장이 등록되었습니다.");
     }
 
-   @GetMapping("/api/owner/store/check")
-    public ResponseEntity<Boolean> checkStoreExists(@RequestParam Long userNo) {
-        boolean exists = storeService.existsStoreByUserNo(userNo);
-        return ResponseEntity.ok(exists);
-    }
-    
+   @GetMapping("/check")
+        public ResponseEntity<Boolean> checkStoreExists(@AuthenticationPrincipal CustomUserDetails user) {
+            boolean exists = storeService.existsStoreByUserNo(user.getUserNo());
+            return ResponseEntity.ok(exists);
+        }
 
+    @GetMapping
+    public ResponseEntity<StoreDTO> getStoreInfo(@AuthenticationPrincipal CustomUserDetails user) {
+        StoreDTO store = storeService.getStoreByUserNo(user.getUserNo());
+        if (store == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(store);
+    }
+
+   @PutMapping("/update")
+    public ResponseEntity<String> updateStore(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestPart("storeDto") StoreDTO storeDto,
+            @RequestPart(value = "images", required = false) MultipartFile[] images,
+            @RequestPart(value = "deletedImagePaths", required = false) List<String> deletedImagePaths,
+            @RequestPart(value = "changedOldImages", required = false) List<String> changedOldImages,
+            @RequestPart(value = "changedNewImages", required = false) List<MultipartFile> changedNewImages
+    ) {
+        storeService.updateStore(
+            user,
+            storeDto,
+            images,
+            deletedImagePaths != null ? deletedImagePaths : Collections.emptyList(),
+            changedOldImages != null ? changedOldImages : Collections.emptyList(),
+            changedNewImages != null ? changedNewImages : Collections.emptyList()
+        );
+        return ResponseEntity.ok("매장이 수정되었습니다.");
+    }
 
 }
