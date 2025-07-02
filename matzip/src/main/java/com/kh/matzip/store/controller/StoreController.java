@@ -31,7 +31,6 @@ public class StoreController {
             @RequestPart("images") MultipartFile[] images  // 파일 배열 받기 (FormData)
     ) {
         // 서비스로 전달하여 매장 등록
-
         CustomUserDetails user = null;
         storeService.insertStore(user, storeDto, images);
         return ResponseEntity.ok("매장이 등록되었습니다.");
