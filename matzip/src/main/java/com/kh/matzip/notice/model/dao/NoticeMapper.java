@@ -27,6 +27,6 @@ public interface NoticeMapper {
     int deleteNotice(Long noticeNo);
 
     // 글 전체 개수조회
-    int selectNoticeCount(Map<String, String> pageInfo);
+    long selectNoticeCount(Map<String, String> pageInfo);
     
 }

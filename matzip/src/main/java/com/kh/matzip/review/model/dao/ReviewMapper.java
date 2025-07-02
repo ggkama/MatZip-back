@@ -31,7 +31,7 @@ public interface ReviewMapper {
     int deleteReview(Long reviewNo);
 
     // 글 전체 개수조회
-    int selectReviewCount(Map<String, String> pageInfo);
+    long selectReviewCount(Map<String, String> pageInfo);
 
     // 이미지 등록
     int insertReviewImage(ReviewImage image);

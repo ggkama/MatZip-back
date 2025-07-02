@@ -20,6 +20,7 @@ public class ReviewDTO {
     private  Long reviewNo;
     private  Long reservationNo;
     private Long userNo;
+    private Long storeNo;
 
     @NotBlank
     private String reviewContent;

@@ -52,28 +52,32 @@ public class NoticeController {
 
     // 공지사항 작성
     // writeForm 사용
-    @PreAuthorize("hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/write")
     public ResponseEntity<String> insertNotice(
         @AuthenticationPrincipal CustomUserDetails user,
         @RequestBody @Valid NoticeWriteFormDTO form) {
 
+
         form.setUserNo(user.getUserNo());
+
         noticeService.insertNotice(form);
         return ResponseEntity.status(HttpStatus.CREATED).body("공지사항이 등록되었습니다.");
     }
 
     // 공지사항 수정
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping
+    @PutMapping("/{noticeNo}")
     public ResponseEntity<String> updateNotice(
            @PathVariable Long noticeNo,
            @AuthenticationPrincipal CustomUserDetails user,
            @RequestBody @Valid NoticeWriteFormDTO form){
 
-            form.setUserNo(user.getUserNo());
-            noticeService.updateNotice(noticeNo, form);
-            return ResponseEntity.ok("공지사항이 수정되었습니다.");
+
+        form.setUserNo(user.getUserNo());
+    
+        noticeService.updateNotice(noticeNo, form);
+        return ResponseEntity.ok("공지사항이 수정되었습니다.");
            }
 
     @PreAuthorize("hasRole('ADMIN')")
