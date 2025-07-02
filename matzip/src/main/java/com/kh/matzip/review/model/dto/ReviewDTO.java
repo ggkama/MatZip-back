@@ -21,6 +21,8 @@ public class ReviewDTO {
     private  Long reservationNo;
     private Long userNo;
     private Long storeNo;
+    private String storeName;
+    private String reviewImageUrl;
 
     @NotBlank
     private String reviewContent;

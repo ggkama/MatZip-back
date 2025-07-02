@@ -7,13 +7,13 @@
 
     <sql id="noticeSelect">
         SELECT
-            N.NOTICE_NO      noticeNo,
-            N.USER_NO        userNo,
-            N.NOTICE_TITLE   noticeTitle,
-            N.NOTICE_CONTENT noticeContent,
-            N.CREATE_DATE    createDate,
-            U.USER_NO        userNo,
-            U.USER_NICKNAME  userNickname
+            N.NOTICE_NO      AS noticeNo,
+            N.USER_NO        AS writerUserNo,
+            N.NOTICE_TITLE   AS noticeTitle,
+            N.NOTICE_CONTENT AS noticeContent,
+            N.CREATE_DATE    AS createDate,
+            U.USER_NO        AS userNo,
+            U.USER_NAME      AS userName
         FROM
             TB_NOTICE N
         JOIN

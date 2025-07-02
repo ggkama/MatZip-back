@@ -15,7 +15,7 @@
             R.REVIEW_CONTENT reviewContent,
             R.STORE_GRADE    storeGrade,
             R.REVIEW_DATE    createDate,
-            RI.IMAGE         image,
+            RI.IMAGE         reviewImageUrl,
             RI.IMAGE_NO      imageNo
         FROM TB_REVIEW R
         LEFT JOIN TB_REVIEW_IMAGE RI
@@ -24,12 +24,21 @@
 
     <!-- 내 리뷰 리스트 조회 -->
     <select id="selectMyReviewList" resultType="com.kh.matzip.review.model.dto.ReviewDTO" parameterType="map">
-    SELECT *
-    FROM TB_REVIEW
-    WHERE USER_NO = #{userNo}
-      AND IS_DELETED = 'N'
-    ORDER BY REVIEW_DATE DESC
+    SELECT 
+        R.REVIEW_NO      reviewNo,
+        R.REVIEW_CONTENT reviewContent,
+        R.STORE_GRADE    storeGrade,
+        R.REVIEW_DATE    createDate,
+        S.STORE_NAME     storeName,
+        RI.IMAGE         reviewImageUrl
+    FROM TB_REVIEW R
+    JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+    LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
+    WHERE R.USER_NO = #{userNo}
+        AND R.IS_DELETED = 'N'
+    ORDER BY R.REVIEW_DATE DESC
     </select>
+    
 
     <!-- 내 리뷰 상세 조회 -->
     <select id="selectMyReviewDetail"
