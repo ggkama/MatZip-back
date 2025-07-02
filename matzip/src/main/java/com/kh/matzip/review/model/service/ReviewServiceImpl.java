@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
         pageInfo.put("size", String.valueOf(size));
 
         List<ReviewDTO> reviewList = reviewMapper.selectMyReviewList(pageInfo);
-        int totalCount = reviewMapper.selectReviewCount(pageInfo);
+        Long totalCount = reviewMapper.selectReviewCount(pageInfo);
 
         Map<String, Object> result = new HashMap<>();
         result.put("content", reviewList);
@@ -61,6 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setUserNo(userNo);
         review.setReviewContent(form.getReviewContent());
         review.setStoreGrade(form.getStoreGrade());
+        review.setStoreNo(form.getStoreNo());
 
         reviewMapper.insertReview(review); // review_no는 DB에서 시퀀스로 생성됨
 
@@ -84,6 +85,9 @@ public class ReviewServiceImpl implements ReviewService {
         review.setReviewNo(reviewNo);
         review.setReviewContent(form.getReviewContent());
         review.setStoreGrade(form.getStoreGrade());
+        review.setReservationNo(form.getReservationNo());
+        review.setStoreNo(form.getStoreNo());
+        
 
         reviewMapper.updateReview(review);
 

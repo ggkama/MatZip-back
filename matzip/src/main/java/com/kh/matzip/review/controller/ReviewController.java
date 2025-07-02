@@ -5,16 +5,15 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,7 +49,7 @@ public class ReviewController {
     }
 
     //내 리뷰 상세 조회
-    @GetMapping("/myreview/{reviewNo}")
+    @GetMapping("/myreview/detail/{reviewNo}")
     public ResponseEntity<List<ReviewDTO>> getMyReviewDetail(
         @AuthenticationPrincipal CustomUserDetails user,
         @PathVariable Long reviewNo
@@ -68,28 +67,21 @@ public class ReviewController {
 
     //리뷰 작성
     //@PreAuthorize("hasRole('USER')")
-    @PreAuthorize("hasRole('USER')")
     @PostMapping("/write")
     public ResponseEntity<String> writeReview(
         @AuthenticationPrincipal CustomUserDetails user,
-        @RequestParam("reservationNo") Long reservationNo,
-        @RequestParam("reviewContent") String reviewContent,
-        @RequestParam("storeGrade") Double storeGrade,
+        //@RequestPart("data") @Valid ReviewWriteFormDTO form,
+        @ModelAttribute @Valid ReviewWriteFormDTO form,
         @RequestParam(name = "files", required = false) List<MultipartFile> files
-        ) {
-    if (files != null && files.size() > 5) {
-        return ResponseEntity.badRequest().body("이미지는 최대 5장까지 업로드 가능합니다.");
+    ) {
+        if (files != null && files.size() > 5) {
+            return ResponseEntity.badRequest().body("이미지는 최대 5장까지 업로드 가능합니다.");
+        }
+        // log.info("user 정보: {}", user);
+        reviewService.insertReview(user.getUserNo(), form, files);
+        return ResponseEntity.status(HttpStatus.CREATED).body("리뷰 작성 완료");
     }
 
-    ReviewWriteFormDTO form = ReviewWriteFormDTO.builder()
-        .reservationNo(reservationNo)
-        .reviewContent(reviewContent)
-        .storeGrade(storeGrade)
-        .build();
-
-    reviewService.insertReview(user.getUserNo(), form, files);
-    return ResponseEntity.status(HttpStatus.CREATED).body("리뷰 작성 완료");
-}
 
 
     //리뷰 수정
@@ -97,8 +89,8 @@ public class ReviewController {
     public ResponseEntity<String> updateReview(
         @AuthenticationPrincipal CustomUserDetails user,
         @PathVariable Long reviewNo,
-        @RequestPart("data") @Valid ReviewWriteFormDTO form,
-        @RequestPart(name = "files", required = false) List<MultipartFile> files
+        @ModelAttribute @Valid ReviewWriteFormDTO form,
+        @RequestParam(name = "files", required = false) List<MultipartFile> files
     ) {
         if (files != null && files.size() > 5) {
             return ResponseEntity.badRequest().body("이미지는 최대 5장까지 업로드 가능합니다.");
@@ -109,7 +101,7 @@ public class ReviewController {
     }
 
     //리뷰 삭제
-    @DeleteMapping("/{reviewNo}")
+    @DeleteMapping("/delete/{reviewNo}")
     public ResponseEntity<String> deleteReview(
         @AuthenticationPrincipal CustomUserDetails user,
         @PathVariable Long reviewNo

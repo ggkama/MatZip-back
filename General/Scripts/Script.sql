@@ -193,6 +193,8 @@ INSERT INTO TB_NOTICE (
 
 ALTER TABLE TB_REVIEW ADD IS_DELETED CHAR(1) DEFAULT 'N' NOT NULL;
 
+ALTER TABLE TB_RESERVATION ADD STATUS CHAR(1) DEFAULT 'Y' NOT NULL;
+
 COMMIT;
 
 SELECT * FROM TB_TOKEN;
@@ -213,6 +215,8 @@ SELECT * FROM TB_STORE;
 
 SELECT * FROM TB_REVIEW;
 
+SELECT * FROM TB_RESERVATION;
+
 CREATE SEQUENCE SEQ_TB_REVIEW_NO
 START WITH 1
 INCREMENT BY 1
@@ -229,4 +233,53 @@ INCREMENT BY 1
 NOCACHE
 NOCYCLE;
 
+ALTER TABLE TB_REVIEW ADD STORE_NO NUMBER NOT NULL;
+
+
+INSERT INTO TB_REVIEW (
+    REVIEW_NO, 
+    RESERVATION_NO, 
+    STORE_NO, 
+    USER_NO, 
+    REVIEW_CONTENT, 
+    STORE_GRADE, 
+    REVIEW_DATE
+) VALUES (
+    SEQ_REVIEW_NO.NEXTVAL,     
+    1,                         -- 유효한 예약 번호 (TB_RESERVATION에 존재하는 번호)
+    1,                         -- 유효한 가게 번호 (TB_STORE에 존재하는 번호)
+    21,                        -- 유효한 유저 번호 (TB_USER에 존재하는 번호)
+    '음식이 맛있어요.',         -- 리뷰 내용
+    4.5,                       -- 평점
+    SYSDATE                   -- 작성일
+);
+
+
+
+INSERT INTO TB_RESERVATION (
+    RESERVATION_NO,
+    USER_NO,
+    STORE_NO,
+    RESERVATION_DATE,
+    RESERVATION_TIME,
+    PERSON_COUNT,
+    STATUS,
+    CREATED_DATE
+) VALUES (
+    SEQ_RESERVATION_NO.NEXTVAL,
+    21,                     -- USER_NO
+    22,                      -- STORE_NO
+    TO_DATE('2025-07-02', 'YYYY-MM-DD'),  -- 예약일
+    '18:00',                -- 예약 시간
+    2,                      -- 예약 인원
+    'Y',                    -- 상태 (예: Y=완료, N=취소 등)
+    SYSDATE                 -- 등록일
+);
+
+
+CREATE SEQUENCE SEQ_RESERVATION_NO
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
 
