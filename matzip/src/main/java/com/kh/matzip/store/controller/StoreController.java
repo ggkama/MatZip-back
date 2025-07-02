@@ -1,6 +1,7 @@
 package com.kh.matzip.store.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +23,10 @@ public class StoreController {
 
  private final StoreService storeService;
     
-    //@PreAuthorize("hasRole('ROLE_OWNER')")  // OWNER 역할만 접근 가능
+    
     @PostMapping
     public ResponseEntity<String> insertStore(
-            // @AuthenticationPrincipal CustomUserDetails user,  // 인증된 사용자 정보
+            @AuthenticationPrincipal CustomUserDetails user,  // 인증된 사용자 정보
             @RequestPart("storeDto") StoreDTO storeDto,  // JSON 데이터 받기 (FormData)
             @RequestPart("images") MultipartFile[] images  // 파일 배열 받기 (FormData)
     ) {

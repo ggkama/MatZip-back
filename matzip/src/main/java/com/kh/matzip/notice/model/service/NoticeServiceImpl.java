@@ -31,7 +31,7 @@ public class NoticeServiceImpl implements NoticeService {
 
 
     @Override
-public Map<String, Object> selectNoticeList(int pageNo, int size) {
+    public Map<String, Object> selectNoticeList(int pageNo, int size) {
     if (pageNo < 0 || size < 1) {
         throw new InvalidFormatException(ResponseCode.BAD_REQUEST, "pageNo 또는 size 값이 올바르지 않습니다.");
     }
