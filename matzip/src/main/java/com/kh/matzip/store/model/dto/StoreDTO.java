@@ -29,6 +29,12 @@ public class StoreDTO {
     private String openTime;
     private String closeTime;
 
+    private List<String> imageList;
+    
+
+    private Date startDate;  
+    private Date endDate;   
+
     private Date createDate;
     private Date modifyDate;
     
