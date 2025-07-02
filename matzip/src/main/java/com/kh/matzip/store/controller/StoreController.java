@@ -29,7 +29,6 @@ public class StoreController {
 
  private final StoreService storeService;
     
-    //@PreAuthorize("hasRole('ROLE_OWNER')")  // OWNER 역할만 접근 가능
    @PostMapping("/write")
     public ResponseEntity<String> insertStore(
             @AuthenticationPrincipal CustomUserDetails user,
