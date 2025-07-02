@@ -10,47 +10,24 @@
       SELECT SEQ_STORE_NO.NEXTVAL FROM DUAL
     </selectKey>
     INSERT INTO TB_STORE 
-                   (
-                     STORE_NO
-                   , USER_NO
-                   , STORE_NAME
-                   , STORE_PHONE
-                   , STORE_ADDRESS_1
-                   , STORE_ADDRESS_2
-                   , CATEGORY_ADDRESS
-                   , CATEGORY_FOODTYPE
-                   , OPEN_TIME
-                   , CLOSE_TIME
-                   , CREATE_DATE
-                   , MODIFIED_DATE
-                   , COUNT
-                   )
-         VALUES (
-                   #{storeNo}
-                 , #{userNo}
-                 , #{storeName}
-                 , #{storePhone}
-                 , #{storeAddress1}
-                 , #{storeAddress2}
-                 , #{categoryAddress}
-                 , #{categoryFoodtype}
-                 , #{openTime}
-                 , #{closeTime}
-                 , SYSDATE
-                 , SYSDATE
-                 , #{count}
-     )
+      (
+        STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
+        CATEGORY_ADDRESS, CATEGORY_FOODTYPE, OPEN_TIME, CLOSE_TIME,
+        CREATE_DATE, MODIFIED_DATE, COUNT
+      )
+    VALUES (
+      #{storeNo}, #{userNo}, #{storeName}, #{storePhone}, #{storeAddress1}, #{storeAddress2},
+      #{categoryAddress}, #{categoryFoodtype}, #{openTime}, #{closeTime},
+      SYSDATE, SYSDATE, #{count}
+    )
   </insert>
 
-   <!-- 이미지 등록 -->
+  <!-- 이미지 등록 -->
   <insert id="insertStoreImage" parameterType="Map">
-    <selectKey keyProperty="imageNo" resultType="long" order="BEFORE">
-      SELECT SEQ_STORE_IMAGE.NEXTVAL FROM DUAL
-    </selectKey>
     INSERT INTO TB_STORE_IMAGE (
       IMAGE_NO, STORE_NO, IMAGE
     ) VALUES (
-      #{imageNo}, #{storeNo}, #{image}
+      SEQ_STORE_IMAGE.NEXTVAL, #{storeNo}, #{image}
     )
   </insert>
 
@@ -59,26 +36,16 @@
   </select>
 
   <delete id="deleteStoreImageByPath">
-    DELETE FROM TB_STORE_IMAGE WHERE STORE_NO = #{storeNo} AND IMAGE = #{image}
+    DELETE FROM TB_STORE_IMAGE WHERE STORE_NO = #{param1} AND IMAGE = #{param2}
   </delete>
 
   <!-- 편의시설 등록 -->
-  <insert id="insertStoreConvenience">
-    <selectKey keyProperty="convenienceNo" resultType="long" order="BEFORE">
-      SELECT SEQ_CONVENIENCE_NO.NEXTVAL FROM DUAL
-    </selectKey>
-    INSERT INTO 
-      TB_CONVENIENCE 
-                    (
-                      CONVENIENCE_NO
-                    , STORE_NO
-                    , CONVENIENCE
-                    )
-            VALUES (
-                      #{convenienceNo}
-                    , #{storeNo}
-                    , #{convenience}
-                    )
+  <insert id="insertStoreConvenience" parameterType="Map">
+    INSERT INTO TB_CONVENIENCE (
+      CONVENIENCE_NO, STORE_NO, CONVENIENCE
+    ) VALUES (
+      SEQ_CONVENIENCE_NO.NEXTVAL, #{storeNo}, #{convenience}
+    )
   </insert>
 
   <select id="selectConveniencesByStoreNo" resultType="string">
@@ -92,11 +59,9 @@
   <!-- 매장 쉬는 날 등록 -->
   <insert id="insertDayOff" parameterType="Map">
     INSERT INTO TB_OFF_DAY (
-      STORE_NO,
-      OFF_DAY
+      STORE_NO, OFF_DAY
     ) VALUES (
-      #{storeNo},
-      #{offDay}
+      #{storeNo}, #{offDay}
     )
   </insert>
 
@@ -109,27 +74,16 @@
   </delete>
 
   <!-- 임시 쉬는 날 등록 -->
-  <insert id="insertShutdownDay">
-    <selectKey keyProperty="dayNo" resultType="long" order="BEFORE">
-      SELECT SEQ_SHUT_DOWN_NO.NEXTVAL FROM DUAL
-    </selectKey>
+  <insert id="insertShutdownDay" parameterType="Map">
     INSERT INTO TB_SHUT_DOWN_DAY (
-      DAY_NO,
-      STORE_NO,
-      START_DATE,
-      END_DATE
+      DAY_NO, STORE_NO, START_DATE, END_DATE
     ) VALUES (
-      #{dayNo},
-      #{storeNo},
-      #{startDate},
-      #{endDate}
+      SEQ_SHUT_DOWN_NO.NEXTVAL, #{storeNo}, #{startDate}, #{endDate}
     )
   </insert>
 
- <select id="selectShutdownDayByStoreNo" resultType="map">
-    SELECT DAY_NO, START_DATE, END_DATE
-    FROM TB_SHUT_DOWN_DAY
-    WHERE STORE_NO = #{storeNo}
+  <select id="selectShutdownDayByStoreNo" resultType="map">
+    SELECT DAY_NO, START_DATE, END_DATE FROM TB_SHUT_DOWN_DAY WHERE STORE_NO = #{storeNo}
   </select>
 
   <delete id="deleteShutdownDayByStoreNo">
@@ -137,18 +91,11 @@
   </delete>
 
   <!-- 메뉴 등록 -->
-  <insert id="insertMenu" parameterType="map">
-    <selectKey keyProperty="menuNo" resultType="long" order="BEFORE">
-      SELECT SEQ_MENU_NO.NEXTVAL FROM DUAL
-    </selectKey>
+  <insert id="insertMenu" parameterType="Map">
     INSERT INTO TB_MENU (
-      MENU_NO,
-      STORE_NO,
-      MENU
+      MENU_NO, STORE_NO, MENU
     ) VALUES (
-      #{menuNo},
-      #{storeNo},
-      #{menuName}
+      SEQ_MENU_NO.NEXTVAL, #{storeNo}, #{menuName}
     )
   </insert>
 
@@ -162,43 +109,27 @@
 
   <!-- 매장 중복확인 -->
   <select id="countStoreByOwnerAndName" resultType="int">
-    SELECT COUNT(STORE_NO)
-    FROM TB_STORE
-    WHERE USER_NO = #{userNo}
-      AND STORE_NAME = #{storeName}
-      AND IS_DELETED = 'N' 
+    SELECT COUNT(STORE_NO) FROM TB_STORE
+    WHERE USER_NO = #{userNo} AND STORE_NAME = #{storeName} AND IS_DELETED = 'N'
   </select>
 
   <!-- 등록 매장 존재 여부 -->
   <select id="existsStoreByUserNo" resultType="boolean">
-    SELECT CASE WHEN COUNT(1) > 0 THEN 1 ELSE 0 END
-    FROM TB_STORE
-    WHERE USER_NO = #{userNo}
-      AND IS_DELETED = 'N'
+    SELECT CASE WHEN COUNT(1) > 0 THEN 1 ELSE 0 END FROM TB_STORE
+    WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
   </select>
 
   <select id="selectStoreByUserNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
     SELECT 
-      STORE_NO,
-      USER_NO,
-      STORE_NAME,
-      STORE_PHONE,
-      STORE_ADDRESS_1,
-      STORE_ADDRESS_2,
-      CATEGORY_ADDRESS,
-      CATEGORY_FOODTYPE,
-      OPEN_TIME,
-      CLOSE_TIME,
-      CREATE_DATE,
-      MODIFIED_DATE,
-      COUNT
+      STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
+      CATEGORY_ADDRESS, CATEGORY_FOODTYPE, OPEN_TIME, CLOSE_TIME,
+      CREATE_DATE, MODIFIED_DATE, COUNT
     FROM TB_STORE
-    WHERE USER_NO = #{userNo}
+    WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
   </select>
 
   <update id="updateStore" parameterType="com.kh.matzip.store.model.dto.StoreDTO">
-    UPDATE TB_STORE
-    SET 
+    UPDATE TB_STORE SET 
       STORE_NAME = #{storeName},
       STORE_PHONE = #{storePhone},
       STORE_ADDRESS_1 = #{storeAddress1},
@@ -212,37 +143,33 @@
     WHERE STORE_NO = #{storeNo}
   </update>
 
-   <!-- 이미지 수정 -->
+  <!-- 이미지 수정 -->
   <update id="updateStoreImage">
-    UPDATE TB_STORE_IMAGE
-    SET IMAGE = #{newImage}
+    UPDATE TB_STORE_IMAGE SET IMAGE = #{newImage}
     WHERE STORE_NO = #{storeNo} AND IMAGE = #{oldImage}
   </update>
 
   <!-- 편의시설 수정 -->
   <update id="updateStoreConvenience">
-    UPDATE TB_CONVENIENCE
-    SET CONVENIENCE = #{newConvenience}
+    UPDATE TB_CONVENIENCE SET CONVENIENCE = #{newConvenience}
     WHERE STORE_NO = #{storeNo} AND CONVENIENCE = #{oldConvenience}
   </update>
 
   <!-- 쉬는 날 수정 -->
   <update id="updateDayOff">
-    UPDATE TB_OFF_DAY
-    SET OFF_DAY = #{newOffDay}
+    UPDATE TB_OFF_DAY SET OFF_DAY = #{newOffDay}
     WHERE STORE_NO = #{storeNo} AND OFF_DAY = #{oldOffDay}
   </update>
 
   <!-- 임시 쉬는 날 수정 -->
   <update id="updateShutdownDay">
-    UPDATE TB_SHUT_DOWN_DAY
-    SET START_DATE = #{startDate}, END_DATE = #{endDate}
+    UPDATE TB_SHUT_DOWN_DAY SET START_DATE = #{startDate}, END_DATE = #{endDate}
     WHERE STORE_NO = #{storeNo} AND DAY_NO = #{dayNo}
   </update>
+
   <!-- 메뉴 수정 -->
   <update id="updateMenu">
-    UPDATE TB_MENU
-    SET MENU = #{newMenu}
+    UPDATE TB_MENU SET MENU = #{newMenu}
     WHERE STORE_NO = #{storeNo} AND MENU = #{oldMenu}
   </update>
 

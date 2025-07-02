@@ -14,5 +14,12 @@ public interface StoreService {
 
     StoreDTO getStoreByUserNo(Long userNo);
 
-    void updateStore(CustomUserDetails user, StoreDTO storeDto, MultipartFile[] images, List<String> deletedImagePaths);
+    void updateStore(
+        CustomUserDetails user,
+        StoreDTO storeDto,
+        MultipartFile[] images,
+        List<String> deletedImagePaths,
+        List<String> changedOldImages,        
+        List<MultipartFile> changedNewImages  
+    );
 }
