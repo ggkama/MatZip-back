@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.matzip.member.model.dao.ReservationMapper">
+   <insert id="insert" parameterType="com.kh.matzip.reservation.model.vo.Reservation">
+    <selectKey keyProperty="reservationNo" order="BEFORE" resultType="long">
+        SELECT PK_TB_RESERVATION.NEXTVAL FROM DUAL
+    </selectKey>
+    
+    INSERT INTO TB_RESERVATION (
+        RESERVATION_NO,
+        USER_NO,
+        STORE_NO,
+        RESERVATION_DATE,
+        RESERVATION_TIME,
+        PERSON_COUNT,
+        RESERVATION_STATUS,
+        CREATE_DATE
+    ) VALUES (
+        #{reservationNo},
+        #{userNo},
+        #{storeNo},
+        #{reservationDate},
+        #{reservationTime},
+        #{personCount},
+        #{reservationStatus},
+        SYSDATE
+    )
+    </insert>
+
+</mapper>

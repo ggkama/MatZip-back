@@ -12,7 +12,7 @@
             N.NOTICE_TITLE   noticeTitle,
             N.NOTICE_CONTENT noticeContent,
             N.CREATE_DATE    createDate,
-            U.USER_ID        userId,
+            U.USER_NO        userNo,
             U.USER_NICKNAME  userNickname
         FROM
             TB_NOTICE N

@@ -22,14 +22,13 @@
         ON R.REVIEW_NO = RI.REVIEW_NO
     </sql>
 
-    <!--  리뷰 리스트 -->
-    <select id="selectMyReviewList"
-            parameterType="map"
-            resultType="com.kh.matzip.review.model.dto.ReviewDTO">
-        <include refid="reviewSelect"/>
-        WHERE R.USER_NO = #{userNo}
-        ORDER BY R.REVIEW_DATE DESC
-        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    <!-- 내 리뷰 리스트 조회 -->
+    <select id="selectMyReviewList" resultType="com.kh.matzip.review.model.dto.ReviewDTO" parameterType="map">
+    SELECT *
+    FROM TB_REVIEW
+    WHERE USER_NO = #{userNo}
+      AND IS_DELETED = 'N'
+    ORDER BY REVIEW_DATE DESC
     </select>
 
     <!-- 내 리뷰 상세 조회 -->
@@ -96,11 +95,11 @@
     </update>
 
     <!-- 리뷰 삭제 -->
-    <delete id="deleteReview"
-            parameterType="long">
-        DELETE FROM TB_REVIEW
-        WHERE REVIEW_NO = #{reviewNo}
-    </delete>
+    <update id="deleteReview" parameterType="long">
+    UPDATE TB_REVIEW
+    SET IS_DELETED = 'Y'
+    WHERE REVIEW_NO = #{reviewNo}
+    </update>
 
     <!-- 기존 이미지 리스트 (삭제용) -->
     <select id="selectImageListByReviewNo"
@@ -111,8 +110,15 @@
         WHERE REVIEW_NO = #{reviewNo}
     </select>
 
+    <!-- 이미지 url 조회 -->
+    <select id="selectReviewImageUrls" resultType="string">
+    SELECT IMAGE
+    FROM TB_REVIEW_IMAGE
+    WHERE REVIEW_NO = #{reviewNo}
+    </select>
+
     <!-- 기존 이미지 삭제 -->
-    <delete id="deleteImagesByReviewNo"
+    <delete id="deleteReviewImages"
             parameterType="long">
         DELETE FROM TB_REVIEW_IMAGE
         WHERE REVIEW_NO = #{reviewNo}

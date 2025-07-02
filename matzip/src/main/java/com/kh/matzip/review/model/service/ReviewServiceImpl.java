@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
         pageInfo.put("size", String.valueOf(size));
 
         List<ReviewDTO> reviewList = reviewMapper.selectMyReviewList(pageInfo);
-        int totalCount = reviewMapper.selectReviewCount(pageInfo);
+        Long totalCount = reviewMapper.selectReviewCount(pageInfo);
 
         Map<String, Object> result = new HashMap<>();
         result.put("content", reviewList);
@@ -55,16 +55,17 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void insertReview(Long userNo, ReviewWriteFormDTO form, List<MultipartFile> files) {
-        // 1. Review insert
+        // Review insert
         Review review = new Review();
         review.setReservationNo(form.getReservationNo());
         review.setUserNo(userNo);
         review.setReviewContent(form.getReviewContent());
         review.setStoreGrade(form.getStoreGrade());
+        review.setStoreNo(form.getStoreNo());
 
         reviewMapper.insertReview(review); // review_no는 DB에서 시퀀스로 생성됨
 
-        // 2. 이미지 insert
+        // 이미지 insert
         if (files != null) {
             for (MultipartFile file : files) {
                 String url = fileService.store(file);
@@ -84,13 +85,16 @@ public class ReviewServiceImpl implements ReviewService {
         review.setReviewNo(reviewNo);
         review.setReviewContent(form.getReviewContent());
         review.setStoreGrade(form.getStoreGrade());
+        review.setReservationNo(form.getReservationNo());
+        review.setStoreNo(form.getStoreNo());
+        
 
         reviewMapper.updateReview(review);
 
         // 기존 이미지 끌고오기
         List<String> oldImages = reviewMapper.selectReviewImageUrls(reviewNo);
-        for (String imageUrl : oldImages) {
-            fileService.deleteFile(imageUrl);
+        for (String url : oldImages) {
+            fileService.delete(url);
         }
         reviewMapper.deleteReviewImages(reviewNo);
 
@@ -111,7 +115,7 @@ public class ReviewServiceImpl implements ReviewService {
         // 기존 이미지 파일 삭제
         List<String> urls = reviewMapper.selectReviewImageUrls(reviewNo);
         for (String url : urls) {
-            fileService.deleteFile(url);
+            fileService.delete(url);
         }
 
         // DB로 가서 이미지 날리기
