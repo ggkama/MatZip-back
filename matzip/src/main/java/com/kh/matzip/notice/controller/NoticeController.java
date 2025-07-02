@@ -58,6 +58,7 @@ public class NoticeController {
         @AuthenticationPrincipal CustomUserDetails user,
         @RequestBody @Valid NoticeWriteFormDTO form) {
 
+    	log.debug("🔍 로그인된 유저 번호: {}", user.getUserNo());
         form.setUserNo(user.getUserNo());
         noticeService.insertNotice(form);
         return ResponseEntity.status(HttpStatus.CREATED).body("공지사항이 등록되었습니다.");
