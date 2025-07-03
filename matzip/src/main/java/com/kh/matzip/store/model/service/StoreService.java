@@ -22,4 +22,5 @@ public interface StoreService {
         List<String> changedOldImages,        
         List<MultipartFile> changedNewImages  
     );
+
 }

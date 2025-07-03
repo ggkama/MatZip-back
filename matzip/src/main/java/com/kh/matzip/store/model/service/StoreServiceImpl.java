@@ -16,6 +16,7 @@ import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
 import com.kh.matzip.member.model.vo.CustomUserDetails;
 import com.kh.matzip.store.model.dao.StoreMapper;
 import com.kh.matzip.store.model.dto.StoreDTO;
+import com.kh.matzip.store.vo.Store;
 import com.kh.matzip.util.file.FileService;
 
 import jakarta.transaction.Transactional;
@@ -249,4 +250,6 @@ public class StoreServiceImpl implements StoreService {
             ));
         }
     }
+
+   
 }
