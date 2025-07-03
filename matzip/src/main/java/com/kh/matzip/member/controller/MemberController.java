@@ -58,7 +58,7 @@ public class MemberController {
     public ResponseEntity<ApiResponse<?>> logout(@AuthenticationPrincipal CustomUserDetails user) {
     	
         if (user == null) {
-            log.warn("로그아웃 실패(로그인 정보가 없음");
+            log.warn("로그아웃 실패(로그인 정보가 없음）");
         }
 
         tokenService.deleteToken(user.getUserNo());

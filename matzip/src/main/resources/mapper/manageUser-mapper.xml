@@ -24,6 +24,13 @@
 			ROWS ONLY
 	</select>
 	
+	<select id="countAllUsers" resultType="int">
+		SELECT
+			COUNT(USER_NO)
+		FROM
+			TB_USER
+	</select>
+	
 	<select id="selectUserDetail" resultType="com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO">
 		SELECT 
 			USER_NO,
