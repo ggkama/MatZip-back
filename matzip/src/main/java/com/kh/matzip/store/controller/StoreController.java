@@ -68,9 +68,9 @@ public class StoreController {
             user,
             storeDto,
             images,
-            deletedImagePaths != null ? deletedImagePaths : Collections.emptyList(),
-            changedOldImages != null ? changedOldImages : Collections.emptyList(),
-            changedNewImages != null ? changedNewImages : Collections.emptyList()
+            deletedImagePaths,
+            changedOldImages,
+            changedNewImages
         );
         return ResponseEntity.ok("매장이 수정되었습니다.");
     }
