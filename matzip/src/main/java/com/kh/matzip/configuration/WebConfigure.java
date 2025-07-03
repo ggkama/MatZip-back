@@ -12,6 +12,7 @@ import org.springframework.lang.NonNull;
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         String uploadPath = "file:" + System.getProperty("user.dir").replace("\\", "/") + "/uploads/";
         System.out.println(uploadPath);
+        System.out.println(272727);
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations(uploadPath);
     }

@@ -45,7 +45,7 @@ public class SecurityConfigure {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/uploads/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/uploads/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
