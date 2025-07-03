@@ -41,11 +41,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String authorization = request.getHeader("Authorization");
         System.out.println(authorization);
-        System.out.println("머지");
+        System.err.println("방가룽");
 
         if (authorization != null && authorization.startsWith("Bearer ")) {
             String token = authorization.substring(7);
-            System.out.println("1111");
+            System.err.println("방가룽");
+
             try {
                 Claims claims = jwtUtil.parseJwt(token);
                 String userId = claims.getSubject();

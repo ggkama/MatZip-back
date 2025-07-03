@@ -18,6 +18,8 @@ public class ManageUserDTO {
 	private Long userNo;
 	private String userId;
 	private String userName;
+	private String userNickName;
+	private String userPhone;
 	private String userRole;
 	private String isDeleted;
 	private Date enrollDate;

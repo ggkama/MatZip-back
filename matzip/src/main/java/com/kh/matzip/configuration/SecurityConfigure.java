@@ -45,10 +45,11 @@ public class SecurityConfigure {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
+                .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
-                .requestMatchers("/uploads/**").permitAll()
                 .anyRequest().authenticated()
                 )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 삽입
