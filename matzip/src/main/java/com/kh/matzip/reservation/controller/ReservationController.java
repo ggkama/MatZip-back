@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +29,11 @@ public class ReservationController {
         }
         return ResponseEntity.ok(reservationInfo);
     }
-    // owner 조회/취소
+    @PostMapping
+    public ResponseEntity<?> createReservation(@RequestBody ReservationDTO reservation) {
+        reservationService.createReservation(reservation);
+        return ResponseEntity.ok().build();
+    }
+
     
 }

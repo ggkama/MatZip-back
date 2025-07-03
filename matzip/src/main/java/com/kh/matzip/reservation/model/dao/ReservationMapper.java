@@ -15,7 +15,8 @@ public interface ReservationMapper {
 
     Map<String, Object> selectShutdownDayByStoreNo(Long storeNo);
 
-    Map<String, String> selectOpenCloseTimeByStoreNo(Long storeNo);
+    Map<String, Object> selectOpenCloseTimeByStoreNo(Long storeNo);
 
     void createReservation(ReservationDTO reservation);
+    
 }

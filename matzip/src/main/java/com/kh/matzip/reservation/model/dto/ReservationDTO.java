@@ -19,6 +19,7 @@ public class ReservationDTO {
     private Long reservationNo;
     private Long userNo;
     private Long storeNo;
+    private String storeName;
     private Date reservationDate;
     private String reservationTime;
     private int  personCount;
