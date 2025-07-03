@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.kh.matzip.admin.manageUser.model.dao.ManageUserMapper;
 import com.kh.matzip.admin.manageUser.model.dto.ManageUserDTO;
+import com.kh.matzip.global.enums.ResponseCode;
+import com.kh.matzip.global.error.exceptions.EntityNotFoundException;
+import com.kh.matzip.global.error.exceptions.UserAlreadyDeletedException;
 import com.kh.matzip.util.pagenation.PagenationService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,26 +41,35 @@ public class ManageUserServiceImpl implements ManageUserService {
 		return resultList;
 	}
 
-
 	@Override
-	public Map<String, Object> getOwnerListByAdmin(int pageNo, int size) {
-		int startIndex = pagenationService.getStartIndex(pageNo, size);
+	public ManageUserDTO getUserDetailByAdmin(Long userNo) {
 		
-		Map<String, Object> param = new HashMap<>();
-		param.put("startIndex", startIndex);
-		param.put("size", size);
-		
-		List<ManageUserDTO> ownerList = manageuserMapper.selectOwnerList(param);
-		
-		Map<String, Object> resultList = new HashMap<>();
-		resultList.put("ownerList", ownerList);
-		resultList.put("pageNo", pageNo);
-		resultList.put("size", size);
-		
-		return resultList;
+		ManageUserDTO user = manageuserMapper.selectUserDetail(userNo);
+
+	    if (user == null) {
+	        throw new EntityNotFoundException(ResponseCode.USER_NOT, "회원이 없습니다.");
+	    }
+
+	    return user;
 	}
 	
-	
+	@Override
+	public void unregisterUserByAdmin(Long userNo) {
+		ManageUserDTO user = manageuserMapper.selectUserDetail(userNo);
+		
+		if(user == null) {
+			throw new EntityNotFoundException(ResponseCode.USER_NOT, "회원이 없습니다.");
+		}
+		
+		if ("Y".equals(user.getIsDeleted())) {
+	        throw new UserAlreadyDeletedException(ResponseCode.USER_IS_DELETED, "이미 탈퇴된 회원입니다.");
+	    }
+		
+		int result = manageuserMapper.updateStatusUser(userNo);
+		
+		if (result == 0) {
+	        throw new EntityNotFoundException(ResponseCode.USER_NOT, "회원이 없습니다.");
+	    }
+	}
     
-	
 }

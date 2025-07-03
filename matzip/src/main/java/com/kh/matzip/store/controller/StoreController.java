@@ -29,7 +29,6 @@ public class StoreController {
 
  private final StoreService storeService;
     
-    //@PreAuthorize("hasRole('ROLE_OWNER')")  // OWNER 역할만 접근 가능
    @PostMapping("/write")
     public ResponseEntity<String> insertStore(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -69,9 +68,9 @@ public class StoreController {
             user,
             storeDto,
             images,
-            deletedImagePaths != null ? deletedImagePaths : Collections.emptyList(),
-            changedOldImages != null ? changedOldImages : Collections.emptyList(),
-            changedNewImages != null ? changedNewImages : Collections.emptyList()
+            deletedImagePaths,
+            changedOldImages,
+            changedNewImages
         );
         return ResponseEntity.ok("매장이 수정되었습니다.");
     }

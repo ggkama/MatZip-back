@@ -3,6 +3,10 @@ spring:
     name: matzip
   profiles:
     active: private
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
   servlet:
     multipart:
