@@ -35,5 +35,5 @@ mybatis:
     jdbc-type-for-null: VARCHAR
     map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/**/*.xml
-  type-aliases-package: com.kh.matzip.member.model.vo, com.kh.matzip.member.model.dto,com.kh.matzip.mypage.model.dto, com.kh.matzip.store.model.dto
+  type-aliases-package: com.kh.matzip.member.model.vo, com.kh.matzip.member.model.dto,com.kh.matzip.mypage.model.dto, com.kh.matzip.store.model.dto, com.kh.matzip.notice.model.dto
   

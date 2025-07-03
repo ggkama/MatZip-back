@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -45,10 +46,11 @@ public class SecurityConfigure {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
                 .requestMatchers("/uploads/**").permitAll()
                 .anyRequest().authenticated()
-            )
+                )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 삽입
 
         return http.build();
