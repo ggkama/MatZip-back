@@ -1,8 +1,18 @@
 spring:
   application:
-    name:  matzip
+    name: matzip
   profiles:
     active: private
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   mail:
     host: smtp.gmail.com
@@ -16,7 +26,6 @@ spring:
           timeout: 5000
           writetimeout: 5000
           connectiontimeout: 5000
-
 server:
   port: 8080
 
@@ -26,5 +35,4 @@ mybatis:
     jdbc-type-for-null: VARCHAR
     map-underscore-to-camel-case: true
   mapper-locations: classpath:mapper/**/*.xml
-  type-aliases-package: com.kh.matzip.member.model.vo,
-                        com.kh.matzip.member.model.dto
+  type-aliases-package: com.kh.matzip.member.model.vo, com.kh.matzip.member.model.dto,com.kh.matzip.mypage.model.dto, com.kh.matzip.store.model.dto

@@ -10,6 +10,7 @@ import lombok.Value;
 public class Notice {
     private Long noticeNo;
     private Long userNo;
+    private String userName;
     private String noticeTitle;
     private String noticeContent;
     private Date createDate;

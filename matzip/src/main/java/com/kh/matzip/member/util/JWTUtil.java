@@ -53,6 +53,23 @@ public class JWTUtil {
 				.signWith(key)
 				.compact();
 	}
+
+	/* token에서 ownerNo 가져오기 */
+	
+	public Long getUserNoFromToken(String token) {
+		if (token.startsWith("Bearer ")) {
+			token = token.substring(7);
+		}
+		
+		String subject = Jwts.parser()
+				.verifyWith(key)
+				.build()
+				.parseSignedClaims(token)
+				.getPayload()
+				.getSubject(); // → userNo 들어있음
+
+		return Long.valueOf(subject);
+	}
 	
 	public String extractUserId(String token) {
 	    return parseJwt(token).get("userId", String.class);

@@ -32,24 +32,24 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public Map<String, Object> selectNoticeList(int pageNo, int size) {
-        if (pageNo < 0 || size < 1) {
-            throw new InvalidFormatException(ResponseCode.BAD_REQUEST, "pageNo 또는 size 값이 올바르지 않습니다.");
-        }
+    if (pageNo < 0 || size < 1) {
+        throw new InvalidFormatException(ResponseCode.BAD_REQUEST, "pageNo 또는 size 값이 올바르지 않습니다.");
+    }
 
-        int startIndex = pagenation.getStartIndex(pageNo, size);
+    int startIndex = pagenation.getStartIndex(pageNo, size);
 
-        Map<String, String> pageInfo = new HashMap<>();
-        pageInfo.put("startIndex", String.valueOf(startIndex));
-        pageInfo.put("size", String.valueOf(size));
+    Map<String, String> pageInfo = new HashMap<>();
+    pageInfo.put("startIndex", String.valueOf(startIndex));
+    pageInfo.put("size", String.valueOf(size));
 
-        List<NoticeDTO> noticeList = noticeMapper.selectNoticeList(pageInfo);
-        int totalCount = noticeMapper.selectNoticeCount(pageInfo);
+    List<NoticeDTO> noticeList = noticeMapper.selectNoticeList(pageInfo);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("noticeList", noticeList);
-        result.put("totalCount", totalCount);
+    long totalCount = noticeMapper.selectNoticeCount(pageInfo);
+    Map<String, Object> result = new HashMap<>();
+    result.put("noticeList", noticeList);
+    result.put("totalCount", totalCount);
 
-        return result;
+    return result;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         Notice notice = Notice.builder()
-                .noticeNo(form.getNoticeNo())
+                .noticeNo(noticeNo)
                 .noticeTitle(form.getNoticeTitle())
                 .noticeContent(form.getNoticeContent())
                 .build();
@@ -116,4 +116,3 @@ public class NoticeServiceImpl implements NoticeService {
         log.info("공지사항 삭제 완료", noticeNo);
     }
 }
-

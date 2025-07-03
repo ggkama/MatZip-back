@@ -30,7 +30,9 @@ public enum ResponseCode {
     USER_NOT("E110"),
     USER_IS_DELETED("E111"),
     
-    SERVER_ERROR("500");
+    SERVER_ERROR("500"),
+
+    STORE_SAVE_FAIL("S500"); // 매장 저장 실패를 위한 코드 추가
    
     private final String code;
 
