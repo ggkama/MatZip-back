@@ -76,5 +76,6 @@ public class StoreController {
         return ResponseEntity.ok("매장이 수정되었습니다.");
     }
 
+   
     
 }

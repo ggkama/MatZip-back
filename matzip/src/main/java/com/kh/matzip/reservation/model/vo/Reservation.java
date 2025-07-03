@@ -16,4 +16,5 @@ public class Reservation {
     private int personCount;
     private Date createDate; 
     private String status; 
+
 }

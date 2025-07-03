@@ -171,4 +171,14 @@
     WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
   </select>
 
+  <select id="selectStoreByStoreNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
+    SELECT 
+      STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
+      CATEGORY_ADDRESS, CATEGORY_FOODTYPE, OPEN_TIME, CLOSE_TIME,
+      CREATE_DATE, MODIFIED_DATE, COUNT
+    FROM TB_STORE
+    WHERE STORE_NO = #{storeNo} AND IS_DELETED = 'N'
+  </select>
+
+
 </mapper>

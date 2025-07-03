@@ -3,6 +3,29 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.matzip.member.model.dao.ReservationMapper">
+
+    <!-- 휴무일 리스트 조회 -->
+    <select id="selectDayOffByStoreNo" resultType="string">
+        SELECT OFF_DAY
+        FROM TB_DAY_OFF
+        WHERE STORE_NO = #{storeNo}
+    </select>
+
+    <!-- 임시휴무 시작/종료일 조회 -->
+    <select id="selectShutdownDayByStoreNo" resultType="map">
+        SELECT START_DATE, END_DATE
+        FROM TB_SHUT_DOWN_DAY
+        WHERE STORE_NO = #{storeNo}
+    </select>
+
+    <!-- 운영시간 조회 -->
+    <select id="selectOpenCloseTimeByStoreNo" resultType="map">
+        SELECT OPEN_TIME, CLOSE_TIME
+        FROM TB_STORE
+        WHERE STORE_NO = #{storeNo}
+    </select>
+
+
    <insert id="insert" parameterType="com.kh.matzip.reservation.model.vo.Reservation">
     <selectKey keyProperty="reservationNo" order="BEFORE" resultType="long">
         SELECT PK_TB_RESERVATION.NEXTVAL FROM DUAL

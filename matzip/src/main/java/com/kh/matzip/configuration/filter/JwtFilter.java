@@ -40,20 +40,14 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
-<<<<<<< HEAD
+
         // System.out.println("방가룽");
+        // ./gradlew clean build
 
         if (authorization != null && authorization.startsWith("Bearer ")) {
             String token = authorization.substring(7);
             // System.out.println("1111");
-=======
-        System.err.println("방가룽");
 
-        if (authorization != null && authorization.startsWith("Bearer ")) {
-            String token = authorization.substring(7);
-            System.err.println("방가룽");
-
->>>>>>> fed6085fa48363156c242401301bc22dabd3d287
             try {
                 Claims claims = jwtUtil.parseJwt(token);
                 String userId = claims.getSubject();

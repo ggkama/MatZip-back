@@ -47,4 +47,5 @@ public interface StoreMapper {
     List<String> selectMenuByStoreNo(Long storeNo);
     void deleteSingleMenu(Map<String, Object> params);
     void updateMenu(Map<String, Object> params);
+
 }

@@ -1,7 +1,6 @@
 package com.kh.matzip.store.model.service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
 import com.kh.matzip.member.model.vo.CustomUserDetails;
 import com.kh.matzip.store.model.dao.StoreMapper;
 import com.kh.matzip.store.model.dto.StoreDTO;
-import com.kh.matzip.store.vo.Store;
 import com.kh.matzip.util.file.FileService;
 
 import jakarta.transaction.Transactional;
@@ -31,7 +29,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreMapper storeMapper;
     private final FileService fileService;
 
-   @Override
+    @Override
     @Transactional
     public void insertStore(CustomUserDetails user, StoreDTO storeDto, MultipartFile[] images) {
         Long userNo = user.getUserNo();
@@ -79,20 +77,7 @@ public class StoreServiceImpl implements StoreService {
     public StoreDTO getStoreByUserNo(Long userNo) {
         StoreDTO store = storeMapper.selectStoreByUserNo(userNo);
         if (store == null) return null;
-
-        Long storeNo = store.getStoreNo();
-
-        store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
-        store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
-        store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
-        store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
-
-        Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
-        if (shutdown != null && !shutdown.isEmpty()) {
-            store.setStartDate((Date) shutdown.get("START_DATE"));
-            store.setEndDate((Date) shutdown.get("END_DATE"));
-        }
-
+        loadFullStoreData(store);
         return store;
     }
 
@@ -115,19 +100,16 @@ public class StoreServiceImpl implements StoreService {
             Long storeNo = existingStore.getStoreNo();
             storeDto.setStoreNo(storeNo);
 
-            // 매장 기본 정보 및 카테고리 관련 수정
             storeMapper.updateStore(storeDto);
             updateConveniences(storeNo, storeDto.getCategoryConvenience());
             updateDayOff(storeNo, storeDto.getDayOff());
             updateMenus(storeNo, storeDto.getMenuList());
             updateShutdownPeriod(storeNo, storeDto.getStartDate(), storeDto.getEndDate());
 
-            // 이미지 처리
             handleImageDeletion(storeNo, deletedImagePaths);
             handleImageReplacement(storeNo, changedOldImages, changedNewImages);
             validateAndSaveImages(storeNo, images);
 
-            // 최종 개수 확인
             int finalCount = storeMapper.selectStoreImagesByStoreNo(storeNo).size();
             if (finalCount > 5) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지는 최대 5장까지 등록할 수 있습니다.");
@@ -251,5 +233,17 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
-   
+    private void loadFullStoreData(StoreDTO store) {
+        Long storeNo = store.getStoreNo();
+        store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
+        store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
+        store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
+        store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
+
+        Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
+        if (shutdown != null && !shutdown.isEmpty()) {
+            store.setStartDate((Date) shutdown.get("START_DATE"));
+            store.setEndDate((Date) shutdown.get("END_DATE"));
+        }
+    }
 }
