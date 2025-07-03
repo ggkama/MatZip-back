@@ -20,19 +20,22 @@ public class ManageOwnerServiceImpl implements ManageOwnerService {
 	private final PagenationService pagenationService;
 	
 	@Override
-	public Map<String, Object> getOwnerListByAdmin(int pageNo, int size) {
-		int startIndex = pagenationService.getStartIndex(pageNo, size);
+	public Map<String, Object> getOwnerListByAdmin(int page, int size) {
+		int startIndex = pagenationService.getStartIndex(page, size);
 		
 		Map<String, Object> param = new HashMap<>();
 		param.put("startIndex", startIndex);
 		param.put("size", size);
 		
 		List<ManageOwnerListDTO> ownerList = manageownerMapper.selectOwnerList(param);
+		int totalOwners = manageownerMapper.countAllStores();
 		
 		Map<String, Object> resultList = new HashMap<>();
 		resultList.put("ownerList", ownerList);
-		resultList.put("pageNo", pageNo);
+		resultList.put("pageNo", page);
 		resultList.put("size", size);
+		resultList.put("totalOwners", totalOwners);
+		resultList.put("totalPages", (int) Math.ceil((double) totalOwners / size));
 		
 		return resultList;
 	}

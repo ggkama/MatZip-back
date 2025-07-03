@@ -13,4 +13,7 @@ public interface ManageOwnerMapper {
 	/* 사용자 목록 조회 */
 	List<ManageOwnerListDTO> selectOwnerList(Map<String, Object> param);
 	
+	
+	/* 총 사장님 신청 수 */
+	int countAllStores();
 }

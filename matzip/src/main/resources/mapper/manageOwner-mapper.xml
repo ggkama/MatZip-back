@@ -27,5 +27,12 @@
 			#{size}
 			ROWS ONLY
 	</select>
+	
+	<select id="countAllStores">
+		SELECT
+			COUNT(REGISTER_NO)
+		FROM
+			TB_OWNER
+	</select>
 
 </mapper>

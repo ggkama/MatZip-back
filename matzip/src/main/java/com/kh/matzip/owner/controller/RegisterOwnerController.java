@@ -21,7 +21,7 @@ import com.kh.matzip.util.file.FileService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/mypage")
 @RequiredArgsConstructor
 public class RegisterOwnerController {
 
