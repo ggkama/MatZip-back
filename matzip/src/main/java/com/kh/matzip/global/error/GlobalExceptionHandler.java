@@ -21,6 +21,8 @@ import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
 import com.kh.matzip.global.error.exceptions.ReviewAccessDeniedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotFoundException;
+import com.kh.matzip.global.error.exceptions.StoreAlreadyExistsException;
+import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
 import com.kh.matzip.global.error.exceptions.UserAlreadyDeletedException;
 import com.kh.matzip.global.response.ApiResponse;
 
@@ -139,7 +141,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleUserAlreadyDeletedException(UserAlreadyDeletedException e) {
         return makeResponseEntity(e.getResponseCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-   
 
+   // 이미 존재하는 매장
+    @ExceptionHandler(StoreAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStoreAlreadyExistsException(StoreAlreadyExistsException e) {
+        return makeResponseEntity(ResponseCode.ALREADY_EXIST_STORE, e.getMessage(), HttpStatus.CONFLICT); 
+    }
+
+    // 매장 저장 실패
+    @ExceptionHandler(StoreSaveFailedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleStoreSaveFailedException(StoreSaveFailedException e) {
+        return makeResponseEntity(ResponseCode.STORE_SAVE_FAIL, e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
     
 }
