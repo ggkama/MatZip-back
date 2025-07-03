@@ -21,5 +21,5 @@ public class ReservationDTO {
     private String reservationTime;
     private int  personCount;
     private Date createDate;
-
+    private String status;
 }
