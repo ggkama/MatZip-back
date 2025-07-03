@@ -32,11 +32,14 @@ public class ManageUserServiceImpl implements ManageUserService {
 		param.put("size", size);
 		
 		List<ManageUserDTO> userList = manageuserMapper.selectUserList(param);
+		int totalUsers = manageuserMapper.countAllUsers();
 		
 		Map<String, Object> resultList = new HashMap<>();
 		resultList.put("userList", userList);
 		resultList.put("pageNo", page);
 		resultList.put("size", size);
+		resultList.put("totalUsers", totalUsers);
+		resultList.put("totalPages", (int) Math.ceil((double) totalUsers / size));
 		
 		return resultList;
 	}

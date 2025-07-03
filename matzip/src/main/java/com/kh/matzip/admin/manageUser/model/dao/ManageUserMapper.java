@@ -19,4 +19,6 @@ public interface ManageUserMapper {
 	/* 사용자 탈퇴 처리 */
 	int updateStatusUser(Long userNo);
 	
+	/* 총 사용자 수 */
+	int countAllUsers();
 }
