@@ -16,6 +16,7 @@ public enum ResponseCode {
     LOGOUT_SUCESS("S204"),
     USER_DETAIL_SUCCESS("S205"),
     USER_UNREGISTER("S206"),
+    OWNER_REGISTER("S207"),
     
     DUPLICATED_ID("E100"),
     DUPLICATED_NICKNAME("E101"),
@@ -29,6 +30,8 @@ public enum ResponseCode {
     ALREADY_DELETED("E109"),
     USER_NOT("E110"),
     USER_IS_DELETED("E111"),
+    DUPLICATIED_OWNER("E112"),
+    DUPLICATIED_STORE("E113"),
     
     SERVER_ERROR("500"),
 
