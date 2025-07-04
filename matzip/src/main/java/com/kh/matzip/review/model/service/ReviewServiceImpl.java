@@ -54,7 +54,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewDTO> selectMyReviewDetail(Long reviewNo) {
         List<ReviewDTO> detailList = reviewMapper.selectMyReviewDetail(reviewNo);
 
-        // ⭐️ 상세 조회도 각 리뷰별로 이미지 리스트 세팅!
+        // 상세 조회도 각 리뷰별로 이미지 리스트 세팅!
         for (ReviewDTO review : detailList) {
             List<String> imageUrls = reviewMapper.selectReviewImageUrls(review.getReviewNo());
             review.setImageUrls(imageUrls);

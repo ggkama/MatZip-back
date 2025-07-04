@@ -49,10 +49,10 @@ public class SecurityConfigure {
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/store/detail/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/reservation/**").permitAll() 
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
                 .anyRequest().authenticated()

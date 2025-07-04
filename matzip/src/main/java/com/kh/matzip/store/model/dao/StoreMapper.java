@@ -1,8 +1,7 @@
 package com.kh.matzip.store.model.dao;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -48,4 +47,12 @@ public interface StoreMapper {
     void deleteSingleMenu(Map<String, Object> params);
     void updateMenu(Map<String, Object> params);
 
+    // 리스트 조회
+    List<StoreDTO> selectStoreList(Map<String, Object> param);
+    long selectStoreListCount(Map<String, Object> param);
+    
+
+    // 스토어 디테일 조회
+    StoreDTO selectStoreByStoreNo(Long storeNo);
+    StoreDTO getStoreDetail(Long storeNo);
 }
