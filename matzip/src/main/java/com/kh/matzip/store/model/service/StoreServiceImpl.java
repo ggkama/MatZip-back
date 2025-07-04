@@ -7,13 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.kh.matzip.global.error.exceptions.StoreAlreadyExistsException;
 import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
 import com.kh.matzip.member.model.vo.CustomUserDetails;
+import com.kh.matzip.naversearchapi.NaverSearchApiService;
 import com.kh.matzip.store.model.dao.StoreMapper;
 import com.kh.matzip.store.model.dto.StoreDTO;
 import com.kh.matzip.util.file.FileService;
@@ -66,13 +70,13 @@ public class StoreServiceImpl implements StoreService {
     public boolean existsStoreByUserNo(Long userNo) {
         return storeMapper.existsStoreByUserNo(userNo);
     }
+
+
     @Override
     public StoreDTO getStoreByUserNo(Long userNo) {
         StoreDTO store = storeMapper.selectStoreByUserNo(userNo);
         if (store == null) return null;
-
         Long storeNo = store.getStoreNo();
-
         store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
         store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
         store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
@@ -83,9 +87,9 @@ public class StoreServiceImpl implements StoreService {
             store.setStartDate((Date) shutdown.get("START_DATE"));
             store.setEndDate((Date) shutdown.get("END_DATE"));
         }
-
         return store;
     }
+
 
     @Override
     @Transactional
@@ -223,6 +227,24 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    @Override
+    public StoreDTO getStoreDetail(Long storeNo) {
+        StoreDTO store = storeMapper.selectStoreByStoreNo(storeNo);
+        if (store == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "가게를 찾을 수 없습니다.");
+        store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
+        store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
+        store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
+        store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
+        Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
+        if (shutdown != null && !shutdown.isEmpty()) {
+            store.setStartDate((Date) shutdown.get("START_DATE"));
+            store.setEndDate((Date) shutdown.get("END_DATE"));
+        }
+        return store;
+    }
+
+    
+
     
     @Override
     public Map<String, Object> getStoreList(int page, int size, String search) {
@@ -248,6 +270,6 @@ public class StoreServiceImpl implements StoreService {
         result.put("totalPages", (int)Math.ceil((double)totalCount / size));
         return result;
         }   
-        
+
 
 }
