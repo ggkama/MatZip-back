@@ -30,7 +30,7 @@ public class ReservationController {
    private final ReservationService reservationService;
 
     @GetMapping("/store/{storeNo}")
-    public ResponseEntity<ReservationDTO> getReservationInfoStoreNo(@PathVariable("storeNo") Long storeNo) {
+    public ResponseEntity<ReservationDTO> getReservationInfoStoreNo(@PathVariable(name = "storeNo") Long storeNo) {
         ReservationDTO reservationInfo = reservationService.getReservationInfoStoreNo(storeNo);
         if (reservationInfo == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -44,7 +44,7 @@ public class ReservationController {
     }
 
     @GetMapping("/mypage/{userNo}")
-    public ResponseEntity<List<ReservationDTO>> getMyReservations(@PathVariable Long userNo) {
+    public ResponseEntity<List<ReservationDTO>> getMyReservations(@PathVariable(name = "userNo") Long userNo) {
         List<ReservationDTO> list = reservationService.getReservationUserNo(userNo);
         return ResponseEntity.ok(list);
     }

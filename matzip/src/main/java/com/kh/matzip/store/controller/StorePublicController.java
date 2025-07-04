@@ -24,16 +24,16 @@ public class StorePublicController {
 
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> getStoreList(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "15") int size,
-        @RequestParam(required = false) String search
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "15") int size,
+        @RequestParam(name = "search", required = false) String search
     ) {
         Map<String, Object> result = storeService.getStoreList(page, size, search);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/detail/{storeNo}")
-    public ResponseEntity<StoreDTO> getStoreDetail(@PathVariable Long storeNo) {
+    public ResponseEntity<StoreDTO> getStoreDetail(@PathVariable(name = "storeNo") Long storeNo) {
         StoreDTO dto = storeService.getStoreDetail(storeNo);
     return ResponseEntity.ok(dto);
     }
