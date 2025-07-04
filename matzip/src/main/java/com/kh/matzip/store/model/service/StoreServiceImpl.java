@@ -33,9 +33,6 @@ public class StoreServiceImpl implements StoreService {
     private final StoreMapper storeMapper;
     private final FileService fileService;
     private final PagenationService pagenationService;
-    private final NaverSearchApiService naverSearchApiService;
-
-
 
     @Override
     @Transactional
@@ -84,6 +81,7 @@ public class StoreServiceImpl implements StoreService {
         store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
         store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
         store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
+
         Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
         if (shutdown != null && !shutdown.isEmpty()) {
             store.setStartDate((Date) shutdown.get("START_DATE"));
@@ -93,7 +91,6 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    
     @Override
     @Transactional
     public void updateStore(CustomUserDetails user, StoreDTO storeDto,
@@ -229,31 +226,6 @@ public class StoreServiceImpl implements StoreService {
             ));
         }
     }
-    @Override
-    public Map<String, Object> getStoreList(int page, int size, String search) {
-        int startIndex = pagenationService.getStartIndex(page, size);
-        Map<String, Object> param = new HashMap<>();
-        param.put("startIndex", startIndex);
-        param.put("size", size);
-        if (search != null && !search.trim().isEmpty()) {
-            param.put("search", "%" + search.trim() + "%");
-        }
-        List<StoreDTO> stores = storeMapper.selectStoreList(param);
-
-        // 각 store의 이미지를 조회해서 포함
-        for (StoreDTO dto : stores) {
-            dto.setImageList(storeMapper.selectStoreImagesByStoreNo(dto.getStoreNo()));
-        }
-
-        long totalCount = storeMapper.selectStoreListCount(param);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("content", stores);
-        result.put("totalCount", totalCount);
-        result.put("totalPages", (int)Math.ceil((double)totalCount / size));
-        return result;
-        }   
-
 
     @Override
     public StoreDTO getStoreDetail(Long storeNo) {
@@ -272,5 +244,32 @@ public class StoreServiceImpl implements StoreService {
     }
 
     
+
+    
+    @Override
+    public Map<String, Object> getStoreList(int page, int size, String search) {
+        int startIndex = pagenationService.getStartIndex(page, size);
+        Map<String, Object> param = new HashMap<>();
+        param.put("startIndex", startIndex);
+        param.put("size", size);
+        if (search != null && !search.trim().isEmpty()) {
+            param.put("search", "%" + search.trim() + "%");
+        }
+        List<StoreDTO> stores = storeMapper.selectStoreList(param);
+
+        // 각 store의 이미지를 조회해서 포함
+        for (StoreDTO dto : stores) {
+            dto.setImageList(storeMapper.selectStoreImagesByStoreNo(dto.getStoreNo()));
+        }
+        
+        long totalCount = storeMapper.selectStoreListCount(param);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", stores);
+        result.put("totalCount", totalCount);
+        result.put("totalPages", (int)Math.ceil((double)totalCount / size));
+        return result;
+        }   
+
 
 }
