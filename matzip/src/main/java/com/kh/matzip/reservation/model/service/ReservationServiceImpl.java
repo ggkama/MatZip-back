@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.matzip.reservation.model.dao.ReservationMapper;
+import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;
 import com.kh.matzip.reservation.model.dto.ReservationDTO;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,9 +46,37 @@ public class ReservationServiceImpl implements ReservationService {
         return dto;
     }
 
-   @Override
-  public void createReservation(ReservationDTO reservation) {
-      reservationMapper.createReservation(reservation);
-  }
+    @Transactional
+    @Override
+    public void createReservation(ReservationDTO reservation) {
+        reservationMapper.createReservation(reservation);
+    }
+
+    @Override
+    public List<ReservationDTO> getReservationUserNo(Long userNo) {
+        return reservationMapper.getReservationUserNo(userNo);
+    }
+
+    @Override
+    public ReservationDTO findByReservationNo(Long reservationNo) {
+        return reservationMapper.findByReservationNo(reservationNo);
+    }
+
+
+    @Override
+    @Transactional
+    public void cancelReservation(ReservationCancelDTO dto) {
+        // 1. TB_RESERVATION 상태 'N'으로 변경
+        int result1 = reservationMapper.cancelReservationStatus(dto.getReservationNo());
+        if (result1 == 0) {
+            throw new RuntimeException("예약 상태 변경 실패");
+        }
+
+        // 2. TB_RESERVATION_CANCEL에 취소 정보 삽입
+        int result2 = reservationMapper.insertCancelInfo(dto);
+        if (result2 == 0) {
+            throw new RuntimeException("예약 취소 정보 저장 실패");
+        }
+    }
     
 }

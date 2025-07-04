@@ -43,4 +43,62 @@
     )
     </insert>
 
+    <select id="getReservationUserNo" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+        SELECT
+            R.RESERVATION_NO,
+            R.STORE_NO,
+            S.STORE_NAME,
+            R.RESERVATION_DATE,
+            R.RESERVATION_TIME,
+            R.PERSON_COUNT
+        FROM TB_RESERVATION R
+        JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+        WHERE R.USER_NO = #{userNo}
+        ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
+    </select>
+
+    <select id="findByReservationNo" parameterType="long" resultType="ReservationDTO">
+    SELECT
+        R.RESERVATION_NO,
+        R.STORE_NO,
+        S.STORE_NAME,
+        S.STORE_ADDRESS_1 AS storeAddress1,
+        S.STORE_ADDRESS_2 AS storeAddress2,
+        S.STORE_PHONE AS storePhone,
+        (
+        SELECT IMAGE
+        FROM TB_STORE_IMAGE
+        WHERE STORE_NO = R.STORE_NO
+        AND ROWNUM = 1
+        ) AS storeImage,
+        R.RESERVATION_DATE,
+        R.RESERVATION_TIME,
+        R.PERSON_COUNT,
+        R.USER_NO
+    FROM TB_RESERVATION R
+    JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+    WHERE R.RESERVATION_NO = #{reservationNo}
+    </select>
+
+
+    <!-- 1. 예약 상태 변경 -->
+    <update id="cancelReservationStatus" parameterType="long">
+    UPDATE TB_RESERVATION
+    SET STATUS = 'N'
+    WHERE RESERVATION_NO = #{reservationNo}
+    </update>
+
+    <!-- 2. 취소 사유 등록 -->
+    <insert id="insertCancelInfo" parameterType="ReservationCancelDTO">
+    INSERT INTO TB_RESERVATION_CANCEL (
+        RESERVATION_NO,
+        CANCEL_REASON,
+        CANCEL_DATE
+    ) VALUES (
+        #{reservationNo},
+        #{cancelReason},
+        SYSDATE
+    )
+    </insert>
+
 </mapper>
