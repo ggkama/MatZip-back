@@ -1,6 +1,7 @@
 package com.kh.matzip.store.model.service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ public class StoreServiceImpl implements StoreService {
     private final FileService fileService;
     private final PagenationService pagenationService;
 
-    @Override
+   @Override
     @Transactional
     public void insertStore(CustomUserDetails user, StoreDTO storeDto, MultipartFile[] images) {
         Long userNo = user.getUserNo();
@@ -80,7 +81,20 @@ public class StoreServiceImpl implements StoreService {
     public StoreDTO getStoreByUserNo(Long userNo) {
         StoreDTO store = storeMapper.selectStoreByUserNo(userNo);
         if (store == null) return null;
-        loadFullStoreData(store);
+
+        Long storeNo = store.getStoreNo();
+
+        store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
+        store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
+        store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
+        store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
+
+        Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
+        if (shutdown != null && !shutdown.isEmpty()) {
+            store.setStartDate((Date) shutdown.get("START_DATE"));
+            store.setEndDate((Date) shutdown.get("END_DATE"));
+        }
+
         return store;
     }
 
@@ -103,16 +117,19 @@ public class StoreServiceImpl implements StoreService {
             Long storeNo = existingStore.getStoreNo();
             storeDto.setStoreNo(storeNo);
 
+            // 매장 기본 정보 및 카테고리 관련 수정
             storeMapper.updateStore(storeDto);
             updateConveniences(storeNo, storeDto.getCategoryConvenience());
             updateDayOff(storeNo, storeDto.getDayOff());
             updateMenus(storeNo, storeDto.getMenuList());
             updateShutdownPeriod(storeNo, storeDto.getStartDate(), storeDto.getEndDate());
 
+            // 이미지 처리
             handleImageDeletion(storeNo, deletedImagePaths);
             handleImageReplacement(storeNo, changedOldImages, changedNewImages);
             validateAndSaveImages(storeNo, images);
 
+            // 최종 개수 확인
             int finalCount = storeMapper.selectStoreImagesByStoreNo(storeNo).size();
             if (finalCount > 5) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미지는 최대 5장까지 등록할 수 있습니다.");
@@ -236,17 +253,30 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
-    private void loadFullStoreData(StoreDTO store) {
-        Long storeNo = store.getStoreNo();
-        store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
-        store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
-        store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
-        store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
-
-        Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
-        if (shutdown != null && !shutdown.isEmpty()) {
-            store.setStartDate((Date) shutdown.get("START_DATE"));
-            store.setEndDate((Date) shutdown.get("END_DATE"));
+    @Override
+    public Map<String, Object> getStoreList(int page, int size, String search) {
+        int startIndex = pagenationService.getStartIndex(page, size);
+        Map<String, Object> param = new HashMap<>();
+        param.put("startIndex", startIndex);
+        param.put("size", size);
+        if (search != null && !search.trim().isEmpty()) {
+            param.put("search", "%" + search.trim() + "%");
         }
-    }
+        List<StoreDTO> stores = storeMapper.selectStoreList(param);
+
+        // 각 store의 이미지를 조회해서 포함
+        for (StoreDTO dto : stores) {
+            dto.setImageList(storeMapper.selectStoreImagesByStoreNo(dto.getStoreNo()));
+        }
+        
+        long totalCount = storeMapper.selectStoreListCount(param);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", stores);
+        result.put("totalCount", totalCount);
+        result.put("totalPages", (int)Math.ceil((double)totalCount / size));
+        return result;
+        }   
+
+
 }

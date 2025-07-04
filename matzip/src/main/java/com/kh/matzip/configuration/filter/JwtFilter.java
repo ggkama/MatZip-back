@@ -40,7 +40,6 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
-
         if (authorization != null && authorization.startsWith("Bearer ")) {
             String token = authorization.substring(7);
 

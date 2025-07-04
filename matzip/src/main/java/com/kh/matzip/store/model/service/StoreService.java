@@ -24,4 +24,5 @@ public interface StoreService {
         List<MultipartFile> changedNewImages  
     );
 
+    Map<String, Object> getStoreList(int page, int size, String search);
 }
