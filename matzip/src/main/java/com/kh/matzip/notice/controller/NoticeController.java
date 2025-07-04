@@ -52,7 +52,7 @@ public class NoticeController {
 
     // 공지사항 작성
     // writeForm 사용
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/write")
     public ResponseEntity<String> insertNotice(
         @AuthenticationPrincipal CustomUserDetails user,
