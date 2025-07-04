@@ -171,6 +171,8 @@
     WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
   </select>
 
+
+  <!-- 가게 상세조회도 같이씀 -->
   <select id="selectStoreByStoreNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
     SELECT 
       STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
@@ -179,8 +181,6 @@
     FROM TB_STORE
     WHERE STORE_NO = #{storeNo} AND IS_DELETED = 'N'
   </select>
-
-
 
   <!-- 가게 리스트 (검색, 페이징) -->
   <select id="selectStoreList" resultType="com.kh.matzip.store.model.dto.StoreDTO" parameterType="map">
@@ -215,7 +215,8 @@
       </where>
     </select>
 
-  
+    
+
 
 
 </mapper>

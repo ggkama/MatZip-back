@@ -50,6 +50,7 @@ public class SecurityConfigure {
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/store/detail/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/reservation/**").permitAll() 
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

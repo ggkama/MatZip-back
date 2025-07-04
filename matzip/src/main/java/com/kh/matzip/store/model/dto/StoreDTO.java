@@ -3,8 +3,6 @@ package com.kh.matzip.store.model.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,5 +41,6 @@ public class StoreDTO {
     private String isDelete;
     private Long count;
     private String storeImg;
+
 
 }
