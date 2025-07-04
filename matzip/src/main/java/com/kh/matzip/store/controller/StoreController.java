@@ -1,17 +1,17 @@
 package com.kh.matzip.store.controller;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,8 +35,9 @@ public class StoreController {
             @RequestPart("storeDto") StoreDTO storeDto,
             @RequestPart(value = "images", required = false) MultipartFile[] images
     ) {
+        
         // 서비스로 전달하여 매장 등록
-        storeService.insertStore(user, storeDto, images != null ? images : new MultipartFile[0]);
+        storeService.insertStore(user, storeDto, images);
         return ResponseEntity.ok("매장이 등록되었습니다.");
     }
 
@@ -74,5 +75,6 @@ public class StoreController {
         );
         return ResponseEntity.ok("매장이 수정되었습니다.");
     }
+
 
 }

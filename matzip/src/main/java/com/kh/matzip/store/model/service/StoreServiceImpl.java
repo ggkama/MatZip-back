@@ -3,6 +3,7 @@ package com.kh.matzip.store.model.service;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.kh.matzip.member.model.vo.CustomUserDetails;
 import com.kh.matzip.store.model.dao.StoreMapper;
 import com.kh.matzip.store.model.dto.StoreDTO;
 import com.kh.matzip.util.file.FileService;
+import com.kh.matzip.util.pagenation.PagenationService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class StoreServiceImpl implements StoreService {
 
     private final StoreMapper storeMapper;
     private final FileService fileService;
+    private final PagenationService pagenationService;
 
    @Override
     @Transactional
@@ -249,4 +252,31 @@ public class StoreServiceImpl implements StoreService {
             ));
         }
     }
+
+    @Override
+    public Map<String, Object> getStoreList(int page, int size, String search) {
+        int startIndex = pagenationService.getStartIndex(page, size);
+        Map<String, Object> param = new HashMap<>();
+        param.put("startIndex", startIndex);
+        param.put("size", size);
+        if (search != null && !search.trim().isEmpty()) {
+            param.put("search", "%" + search.trim() + "%");
+        }
+        List<StoreDTO> stores = storeMapper.selectStoreList(param);
+
+        // 각 store의 이미지를 조회해서 포함
+        for (StoreDTO dto : stores) {
+            dto.setImageList(storeMapper.selectStoreImagesByStoreNo(dto.getStoreNo()));
+        }
+        
+        long totalCount = storeMapper.selectStoreListCount(param);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", stores);
+        result.put("totalCount", totalCount);
+        result.put("totalPages", (int)Math.ceil((double)totalCount / size));
+        return result;
+        }   
+
+
 }
