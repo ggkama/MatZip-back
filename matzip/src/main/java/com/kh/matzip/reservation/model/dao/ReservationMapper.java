@@ -1,7 +1,6 @@
 package com.kh.matzip.reservation.model.dao;
 
 import java.util.List;
-
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -18,5 +17,7 @@ public interface ReservationMapper {
     Map<String, Object> selectOpenCloseTimeByStoreNo(Long storeNo);
 
     void createReservation(ReservationDTO reservation);
+
+    List<ReservationDTO> getReservationUserNo(Long userNo);
     
 }

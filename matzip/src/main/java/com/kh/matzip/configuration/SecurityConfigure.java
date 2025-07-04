@@ -50,11 +50,12 @@ public class SecurityConfigure {
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .requestMatchers("/api/reservation/**").permitAll() 
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
+                .requestMatchers("/api/reservation/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
