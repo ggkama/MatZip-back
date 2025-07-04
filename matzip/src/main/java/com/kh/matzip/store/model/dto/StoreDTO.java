@@ -43,4 +43,5 @@ public class StoreDTO {
     private String isDelete;
     private Long count;
     private String storeImg;
+
 }
