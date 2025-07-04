@@ -42,12 +42,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
 
 
-        // System.out.println("방가룽");
-        // ./gradlew clean build
-
         if (authorization != null && authorization.startsWith("Bearer ")) {
             String token = authorization.substring(7);
-            // System.out.println("1111");
 
             try {
                 Claims claims = jwtUtil.parseJwt(token);
