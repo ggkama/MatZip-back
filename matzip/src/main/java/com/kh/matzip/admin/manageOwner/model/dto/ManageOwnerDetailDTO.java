@@ -15,11 +15,15 @@ import lombok.ToString;
 @ToString
 public class ManageOwnerDetailDTO {
 
+	private Long userNo;
+	private String userName;
+	private String userId;
+	
 	private Long registerNo;
 	private String businessNo;
 	private String storeName;
-	private String image;
 	private Date requestDate;
+	private String image;
 	private String status;
 	
 }

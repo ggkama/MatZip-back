@@ -35,6 +35,13 @@ public class ReviewServiceImpl implements ReviewService {
         pageInfo.put("size", String.valueOf(size));
 
         List<ReviewDTO> reviewList = reviewMapper.selectMyReviewList(pageInfo);
+
+        // 리뷰별로 이미지 리스트
+        for (ReviewDTO review : reviewList) {
+            List<String> imageUrls = reviewMapper.selectReviewImageUrls(review.getReviewNo());
+            review.setImageUrls(imageUrls);
+        }
+
         Long totalCount = reviewMapper.selectReviewCount(pageInfo);
 
         Map<String, Object> result = new HashMap<>();
@@ -45,12 +52,28 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<ReviewDTO> selectMyReviewDetail(Long reviewNo) {
-        return reviewMapper.selectMyReviewDetail(reviewNo);
+        List<ReviewDTO> detailList = reviewMapper.selectMyReviewDetail(reviewNo);
+
+        // ⭐️ 상세 조회도 각 리뷰별로 이미지 리스트 세팅!
+        for (ReviewDTO review : detailList) {
+            List<String> imageUrls = reviewMapper.selectReviewImageUrls(review.getReviewNo());
+            review.setImageUrls(imageUrls);
+        }
+
+        return detailList;
     }
 
     @Override
     public List<ReviewDTO> selectReviewDetail(Long storeNo) {
-        return reviewMapper.selectReviewDetail(storeNo);
+        List<ReviewDTO> reviews = reviewMapper.selectReviewDetail(storeNo);
+
+        // 매장상세페이지 리뷰 리스트에도 이미지들 넣기
+        for (ReviewDTO review : reviews) {
+            List<String> imageUrls = reviewMapper.selectReviewImageUrls(review.getReviewNo());
+            review.setImageUrls(imageUrls);
+        }
+
+        return reviews;
     }
 
     @Override
@@ -77,8 +100,6 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-
-    
     @Override
     public void updateReview(Long userNo, Long reviewNo, ReviewWriteFormDTO form, List<MultipartFile> files) {
         Review review = new Review();
@@ -87,7 +108,6 @@ public class ReviewServiceImpl implements ReviewService {
         review.setStoreGrade(form.getStoreGrade());
         review.setReservationNo(form.getReservationNo());
         review.setStoreNo(form.getStoreNo());
-        
 
         reviewMapper.updateReview(review);
 
@@ -97,7 +117,6 @@ public class ReviewServiceImpl implements ReviewService {
             fileService.delete(url);
         }
         reviewMapper.deleteReviewImages(reviewNo);
-
 
         if (files != null) {
             for (MultipartFile file : files) {

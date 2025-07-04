@@ -48,4 +48,11 @@ public interface StoreMapper {
     void deleteSingleMenu(Map<String, Object> params);
     void updateMenu(Map<String, Object> params);
 
+<<<<<<< HEAD
+=======
+    // 리스트 조회
+    List<StoreDTO> selectStoreList(Map<String, Object> param);
+    long selectStoreListCount(Map<String, Object> param);
+    
+>>>>>>> 2286a98259e30380aaed52c7c439f227e1b66df3
 }
