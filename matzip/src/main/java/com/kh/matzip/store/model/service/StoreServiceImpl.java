@@ -7,13 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.kh.matzip.global.error.exceptions.StoreAlreadyExistsException;
 import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
 import com.kh.matzip.member.model.vo.CustomUserDetails;
+import com.kh.matzip.naversearchapi.NaverSearchApiService;
 import com.kh.matzip.store.model.dao.StoreMapper;
 import com.kh.matzip.store.model.dto.StoreDTO;
 import com.kh.matzip.util.file.FileService;
@@ -28,6 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 public class StoreServiceImpl implements StoreService {
     private final StoreMapper storeMapper;
     private final FileService fileService;
+    private final PagenationService pagenationService;
+    private final NaverSearchApiService naverSearchApiService;
+
+
 
     @Override
     @Transactional
@@ -65,13 +73,27 @@ public class StoreServiceImpl implements StoreService {
     public boolean existsStoreByUserNo(Long userNo) {
         return storeMapper.existsStoreByUserNo(userNo);
     }
+
+
     @Override
     public StoreDTO getStoreByUserNo(Long userNo) {
         StoreDTO store = storeMapper.selectStoreByUserNo(userNo);
         if (store == null) return null;
-        loadFullStoreData(store);
+        Long storeNo = store.getStoreNo();
+        store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
+        store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
+        store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
+        store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
+        Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
+        if (shutdown != null && !shutdown.isEmpty()) {
+            store.setStartDate((Date) shutdown.get("START_DATE"));
+            store.setEndDate((Date) shutdown.get("END_DATE"));
+        }
         return store;
     }
+
+
+    
     @Override
     @Transactional
     public void updateStore(CustomUserDetails user, StoreDTO storeDto,
@@ -207,5 +229,48 @@ public class StoreServiceImpl implements StoreService {
             ));
         }
     }
+    @Override
+    public Map<String, Object> getStoreList(int page, int size, String search) {
+        int startIndex = pagenationService.getStartIndex(page, size);
+        Map<String, Object> param = new HashMap<>();
+        param.put("startIndex", startIndex);
+        param.put("size", size);
+        if (search != null && !search.trim().isEmpty()) {
+            param.put("search", "%" + search.trim() + "%");
+        }
+        List<StoreDTO> stores = storeMapper.selectStoreList(param);
+
+        // 각 store의 이미지를 조회해서 포함
+        for (StoreDTO dto : stores) {
+            dto.setImageList(storeMapper.selectStoreImagesByStoreNo(dto.getStoreNo()));
+        }
+
+        long totalCount = storeMapper.selectStoreListCount(param);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", stores);
+        result.put("totalCount", totalCount);
+        result.put("totalPages", (int)Math.ceil((double)totalCount / size));
+        return result;
+        }   
+
+
+    @Override
+    public StoreDTO getStoreDetail(Long storeNo) {
+        StoreDTO store = storeMapper.selectStoreByStoreNo(storeNo);
+        if (store == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "가게를 찾을 수 없습니다.");
+        store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
+        store.setDayOff(storeMapper.selectDayOffByStoreNo(storeNo));
+        store.setMenuList(storeMapper.selectMenuByStoreNo(storeNo));
+        store.setImageList(storeMapper.selectStoreImagesByStoreNo(storeNo));
+        Map<String, Object> shutdown = storeMapper.selectShutdownDayByStoreNo(storeNo);
+        if (shutdown != null && !shutdown.isEmpty()) {
+            store.setStartDate((Date) shutdown.get("START_DATE"));
+            store.setEndDate((Date) shutdown.get("END_DATE"));
+        }
+        return store;
+    }
+
+    
 
 }
