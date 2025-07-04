@@ -40,7 +40,9 @@ public enum ResponseCode {
     
     SERVER_ERROR("500"),
 
-    STORE_SAVE_FAIL("S500"); // 매장 저장 실패를 위한 코드 추가
+    STORE_SAVE_FAIL("E300"), 
+    
+    ALREADY_EXIST_STORE("E301"); 
    
     private final String code;
 
