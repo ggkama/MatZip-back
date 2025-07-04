@@ -171,41 +171,14 @@
     WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
   </select>
 
-
-  <!-- 가게 리스트 (검색, 페이징) -->
-  <select id="selectStoreList" resultType="com.kh.matzip.store.model.dto.StoreDTO" parameterType="map">
+  <select id="selectStoreByStoreNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
     SELECT 
-        S.STORE_NO as storeNo,
-        S.STORE_NAME as storeName,
-        S.STORE_ADDRESS_1 as storeAddress1,
-        S.STORE_ADDRESS_2 as storeAddress2,
-        S.CATEGORY_ADDRESS as categoryAddress,
-        S.CATEGORY_FOODTYPE as categoryFoodtype,
-        S.IS_DELETED as isDeleted
-    FROM TB_STORE S
-    <where>
-        S.IS_DELETED = 'N'
-        <if test="search != null and search != ''">
-            AND S.STORE_NAME LIKE #{search}
-        </if>
-    </where>
-    ORDER BY S.CREATE_DATE DESC
-    OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+      STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
+      CATEGORY_ADDRESS, CATEGORY_FOODTYPE, OPEN_TIME, CLOSE_TIME,
+      CREATE_DATE, MODIFIED_DATE, COUNT
+    FROM TB_STORE
+    WHERE STORE_NO = #{storeNo} AND IS_DELETED = 'N'
   </select>
-
-  <!-- 전체 개수 -->
-    <select id="selectStoreListCount" resultType="long" parameterType="map">
-      SELECT COUNT(*)
-      FROM TB_STORE S
-      <where>
-          S.IS_DELETED = 'N'
-          <if test="search != null and search != ''">
-              AND S.STORE_NAME LIKE #{search}
-          </if>
-      </where>
-    </select>
-
-  
 
 
 </mapper>
