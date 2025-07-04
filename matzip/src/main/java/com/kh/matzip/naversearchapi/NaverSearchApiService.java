@@ -28,6 +28,8 @@ public class NaverSearchApiService {
 
     public String searchBlog(String query) {
         try {
+                    System.out.println("네이버 검색 storeName: " + query);
+
             String url = "https://openapi.naver.com/v1/search/blog.json?query=" + URLEncoder.encode(query, "UTF-8") + "&display=5&sort=sim";
 
             HttpHeaders headers = new HttpHeaders();

@@ -171,10 +171,7 @@
     WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
   </select>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5990ae9ee3643e385207edbec8aa8e139c79e6fe
+  <!-- 가게 상세조회도 같이씀 -->
   <select id="selectStoreByStoreNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
     SELECT 
       STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
@@ -183,9 +180,6 @@
     FROM TB_STORE
     WHERE STORE_NO = #{storeNo} AND IS_DELETED = 'N'
   </select>
-
-<<<<<<< HEAD
-=======
 
   <!-- 가게 리스트 (검색, 페이징) -->
   <select id="selectStoreList" resultType="com.kh.matzip.store.model.dto.StoreDTO" parameterType="map">
@@ -220,10 +214,8 @@
       </where>
     </select>
 
-  
+    
 
->>>>>>> 2286a98259e30380aaed52c7c439f227e1b66df3
-=======
->>>>>>> 5990ae9ee3643e385207edbec8aa8e139c79e6fe
+
 
 </mapper>
