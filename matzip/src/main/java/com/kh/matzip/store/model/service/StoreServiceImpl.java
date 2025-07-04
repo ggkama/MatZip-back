@@ -1,7 +1,6 @@
 package com.kh.matzip.store.model.service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -276,7 +275,7 @@ public class StoreServiceImpl implements StoreService {
         result.put("totalCount", totalCount);
         result.put("totalPages", (int)Math.ceil((double)totalCount / size));
         return result;
-        }   
+        }
 
 
 }

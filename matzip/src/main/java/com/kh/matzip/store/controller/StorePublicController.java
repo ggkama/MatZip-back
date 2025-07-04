@@ -28,5 +28,9 @@ public class StorePublicController {
         return ResponseEntity.ok(result);
     }
 
-    // 상세조회 등도 여기에
+    /* // 상세조회 등도 여기에
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getStoreDetail(
+    
+    ) */
 }
