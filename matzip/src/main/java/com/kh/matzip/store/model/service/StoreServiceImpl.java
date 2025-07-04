@@ -245,5 +245,18 @@ public class StoreServiceImpl implements StoreService {
             store.setStartDate((Date) shutdown.get("START_DATE"));
             store.setEndDate((Date) shutdown.get("END_DATE"));
         }
+
+        
+        long totalCount = storeMapper.selectStoreListCount(param);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", stores);
+        result.put("totalCount", totalCount);
+        result.put("totalPages", (int)Math.ceil((double)totalCount / size));
+        return result;
+        }
+
+
+
     }
 }
