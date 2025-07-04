@@ -236,7 +236,6 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
-<<<<<<< HEAD
     private void loadFullStoreData(StoreDTO store) {
         Long storeNo = store.getStoreNo();
         store.setCategoryConvenience(storeMapper.selectConveniencesByStoreNo(storeNo));
@@ -250,32 +249,4 @@ public class StoreServiceImpl implements StoreService {
             store.setEndDate((Date) shutdown.get("END_DATE"));
         }
     }
-=======
-    @Override
-    public Map<String, Object> getStoreList(int page, int size, String search) {
-        int startIndex = pagenationService.getStartIndex(page, size);
-        Map<String, Object> param = new HashMap<>();
-        param.put("startIndex", startIndex);
-        param.put("size", size);
-        if (search != null && !search.trim().isEmpty()) {
-            param.put("search", "%" + search.trim() + "%");
-        }
-        List<StoreDTO> stores = storeMapper.selectStoreList(param);
-
-        // 각 store의 이미지를 조회해서 포함
-        for (StoreDTO dto : stores) {
-            dto.setImageList(storeMapper.selectStoreImagesByStoreNo(dto.getStoreNo()));
-        }
-        
-        long totalCount = storeMapper.selectStoreListCount(param);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("content", stores);
-        result.put("totalCount", totalCount);
-        result.put("totalPages", (int)Math.ceil((double)totalCount / size));
-        return result;
-        }   
-
-
->>>>>>> 2286a98259e30380aaed52c7c439f227e1b66df3
 }

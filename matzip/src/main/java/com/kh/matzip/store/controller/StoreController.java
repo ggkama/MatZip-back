@@ -76,11 +76,4 @@ public class StoreController {
         );
         return ResponseEntity.ok("매장이 수정되었습니다.");
     }
-
-<<<<<<< HEAD
-   
-    
-=======
-
->>>>>>> 2286a98259e30380aaed52c7c439f227e1b66df3
 }
