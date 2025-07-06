@@ -42,5 +42,5 @@ public class StoreDTO {
     private Long count;
     private String storeImg;
 
-
+    private double star;
 }

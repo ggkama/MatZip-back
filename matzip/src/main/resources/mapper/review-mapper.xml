@@ -12,53 +12,54 @@
             R.RESERVATION_NO reservationNo,
             R.STORE_NO       storeNo,
             R.USER_NO        userNo,
+            U.USER_NICKNAME  userName,  
             R.REVIEW_CONTENT reviewContent,
             R.STORE_GRADE    storeGrade,
             R.REVIEW_DATE    createDate,
             RI.IMAGE         reviewImageUrl,
             RI.IMAGE_NO      imageNo
         FROM TB_REVIEW R
-        LEFT JOIN TB_REVIEW_IMAGE RI
-        ON R.REVIEW_NO = RI.REVIEW_NO
+        LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
+        JOIN TB_USER U ON R.USER_NO = U.USER_NO
     </sql>
 
     <!-- 내 리뷰 리스트 조회 -->
     <select id="selectMyReviewList" resultType="com.kh.matzip.review.model.dto.ReviewDTO" parameterType="map">
-    SELECT 
-        R.REVIEW_NO      reviewNo,
-        R.REVIEW_CONTENT reviewContent,
-        R.STORE_GRADE    storeGrade,
-        R.REVIEW_DATE    createDate,
-        S.STORE_NAME     storeName,
-        RI.IMAGE         reviewImageUrl
-    FROM TB_REVIEW R
-    JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
-    LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
-    WHERE R.USER_NO = #{userNo}
-        AND R.IS_DELETED = 'N'
-    ORDER BY R.REVIEW_DATE DESC
+        SELECT 
+            R.REVIEW_NO      reviewNo,
+            R.REVIEW_CONTENT reviewContent,
+            R.STORE_GRADE    storeGrade,
+            R.REVIEW_DATE    createDate,
+            S.STORE_NAME     storeName,
+            RI.IMAGE         reviewImageUrl
+        FROM TB_REVIEW R
+        JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+        LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
+        WHERE R.USER_NO = #{userNo}
+            AND R.IS_DELETED = 'N'
+        ORDER BY R.REVIEW_DATE DESC
     </select>
     
     <!-- 내 리뷰 상세페이지 조회 -->
     <select id="selectMyReviewDetail" parameterType="long" resultType="com.kh.matzip.review.model.dto.ReviewDTO">
-    SELECT
-        R.REVIEW_NO      reviewNo,
-        R.RESERVATION_NO reservationNo,
-        R.STORE_NO       storeNo,
-        R.USER_NO        userNo,
-        S.STORE_NAME     storeName,
-        R.REVIEW_CONTENT reviewContent,
-        R.STORE_GRADE    storeGrade,
-        R.REVIEW_DATE    createDate,
-        RI.IMAGE         reviewImageUrl
-    FROM TB_REVIEW R
-    JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
-    LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
-    WHERE R.REVIEW_NO = #{reviewNo}
-      AND R.IS_DELETED = 'N'
-</select>
+        SELECT
+            R.REVIEW_NO      reviewNo,
+            R.RESERVATION_NO reservationNo,
+            R.STORE_NO       storeNo,
+            R.USER_NO        userNo,
+            S.STORE_NAME     storeName,
+            R.REVIEW_CONTENT reviewContent,
+            R.STORE_GRADE    storeGrade,
+            R.REVIEW_DATE    createDate,
+            RI.IMAGE         reviewImageUrl
+        FROM TB_REVIEW R
+        JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+        LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
+        WHERE R.REVIEW_NO = #{reviewNo}
+          AND R.IS_DELETED = 'N'
+    </select>
 
-    <!-- 스토어 상세 페이지 리뷰 리스트 -->
+    <!-- 스토어 상세 페이지 리뷰 리스트 (유저 이름 포함) -->
     <select id="selectReviewDetail"
             parameterType="long"
             resultType="com.kh.matzip.review.model.dto.ReviewDTO">
@@ -115,9 +116,9 @@
 
     <!-- 리뷰 삭제 -->
     <update id="deleteReview" parameterType="long">
-    UPDATE TB_REVIEW
-    SET IS_DELETED = 'Y'
-    WHERE REVIEW_NO = #{reviewNo}
+        UPDATE TB_REVIEW
+        SET IS_DELETED = 'Y'
+        WHERE REVIEW_NO = #{reviewNo}
     </update>
 
     <!-- 기존 이미지 리스트 (삭제용) -->
@@ -131,9 +132,9 @@
 
     <!-- 이미지 url 조회 -->
     <select id="selectReviewImageUrls" resultType="string">
-    SELECT IMAGE
-    FROM TB_REVIEW_IMAGE
-    WHERE REVIEW_NO = #{reviewNo}
+        SELECT IMAGE
+        FROM TB_REVIEW_IMAGE
+        WHERE REVIEW_NO = #{reviewNo}
     </select>
 
     <!-- 기존 이미지 삭제 -->
@@ -142,5 +143,4 @@
         DELETE FROM TB_REVIEW_IMAGE
         WHERE REVIEW_NO = #{reviewNo}
     </delete>
-
 </mapper>

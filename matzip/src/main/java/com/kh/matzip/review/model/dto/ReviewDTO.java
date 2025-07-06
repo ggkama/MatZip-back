@@ -23,6 +23,7 @@ public class ReviewDTO {
     private Long storeNo;
     private String storeName;
     private String reviewImageUrl;
+    private String userNickName;
 
     @NotBlank
     private String reviewContent;

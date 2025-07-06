@@ -41,4 +41,7 @@ public interface ReviewMapper {
 
     // 기존 이미지 URL 조회 하기(삭제용)
     List<String> selectReviewImageUrls(Long reviewNo);
+
+    
+
 }

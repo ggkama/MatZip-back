@@ -216,6 +216,14 @@
 
     
 
+  <!-- 별점 평균 -->
+  <select id="selectAvgStarByStoreNo" resultType="double" parameterType="long">
+    SELECT NVL(AVG(STORE_GRADE), 0)
+    FROM TB_REVIEW
+    WHERE STORE_NO = #{storeNo}
+      AND IS_DELETED = 'N'
+  </select>
+
 
 
 </mapper>
