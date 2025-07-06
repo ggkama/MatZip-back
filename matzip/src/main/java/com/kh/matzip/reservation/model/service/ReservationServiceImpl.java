@@ -1,11 +1,10 @@
 package com.kh.matzip.reservation.model.service;
 
 import java.util.Date;
-
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
 
 import com.kh.matzip.reservation.model.dao.ReservationMapper;
 import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;
@@ -77,6 +76,16 @@ public class ReservationServiceImpl implements ReservationService {
         if (result2 == 0) {
             throw new RuntimeException("예약 취소 정보 저장 실패");
         }
+    }
+
+    @Override
+    public void updateIsReviewYet() {
+        reservationMapper.updateIsReviewYet();
+    }
+
+    @Override
+    public void updateIsReviewComplete(Long reservationNo) {
+        reservationMapper.updateIsReviewComplete(reservationNo);
     }
     
 }

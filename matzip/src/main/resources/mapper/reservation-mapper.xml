@@ -24,22 +24,23 @@
         FROM TB_STORE
         WHERE STORE_NO = #{storeNo}
     </select>
-
-   <insert id="createReservation" parameterType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+    <insert id="createReservation" parameterType="com.kh.matzip.reservation.model.dto.ReservationDTO">
     INSERT INTO TB_RESERVATION (
         RESERVATION_NO,
         USER_NO,
         STORE_NO,
         RESERVATION_DATE,
         RESERVATION_TIME,
-        PERSON_COUNT
+        PERSON_COUNT,
+        IS_REVIEW
     ) VALUES (
         SEQ_RESERVATION_NO.NEXTVAL,
         #{userNo},
         #{storeNo},
         #{reservationDate},
         #{reservationTime},
-        #{personCount}
+        #{personCount},
+        'NO'
     )
     </insert>
 
@@ -50,35 +51,40 @@
             S.STORE_NAME,
             R.RESERVATION_DATE,
             R.RESERVATION_TIME,
-            R.PERSON_COUNT
+            R.PERSON_COUNT,
+            R.STATUS,
+            R.IS_REVIEW AS isReview
         FROM TB_RESERVATION R
         JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
         WHERE R.USER_NO = #{userNo}
         ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
     </select>
 
-    <select id="findByReservationNo" parameterType="long" resultType="ReservationDTO">
-    SELECT
-        R.RESERVATION_NO,
-        R.STORE_NO,
-        S.STORE_NAME,
-        S.STORE_ADDRESS_1 AS storeAddress1,
-        S.STORE_ADDRESS_2 AS storeAddress2,
-        S.STORE_PHONE AS storePhone,
-        (
-        SELECT IMAGE
-        FROM TB_STORE_IMAGE
-        WHERE STORE_NO = R.STORE_NO
-        AND ROWNUM = 1
-        ) AS storeImage,
-        R.RESERVATION_DATE,
-        R.RESERVATION_TIME,
-        R.PERSON_COUNT,
-        R.USER_NO
-    FROM TB_RESERVATION R
-    JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
-    WHERE R.RESERVATION_NO = #{reservationNo}
+   <select id="findByReservationNo" parameterType="long" resultType="ReservationDTO">
+        SELECT
+            R.RESERVATION_NO,
+            R.STORE_NO,
+            S.STORE_NAME,
+            S.STORE_ADDRESS_1 AS storeAddress1,
+            S.STORE_ADDRESS_2 AS storeAddress2,
+            S.STORE_PHONE AS storePhone,
+            (
+                SELECT IMAGE
+                FROM TB_STORE_IMAGE
+                WHERE STORE_NO = R.STORE_NO
+                AND ROWNUM = 1
+            ) AS storeImage,
+            R.RESERVATION_DATE,
+            R.RESERVATION_TIME,
+            R.PERSON_COUNT,
+            R.USER_NO,
+            R.STATUS        
+        FROM TB_RESERVATION R
+        JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+        WHERE R.RESERVATION_NO = #{reservationNo}
     </select>
+
+    
 
 
     <!-- 1. 예약 상태 변경 -->
@@ -100,5 +106,35 @@
         SYSDATE
     )
     </insert>
+
+    <!-- 예약시간이 지난 예약이면 리뷰상태 변경 -->
+    <update id="updateIsReviewYet">
+        UPDATE TB_RESERVATION
+        SET IS_REVIEW = 'YET'
+        WHERE STATUS = 'Y'
+            AND IS_REVIEW = 'NO'
+            AND (
+                RESERVATION_DATE &lt; TRUNC(SYSDATE)
+                OR (
+                    RESERVATION_DATE = TRUNC(SYSDATE)
+                    AND TO_DATE(RESERVATION_TIME, 'HH24:MI') &lt;= TO_DATE(TO_CHAR(SYSDATE, 'HH24:MI'), 'HH24:MI')
+                )
+            )
+    </update>
+
+    <!-- 예약건들중 리뷰작성 완료된 상태 변경 -->
+
+   <update id="updateIsReviewComplete" parameterType="long">
+        UPDATE TB_RESERVATION R
+        SET R.IS_REVIEW = 'COM'
+        WHERE R.RESERVATION_NO = #{reservationNo}
+            AND EXISTS (
+                SELECT 1
+                FROM TB_REVIEW RV
+                WHERE RV.RESERVATION_NO = R.RESERVATION_NO
+                    AND RV.IS_DELETED = 'N'
+            )
+    </update>
+
 
 </mapper>

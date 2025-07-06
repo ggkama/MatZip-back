@@ -58,7 +58,7 @@ public class ReservationController {
         return ResponseEntity.ok(detail);
     }
     
-   @PatchMapping("/cancel")
+   @PatchMapping("/mypage/cancel")
     public ResponseEntity<Void> cancelReservation(@RequestBody ReservationCancelDTO cancelDTO) {
         try {
             reservationService.cancelReservation(cancelDTO);
@@ -67,7 +67,19 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    // 예약 시간이 지난 상태라면 IS_REVIEW를 YET으로 변경
+    @PatchMapping("/review/status-update")
+    public ResponseEntity<Void> updateReviewStatusToYet() {
+        reservationService.updateIsReviewYet();
+        return ResponseEntity.ok().build();
+    }
 
+    // 리뷰 작성 완료 시 IS_REVIEW를 COM으로 변경
+    @PatchMapping("/review/complete/{reservationNo}")
+    public ResponseEntity<Void> updateReviewStatusToComplete(@PathVariable Long reservationNo) {
+        reservationService.updateIsReviewComplete(reservationNo);
+        return ResponseEntity.ok().build();
+    }
 
     
 }

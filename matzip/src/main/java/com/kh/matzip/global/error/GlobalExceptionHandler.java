@@ -23,7 +23,9 @@ import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotFoundException;
 import com.kh.matzip.global.error.exceptions.StoreAlreadyExistsException;
 import com.kh.matzip.global.error.exceptions.StoreSaveFailedException;
+import com.kh.matzip.global.error.exceptions.UpdateFailedException;
 import com.kh.matzip.global.error.exceptions.UserAlreadyDeletedException;
+import com.kh.matzip.global.error.exceptions.UserNotFoundException;
 import com.kh.matzip.global.response.ApiResponse;
 
 import jakarta.validation.ConstraintViolationException;
@@ -153,5 +155,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleStoreSaveFailedException(StoreSaveFailedException e) {
         return makeResponseEntity(ResponseCode.STORE_SAVE_FAIL, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    // 사용자 없음
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserNotFoundException(UserNotFoundException e) {
+        return makeResponseEntity(ResponseCode.USER_NOT_FOUND, e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    // 사용자 정보 수정 실패
+    @ExceptionHandler(UpdateFailedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUpdateFailedException(UpdateFailedException e) {
+        return makeResponseEntity(ResponseCode.USER_UPDATE_FAIL, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    
     
 }

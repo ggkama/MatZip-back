@@ -8,9 +8,16 @@ import com.kh.matzip.mypage.model.dto.MyProfileDTO;
 
 @Mapper
 public interface MyProfileMapper {
-    MyProfileDTO selectMyprofile(Long userNo);
 
-    void updateMyProfile(MyProfileDTO MyProfile);
+    MyProfileDTO selectMyProfile(Long userNo);
+
+    void updateUserProfile(MyProfileDTO dto);
+
+    String findImageByUserNo(Long userNo);
+
+    void insertProfileImage(Map<String, Object> imageData);
+
+    void updateProfileImage(Map<String, Object> imageData);
 
     void changePassword(Map<String, Object> changeRequest);
 }

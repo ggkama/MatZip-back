@@ -37,6 +37,8 @@ public enum ResponseCode {
     DUPLICATIED_APPROVAL("E114"),
     ENTITY_NOT_FOUND("E115"),
     FAIL_CHANGE_OWNER("E116"),
+    USER_NOT_FOUND("E117"),
+    USER_UPDATE_FAIL("E118"),
     
     SERVER_ERROR("500"),
 

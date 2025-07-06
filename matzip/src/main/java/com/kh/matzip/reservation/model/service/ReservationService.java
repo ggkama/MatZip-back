@@ -17,4 +17,8 @@ public interface ReservationService {
     ReservationDTO findByReservationNo(Long reservationNo);
 
     void cancelReservation(ReservationCancelDTO dto);
+
+    void updateIsReviewYet();
+
+    void updateIsReviewComplete(Long reservationNo);
 }
