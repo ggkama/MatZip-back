@@ -38,15 +38,39 @@
 
      <!-- 프로필 이미지 INSERT -->
      <insert id="insertProfileImage" parameterType="map">
-     INSERT INTO TB_PROFILE_IMAGE (USER_NO, IMAGE_URL)
-     VALUES (#{userNo}, #{imageUrl})
+          INSERT INTO TB_PROFILE_IMAGE (USER_NO, IMAGE_URL)
+          VALUES (#{userNo}, #{imageUrl})
      </insert>
 
      <!-- 프로필 이미지 UPDATE -->
      <update id="updateProfileImage" parameterType="map">
-     UPDATE TB_PROFILE_IMAGE
-     SET IMAGE_URL = #{imageUrl}
-     WHERE USER_NO = #{userNo}
+          UPDATE TB_PROFILE_IMAGE
+          SET IMAGE_URL = #{imageUrl}
+          WHERE USER_NO = #{userNo}
      </update>
+
+     <!-- 비밀번호 조회 -->
+     <select id="findPasswordByUserNo" resultType="string">
+          SELECT USER_PW
+          FROM TB_USER
+          WHERE USER_NO = #{userNo}
+     </select>
+
+     <!-- 비밀번호 변경 -->
+     <update id="updatePassword" parameterType="map">
+          UPDATE TB_USER
+          SET USER_PW = #{userPw}
+          WHERE USER_NO = #{userNo}
+     </update>
+
+     <!-- 회원 탈퇴 -->
+
+     <update id="deleteUser" parameterType="long">
+          UPDATE TB_USER
+          SET IS_DELETED = 'Y',
+               MODIFIED_DATE = SYSDATE
+          WHERE USER_NO = #{userNo}
+     </update>
+
 
 </mapper>

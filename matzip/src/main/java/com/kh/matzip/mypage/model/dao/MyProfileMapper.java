@@ -19,5 +19,12 @@ public interface MyProfileMapper {
 
     void updateProfileImage(Map<String, Object> imageData);
 
-    void changePassword(Map<String, Object> changeRequest);
+     // 현재 비밀번호 가져오기
+    String findPasswordByUserNo(Long userNo);
+
+    // 비밀번호 변경
+    int updatePassword(Map<String, Object> param);
+
+    // 회원탈퇴
+    void deleteUser(Long userNo);
 }

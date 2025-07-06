@@ -1,26 +1,27 @@
 package com.kh.matzip.mypage.controller;
 
-import org.apache.tomcat.util.http.ResponseUtil;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.matzip.mypage.model.service.MyProfileService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 
 import com.kh.matzip.global.enums.ResponseCode;
 import com.kh.matzip.global.response.ApiResponse;
 import com.kh.matzip.member.model.vo.CustomUserDetails;
-import com.kh.matzip.mypage.model.dao.MyProfileMapper;
 import com.kh.matzip.mypage.model.dto.MyProfileDTO;
+import com.kh.matzip.mypage.model.dto.PasswordDTO;
 
 
 @RestController
@@ -66,4 +67,27 @@ public class MyProfileController  {
 
         return ResponseEntity.ok(ApiResponse.success(ResponseCode.SUCCESS, "정보 수정 완료"));
     }
+
+   @PutMapping("/password")
+    public ResponseEntity<String> updatePassword(@Valid @RequestBody PasswordDTO passwordDTO) {
+        CustomUserDetails userDetails = (CustomUserDetails)
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userNo = userDetails.getUserNo();
+
+        myProfileService.updatePassword(userNo, passwordDTO.getCurrentPw(), passwordDTO.getNewPw());
+
+        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+    }
+    
+    @PutMapping("/delete")
+    public ResponseEntity<String> deleteUser() {
+        CustomUserDetails userDetails = (CustomUserDetails)
+            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userNo = userDetails.getUserNo();
+
+        myProfileService.deleteUser(userNo);
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    }
+
+
 }

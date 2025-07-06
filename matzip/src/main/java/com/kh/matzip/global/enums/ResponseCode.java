@@ -39,6 +39,7 @@ public enum ResponseCode {
     FAIL_CHANGE_OWNER("E116"),
     USER_NOT_FOUND("E117"),
     USER_UPDATE_FAIL("E118"),
+    INVALID_PASSWORD("E119"),
     
     SERVER_ERROR("500"),
 

@@ -16,6 +16,7 @@ import com.kh.matzip.global.error.exceptions.DuplicateDataException;
 import com.kh.matzip.global.error.exceptions.FileStreamException;
 import com.kh.matzip.global.error.exceptions.FileTypeNotAllowedException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
+import com.kh.matzip.global.error.exceptions.InvalidPasswordException;
 import com.kh.matzip.global.error.exceptions.InvalidValueException;
 import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
 import com.kh.matzip.global.error.exceptions.ReviewAccessDeniedException;
@@ -168,7 +169,11 @@ public class GlobalExceptionHandler {
         return makeResponseEntity(ResponseCode.USER_UPDATE_FAIL, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
+    // 비밀번호 불일치 예외
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidPasswordException(InvalidPasswordException e) {
+        return makeResponseEntity(ResponseCode.INVALID_PASSWORD, e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
     
     
 }

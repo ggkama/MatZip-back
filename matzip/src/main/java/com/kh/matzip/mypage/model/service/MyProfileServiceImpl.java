@@ -1,10 +1,13 @@
 package com.kh.matzip.mypage.model.service;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.matzip.global.enums.ResponseCode;
+import com.kh.matzip.global.error.exceptions.InvalidPasswordException;
 import com.kh.matzip.global.error.exceptions.UpdateFailedException;
 import com.kh.matzip.mypage.model.dao.MyProfileMapper;
 import com.kh.matzip.mypage.model.dto.MyProfileDTO;
@@ -67,6 +70,27 @@ public class MyProfileServiceImpl implements MyProfileService {
         }
     }
 
+   @Override
+    public void updatePassword(Long userNo, String currentPw, String newPw) {
+        String userPw = myProfileMapper.findPasswordByUserNo(userNo);
+
+        if (!passwordEncoder.matches(currentPw, userPw)) {
+            throw new InvalidPasswordException(ResponseCode.INVALID_PASSWORD, "현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        String encodedNewPw = passwordEncoder.encode(newPw);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("userNo", userNo);
+        param.put("userPw", encodedNewPw);
+
+        myProfileMapper.updatePassword(param);
+    }
+
+    @Override
+    public void deleteUser(Long userNo) {
+        myProfileMapper.deleteUser(userNo);
+    }
 
     
 }
