@@ -19,6 +19,7 @@ public enum ResponseCode {
     OWNER_DETAIL_SUCCESS("S208"),
     OWNER_APPROVE("S209"),
     OWNER_REJECT("S210"),
+    OAUTH_SIGNUP("S211"),
     
     DUPLICATED_ID("E100"),
     DUPLICATED_NICKNAME("E101"),
@@ -37,6 +38,7 @@ public enum ResponseCode {
     DUPLICATIED_APPROVAL("E114"),
     ENTITY_NOT_FOUND("E115"),
     FAIL_CHANGE_OWNER("E116"),
+    OAUTH_NOTFOUND("E117"),
     
     SERVER_ERROR("500"),
 

@@ -1,0 +1,39 @@
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.kh.matzip.oauth.model.dao.OAuthMapper">
+
+	<select id="findByProviderId" resultType="com.kh.matzip.oauth.model.dto.OAuthResponseDTO">
+        SELECT 
+            OAUTH_NO, USER_NO, USER_ID, PROVIDER, PROVIDER_ID, EMAIL, USER_NICKNAME, ENROLL_DATE
+        FROM 
+            TB_OAUTH_USER
+        WHERE 
+            PROVIDER = #{provider}
+          AND
+          	PROVIDER_ID = #{providerId}
+    </select>
+
+    <insert id="insertOAuthUser">
+        INSERT INTO TB_OAUTH_USER (
+            OAUTH_NO,
+            USER_NO,
+            USER_ID,
+            PROVIDER,
+            PROVIDER_ID,
+            EMAIL,
+            USER_NICKNAME,
+            ENROLL_DATE
+        ) VALUES (
+            SEQ_OAUTH_NO.NEXTVAL,
+            #{userNo},
+        	#{userId},
+            #{provider},
+            #{providerId},
+            #{email},
+            #{userNickname},
+            SYSDATE
+        )
+    </insert>
+
+</mapper>

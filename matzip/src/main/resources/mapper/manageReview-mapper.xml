@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+  
+<mapper namespace="com.kh.matzip.admin.manageReview.model.dao.ManageReviewMapper">
+
+	<select id="selectReviewList" resultType="com.kh.matzip.admin.manageReview.model.dto.ManageReviewListDTO">
+		SELECT
+			R.REVIEW_NO,
+			S.STORE_NAME,
+			U.USER_NICKNAME,
+			R.STORE_GRADE,
+			R.REVIEW_DATE
+		FROM
+			TB_REVIEW R
+		JOIN
+			TB_USER U ON R.USER_NO = U.USER_NO
+		JOIN
+			TB_STORE S ON R.STORE_NO = S.STORE_NO
+		ORDER BY
+			R.REVIEW_DATE DESC
+	</select>
+	
+	<select id="countAllReviews">
+		SELECT
+			COUNT(REVIEW_NO)
+		FROM
+			TB_REVIEW
+	</select>
+
+</mapper>

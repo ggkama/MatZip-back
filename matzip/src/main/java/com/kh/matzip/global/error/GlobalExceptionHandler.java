@@ -18,6 +18,7 @@ import com.kh.matzip.global.error.exceptions.FileTypeNotAllowedException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
 import com.kh.matzip.global.error.exceptions.InvalidValueException;
 import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
+import com.kh.matzip.global.error.exceptions.OAuthUserNotFoundException;
 import com.kh.matzip.global.error.exceptions.ReviewAccessDeniedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotFoundException;
@@ -152,6 +153,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(StoreSaveFailedException.class)
     public ResponseEntity<ApiResponse<Void>> handleStoreSaveFailedException(StoreSaveFailedException e) {
         return makeResponseEntity(ResponseCode.STORE_SAVE_FAIL, e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(OAuthUserNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleOAuthUserNotFoundException(OAuthUserNotFoundException e) {
+        return makeResponseEntity(ResponseCode.OAUTH_NOTFOUND, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
 }
