@@ -21,4 +21,10 @@ public interface ReservationService {
     void updateIsReviewYet();
 
     void updateIsReviewComplete(Long reservationNo);
+
+    List<ReservationDTO> getReservationsByStoreNo(Long storeNo);
+
+    ReservationDTO getReservationDetailByNo(Long reservationNo);
+
+    void cancelReservationOwner(ReservationCancelDTO dto);
 }

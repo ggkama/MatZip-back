@@ -78,7 +78,7 @@
             R.RESERVATION_TIME,
             R.PERSON_COUNT,
             R.USER_NO,
-            R.STATUS        
+            R.STATUS         
         FROM TB_RESERVATION R
         JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
         WHERE R.RESERVATION_NO = #{reservationNo}
@@ -135,6 +135,55 @@
                     AND RV.IS_DELETED = 'N'
             )
     </update>
+
+   <select id="getReservationsByStoreNo" parameterType="long" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+        SELECT 
+            R.RESERVATION_NO,
+            R.USER_NO,
+            U.USER_NAME AS userName,
+            U.USER_PHONE AS userPhone,
+            R.RESERVATION_DATE,
+            R.RESERVATION_TIME,
+            R.PERSON_COUNT,
+            R.STATUS
+        FROM TB_RESERVATION R
+        JOIN TB_USER U ON R.USER_NO = U.USER_NO
+        WHERE R.STORE_NO = #{storeNo}
+        ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
+    </select>
+
+    <!-- 사장님 예약 상세조회 -->
+
+    <select id="getReservationDetailByNo" parameterType="long" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+    SELECT 
+        R.RESERVATION_NO,
+        R.USER_NO,
+        U.USER_NAME,
+        U.USER_PHONE,
+        R.STORE_NO,
+        S.STORE_NAME,
+        R.RESERVATION_DATE,
+        R.RESERVATION_TIME,
+        R.PERSON_COUNT,
+        R.STATUS,
+        R.CREATED_DATE
+    FROM TB_RESERVATION R
+    JOIN TB_USER U ON R.USER_NO = U.USER_NO
+    JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+    WHERE R.RESERVATION_NO = #{reservationNo}
+    </select>
+
+    <!-- 사장님 예약취소 -->
+    <update id="updateReservationStatusToCancel" parameterType="long">
+        UPDATE TB_RESERVATION
+        SET STATUS = 'N'
+        WHERE RESERVATION_NO = #{reservationNo}
+    </update>
+
+    <insert id="insertReservationCancel" parameterType="map">
+        INSERT INTO TB_RESERVATION_CANCEL (RESERVATION_NO, CANCEL_REASON, CANCEL_DATE)
+        VALUES (#{reservationNo}, #{cancelReason}, SYSDATE)
+    </insert>
 
 
 </mapper>

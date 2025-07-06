@@ -1,6 +1,7 @@
 package com.kh.matzip.reservation.model.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +87,34 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void updateIsReviewComplete(Long reservationNo) {
         reservationMapper.updateIsReviewComplete(reservationNo);
+    }
+
+    // 사장님 예약 조회
+    @Override
+    public List<ReservationDTO> getReservationsByStoreNo(Long storeNo) {
+        return reservationMapper.getReservationsByStoreNo(storeNo);
+    }
+
+    // 사장님 예약 상세 조회
+
+    @Override
+    public ReservationDTO getReservationDetailByNo(Long reservationNo) {
+        return reservationMapper.getReservationDetailByNo(reservationNo);
+    }
+
+    // 사장님 예약취소
+    @Transactional
+    @Override
+    public void cancelReservationOwner(ReservationCancelDTO dto) {
+        Long reservationNo = dto.getReservationNo();
+        String cancelReason = dto.getCancelReason();
+
+        reservationMapper.updateReservationStatusToCancel(reservationNo);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("reservationNo", reservationNo);
+        param.put("cancelReason", cancelReason);
+        reservationMapper.insertReservationCancel(param);
     }
     
 }

@@ -30,6 +30,9 @@ public class ReservationDTO {
     private String storeAddress2;
     private String storeImage;
     private String isReview;
+    private String userName;
+    private String userPhone;
+
 
     // 예약 가능한 조건들 (가게 관련 정보)
     private List<String> dayOff; 

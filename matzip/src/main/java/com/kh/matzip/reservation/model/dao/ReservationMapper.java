@@ -32,5 +32,17 @@ public interface ReservationMapper {
 
     //  실제 리뷰가 존재할 경우 예약의 IS_REVIEW를 COM으로 변경
     int updateIsReviewComplete(Long reservationNo);
+
+    // 사장님 예약 조회
+    List<ReservationDTO> getReservationsByStoreNo(Long storeNo);
+
+    // 사장님 예약 상세 조회
+    ReservationDTO getReservationDetailByNo(Long reservationNo);
+
+    // 사장님 예약취소
+    int updateReservationStatusToCancel(Long reservationNo); // TB_RESERVATION 업데이트
+    int insertReservationCancel(Map<String, Object> param);  // TB_RESERVATION_CANCEL
+
+
     
 }

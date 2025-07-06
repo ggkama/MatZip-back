@@ -81,5 +81,32 @@ public class ReservationController {
         return ResponseEntity.ok().build();
     }
 
+    // 사장님 예약 조회
+    @GetMapping("/owner/{storeNo}")
+    public ResponseEntity<List<ReservationDTO>> getStoreReservations(@PathVariable Long storeNo) {
+        System.out.println("🔥 storeNo = " + storeNo);  // 찍어보기
+        List<ReservationDTO> list = reservationService.getReservationsByStoreNo(storeNo);
+        System.out.println("🔥 예약 개수 = " + list.size());  // 찍어보기
+        return ResponseEntity.ok(list);
+    };
+
+    // 사장님 예약 상세 조회 
+    @GetMapping("/owner/detail/{reservationNo}")
+        public ResponseEntity<ReservationDTO> getReservationDetailByNo(@PathVariable Long reservationNo) {
+            ReservationDTO detail = reservationService.getReservationDetailByNo(reservationNo);
+            return ResponseEntity.ok(detail);
+    }
+    
+    // 사장님 예약 취소
+    @PatchMapping("/owner/cancel")
+    public ResponseEntity<Void> cancelReservationByOwner(@RequestBody ReservationCancelDTO cancelDTO) {
+        try {
+            reservationService.cancelReservationOwner(cancelDTO);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     
 }
