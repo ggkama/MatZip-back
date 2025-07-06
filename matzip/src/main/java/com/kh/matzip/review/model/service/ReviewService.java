@@ -16,6 +16,8 @@ public interface ReviewService {
 
     List<ReviewDTO> selectReviewDetail(Long storeNo);
 
+    List<ReviewDTO> selectMyReviewDetailAuth(Long userNo, Long reviewNo);
+
     void insertReview(Long userNo, ReviewWriteFormDTO form, List<MultipartFile> files);
 
     void updateReview(Long userNo, Long reviewNo, ReviewWriteFormDTO form, List<MultipartFile> files);

@@ -143,4 +143,20 @@
         DELETE FROM TB_REVIEW_IMAGE
         WHERE REVIEW_NO = #{reviewNo}
     </delete>
+
+    <!-- 예약자 검증 -->
+    <select id="existsUserReservation" resultType="boolean">
+      SELECT COUNT(*) > 0 FROM TB_RESERVATION
+      WHERE USER_NO = #{userNo} AND STORE_NO = #{storeNo} AND RESERVATION_NO = #{reservationNo} AND STATUS = 'Y'
+    </select>
+
+    <!-- 동일 예약에 리뷰 중복 작성 금지 -->
+    <select id="existsReviewByReservation" resultType="boolean">
+      SELECT COUNT(*) > 0 FROM TB_REVIEW WHERE RESERVATION_NO = #{reservationNo} AND IS_DELETED = 'N'
+    </select>
+
+    <!-- 리뷰 작성자 확인 -->
+    <select id="selectReviewOwner" parameterType="long" resultType="com.kh.matzip.review.model.dto.ReviewDTO">
+      SELECT USER_NO as userNo FROM TB_REVIEW WHERE REVIEW_NO = #{reviewNo} AND IS_DELETED = 'N'
+    </select>
 </mapper>

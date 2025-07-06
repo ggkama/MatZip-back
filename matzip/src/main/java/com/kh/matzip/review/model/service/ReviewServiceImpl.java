@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
 import com.kh.matzip.review.model.dao.ReviewMapper;
 import com.kh.matzip.review.model.dto.ReviewDTO;
 import com.kh.matzip.review.model.dto.ReviewWriteFormDTO;
@@ -63,6 +64,20 @@ public class ReviewServiceImpl implements ReviewService {
         return detailList;
     }
 
+
+    @Override
+    public List<ReviewDTO> selectMyReviewDetailAuth(Long userNo, Long reviewNo) {
+        List<ReviewDTO> detailList = reviewMapper.selectMyReviewDetail(reviewNo);
+        if (detailList.isEmpty() || !detailList.get(0).getUserNo().equals(userNo)) {
+            throw new RuntimeException("본인만 접근 가능합니다."); // 권한 체크
+        }
+        for (ReviewDTO review : detailList) {
+            List<String> imageUrls = reviewMapper.selectReviewImageUrls(review.getReviewNo());
+            review.setImageUrls(imageUrls);
+        }
+        return detailList;
+    }
+
     @Override
     public List<ReviewDTO> selectReviewDetail(Long storeNo) {
         List<ReviewDTO> reviews = reviewMapper.selectReviewDetail(storeNo);
@@ -78,6 +93,16 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void insertReview(Long userNo, ReviewWriteFormDTO form, List<MultipartFile> files) {
+
+        // 중복체크 / 예약했는지 체크
+        boolean hasReservation = reviewMapper.existsUserReservation(userNo, form.getStoreNo(), form.getReservationNo());
+        if (!hasReservation) throw new ReviewNotAllowedException("해당 가게 예약 내역이 없습니다.");
+
+        boolean alreadyWritten = reviewMapper.existsReviewByReservation(form.getReservationNo());
+        if (alreadyWritten) throw new IllegalStateException("이미 해당 예약에 리뷰를 작성했습니다.");
+
+        if (files == null || files.size() == 0)
+            throw new IllegalArgumentException("이미지는 1장 이상 필수입니다.");
         // Review insert
         Review review = new Review();
         review.setReservationNo(form.getReservationNo());
@@ -102,6 +127,16 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void updateReview(Long userNo, Long reviewNo, ReviewWriteFormDTO form, List<MultipartFile> files) {
+
+        ReviewDTO owner = reviewMapper.selectReviewOwner(reviewNo);
+        if (owner == null || !owner.getUserNo().equals(userNo)) {
+            throw new IllegalStateException("본인만 수정할 수 있습니다.");
+        }
+
+        if (files == null || files.size() == 0)
+            throw new IllegalArgumentException("이미지는 1장 이상 필수입니다.");
+
+
         Review review = new Review();
         review.setReviewNo(reviewNo);
         review.setReviewContent(form.getReviewContent());
