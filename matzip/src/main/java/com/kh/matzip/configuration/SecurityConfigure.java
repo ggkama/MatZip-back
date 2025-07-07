@@ -47,6 +47,7 @@ public class SecurityConfigure {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
+                .requestMatchers(HttpMethod.OPTIONS, "/api/reservation/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
