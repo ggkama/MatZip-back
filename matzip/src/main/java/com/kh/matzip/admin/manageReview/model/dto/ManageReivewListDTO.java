@@ -1,4 +1,4 @@
-package com.kh.matzip.admin.manageStore.model.dto;
+package com.kh.matzip.admin.manageReview.model.dto;
 
 import java.util.Date;
 
@@ -13,12 +13,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ManageStoreListDTO {
-	
-	private Long storeNo;
+public class ManageReivewListDTO {
+
+	private Long reviewNo;
 	private String storeName;
-	private String categoryAddress;
+	private String userNickname;
 	private Double storeGrade;
-	private Date createDate;
+	private Date reviewDate;
 	
 }

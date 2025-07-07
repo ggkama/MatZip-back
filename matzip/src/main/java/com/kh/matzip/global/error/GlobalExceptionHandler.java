@@ -19,6 +19,7 @@ import com.kh.matzip.global.error.exceptions.InvalidAccessException;
 import com.kh.matzip.global.error.exceptions.InvalidPasswordException;
 import com.kh.matzip.global.error.exceptions.InvalidValueException;
 import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
+import com.kh.matzip.global.error.exceptions.OAuthUserNotFoundException;
 import com.kh.matzip.global.error.exceptions.ReviewAccessDeniedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
 import com.kh.matzip.global.error.exceptions.ReviewNotFoundException;
@@ -175,5 +176,10 @@ public class GlobalExceptionHandler {
         return makeResponseEntity(ResponseCode.INVALID_PASSWORD, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
+    
+    @ExceptionHandler(OAuthUserNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleOAuthUserNotFoundException(OAuthUserNotFoundException e) {
+        return makeResponseEntity(ResponseCode.OAUTH_NOTFOUND, e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
     
 }
