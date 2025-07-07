@@ -65,6 +65,7 @@
             resultType="com.kh.matzip.review.model.dto.ReviewDTO">
         <include refid="reviewSelect"/>
         WHERE R.STORE_NO = #{storeNo}
+          AND R.IS_DELETED = 'N'
         ORDER BY R.REVIEW_DATE DESC
     </select>
 

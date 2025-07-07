@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.matzip.global.error.exceptions.ReviewNotAllowedException;
+import com.kh.matzip.global.error.exceptions.ReviewNotFoundException;
 import com.kh.matzip.review.model.dao.ReviewMapper;
 import com.kh.matzip.review.model.dto.ReviewDTO;
 import com.kh.matzip.review.model.dto.ReviewWriteFormDTO;
@@ -129,6 +130,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void updateReview(Long userNo, Long reviewNo, ReviewWriteFormDTO form, List<MultipartFile> files) {
 
         ReviewDTO owner = reviewMapper.selectReviewOwner(reviewNo);
+        if (owner == null) throw new ReviewNotFoundException("존재하지 않는 리뷰입니다.");
         if (owner == null || !owner.getUserNo().equals(userNo)) {
             throw new IllegalStateException("본인만 수정할 수 있습니다.");
         }
@@ -148,6 +150,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 기존 이미지 끌고오기
         List<String> oldImages = reviewMapper.selectReviewImageUrls(reviewNo);
+
+        // if ( oldImages )
+
         for (String url : oldImages) {
             fileService.delete(url);
         }

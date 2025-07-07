@@ -19,7 +19,10 @@ import lombok.ToString;
 @ToString
 public class ReviewWriteFormDTO {
 
+    
     private Long reservationNo;
+
+    
     private Long storeNo;
 
     @NotBlank

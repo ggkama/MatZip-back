@@ -43,7 +43,7 @@ public interface ReviewMapper {
     // 기존 이미지 URL 조회 하기(삭제용)
     List<String> selectReviewImageUrls(Long reviewNo);
 
-
+    // 예약여부 체크
     boolean existsUserReservation(@Param("userNo") Long userNo, @Param("storeNo") Long storeNo, @Param("reservationNo") Long reservationNo);
 
     // 해당 예약에 이미 리뷰 썼는지
@@ -51,6 +51,8 @@ public interface ReviewMapper {
 
     // 리뷰 작성자 userNo 반환
     ReviewDTO selectReviewOwner(Long reviewNo);
+
+    
     
 
 }

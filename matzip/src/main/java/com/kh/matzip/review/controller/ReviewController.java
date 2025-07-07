@@ -69,6 +69,7 @@ public class ReviewController {
     @PostMapping("/write")
     public ResponseEntity<String> writeReview(
         @AuthenticationPrincipal CustomUserDetails user,
+        @PathVariable Long reviewNo,
         @ModelAttribute @Valid ReviewWriteFormDTO form,
         @RequestParam(name = "files") List<MultipartFile> files
     ) {
