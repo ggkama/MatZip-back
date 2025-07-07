@@ -100,13 +100,25 @@ public class StoreServiceImpl implements StoreService {
                             List<MultipartFile> changedNewImages) {
         try {
             Long userNo = user.getUserNo();
-            storeDto.setUserNo(userNo);
-            StoreDTO existingStore = storeMapper.selectStoreByUserNo(userNo);
-            if (existingStore == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "등록된 매장이 없습니다.");
+            
+            // 관리자도 접근할 수 있도록 수정
+            String role = user.getUserRole();
+            Long storeNo;
+            
+            if(role.equals("ROLE_ADMIN")) {
+            	storeNo = storeDto.getStoreNo();
+            	if(storeNo == null) {
+            		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "등록된 매장이 없습니다.");
+            	}
+            } else {
+            	StoreDTO existingStore = storeMapper.selectStoreByUserNo(userNo);
+            	if (existingStore == null) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "등록된 매장이 없습니다.");
+                }
+                storeNo = existingStore.getStoreNo();
+                storeDto.setUserNo(userNo);
+                storeDto.setStoreNo(storeNo);
             }
-            Long storeNo = existingStore.getStoreNo();
-            storeDto.setStoreNo(storeNo);
 
             storeMapper.updateStore(storeDto);
             updateConveniences(storeNo, storeDto.getCategoryConvenience());

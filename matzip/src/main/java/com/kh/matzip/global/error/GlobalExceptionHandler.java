@@ -179,7 +179,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(OAuthUserNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleOAuthUserNotFoundException(OAuthUserNotFoundException e) {
-        return makeResponseEntity(ResponseCode.OAUTH_NOTFOUND, e.getMessage(), HttpStatus.BAD_REQUEST);
+        return makeResponseEntity(ResponseCode.USER_NOT_FOUND, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
 }
