@@ -44,6 +44,8 @@
     )
     </insert>
 
+    <!-- 사용자용 예약 내역 조회 -->
+
     <select id="getReservationUserNo" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
         SELECT
             R.RESERVATION_NO,
@@ -58,6 +60,13 @@
         JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
         WHERE R.USER_NO = #{userNo}
         ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countReservationsByUserNo" resultType="int">
+        SELECT COUNT(RESERVATION_NO)
+        FROM TB_RESERVATION
+        WHERE USER_NO = #{userNo}
     </select>
 
    <select id="findByReservationNo" parameterType="long" resultType="ReservationDTO">
@@ -136,20 +145,28 @@
             )
     </update>
 
-   <select id="getReservationsByStoreNo" parameterType="long" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
-        SELECT 
-            R.RESERVATION_NO,
-            R.USER_NO,
-            U.USER_NAME AS userName,
-            U.USER_PHONE AS userPhone,
-            R.RESERVATION_DATE,
-            R.RESERVATION_TIME,
-            R.PERSON_COUNT,
-            R.STATUS
-        FROM TB_RESERVATION R
-        JOIN TB_USER U ON R.USER_NO = U.USER_NO
-        WHERE R.STORE_NO = #{storeNo}
-        ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
+   <select id="getReservationsByStoreNo" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+    SELECT 
+        R.RESERVATION_NO,
+        R.USER_NO,
+        U.USER_NAME AS userName,
+        U.USER_PHONE AS userPhone,
+        R.RESERVATION_DATE,
+        R.RESERVATION_TIME,
+        R.PERSON_COUNT,
+        R.STATUS,
+        R.CREATED_DATE
+    FROM TB_RESERVATION R
+    JOIN TB_USER U ON R.USER_NO = U.USER_NO
+    WHERE R.STORE_NO = #{storeNo}
+    ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
+    OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countReservationsByStoreNo" resultType="int">
+        SELECT COUNT(RESERVATION_NO)
+        FROM TB_RESERVATION
+        WHERE STORE_NO = #{storeNo}
     </select>
 
     <!-- 사장님 예약 상세조회 -->

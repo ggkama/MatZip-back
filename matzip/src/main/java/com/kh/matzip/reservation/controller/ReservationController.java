@@ -1,6 +1,7 @@
 package com.kh.matzip.reservation.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,16 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;
 import com.kh.matzip.reservation.model.dto.ReservationDTO;
 import com.kh.matzip.reservation.model.service.ReservationService;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;
 
 
 @RestController
@@ -44,9 +43,13 @@ public class ReservationController {
     }
 
     @GetMapping("/mypage/{userNo}")
-    public ResponseEntity<List<ReservationDTO>> getMyReservations(@PathVariable(name = "userNo") Long userNo) {
-        List<ReservationDTO> list = reservationService.getReservationUserNo(userNo);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<Map<String, Object>> getMyReservations(
+            @PathVariable("userNo") Long userNo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Map<String, Object> result = reservationService.getReservationsByUserNo(userNo, page, size);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/mypage/detail/{reservationNo}")
@@ -83,12 +86,14 @@ public class ReservationController {
 
     // 사장님 예약 조회
     @GetMapping("/owner/{storeNo}")
-    public ResponseEntity<List<ReservationDTO>> getStoreReservations(@PathVariable Long storeNo) {
-        System.out.println("🔥 storeNo = " + storeNo);  // 찍어보기
-        List<ReservationDTO> list = reservationService.getReservationsByStoreNo(storeNo);
-        System.out.println("🔥 예약 개수 = " + list.size());  // 찍어보기
-        return ResponseEntity.ok(list);
-    };
+    public ResponseEntity<Map<String, Object>> getStoreReservations(
+            @PathVariable Long storeNo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Map<String, Object> result = reservationService.getReservationsByStoreNo(storeNo, page, size);
+        return ResponseEntity.ok(result);
+    }
 
     // 사장님 예약 상세 조회 
     @GetMapping("/owner/detail/{reservationNo}")
@@ -96,7 +101,7 @@ public class ReservationController {
             ReservationDTO detail = reservationService.getReservationDetailByNo(reservationNo);
             return ResponseEntity.ok(detail);
     }
-    
+
     // 사장님 예약 취소
     @PatchMapping("/owner/cancel")
     public ResponseEntity<Void> cancelReservationByOwner(@RequestBody ReservationCancelDTO cancelDTO) {

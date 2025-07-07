@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.kh.matzip.reservation.model.dao.ReservationMapper;
 import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;
 import com.kh.matzip.reservation.model.dto.ReservationDTO;
+import com.kh.matzip.util.pagenation.PagenationService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ReservationServiceImpl implements ReservationService {
 
   private final ReservationMapper reservationMapper; 
+  private final PagenationService pagenationService;
 
   @Override
     public ReservationDTO getReservationInfoStoreNo(Long storeNo) {
@@ -53,8 +55,25 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDTO> getReservationUserNo(Long userNo) {
-        return reservationMapper.getReservationUserNo(userNo);
+    public Map<String, Object> getReservationsByUserNo(Long userNo, int page, int size) {
+        int startIndex = pagenationService.getStartIndex(page, size);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("userNo", userNo);
+        param.put("startIndex", startIndex);
+        param.put("size", size);
+
+        List<ReservationDTO> list = reservationMapper.getReservationUserNo(param);
+        int total = reservationMapper.countReservationsByUserNo(userNo);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("reservationList", list);
+        result.put("pageNo", page);
+        result.put("size", size);
+        result.put("totalReservations", total);
+        result.put("totalPages", (int) Math.ceil((double) total / size));
+
+        return result;
     }
 
     @Override
@@ -90,9 +109,26 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     // 사장님 예약 조회
-    @Override
-    public List<ReservationDTO> getReservationsByStoreNo(Long storeNo) {
-        return reservationMapper.getReservationsByStoreNo(storeNo);
+   @Override
+    public Map<String, Object> getReservationsByStoreNo(Long storeNo, int page, int size) {
+        int startIndex = pagenationService.getStartIndex(page, size);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("storeNo", storeNo);
+        param.put("startIndex", startIndex);
+        param.put("size", size);
+
+        List<ReservationDTO> reservationList = reservationMapper.getReservationsByStoreNo(param);
+        int totalReservations = reservationMapper.countReservationsByStoreNo(storeNo);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("reservationList", reservationList);
+        result.put("pageNo", page);
+        result.put("size", size);
+        result.put("totalReservations", totalReservations);
+        result.put("totalPages", (int) Math.ceil((double) totalReservations / size));
+
+        return result;
     }
 
     // 사장님 예약 상세 조회

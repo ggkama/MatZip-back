@@ -27,6 +27,9 @@ public interface ReservationMapper {
 
     int insertCancelInfo(ReservationCancelDTO dto);
 
+    List<ReservationDTO> getReservationUserNo(Map<String, Object> param);
+    int countReservationsByUserNo(Long userNo);
+
      //  예약일이 지났고 상태가 Y이며 리뷰가 없는 예약 → YET 상태로 변경
     int updateIsReviewYet();
 
@@ -34,7 +37,8 @@ public interface ReservationMapper {
     int updateIsReviewComplete(Long reservationNo);
 
     // 사장님 예약 조회
-    List<ReservationDTO> getReservationsByStoreNo(Long storeNo);
+    List<ReservationDTO> getReservationsByStoreNo(Map<String, Object> param);
+    int countReservationsByStoreNo(Long storeNo);
 
     // 사장님 예약 상세 조회
     ReservationDTO getReservationDetailByNo(Long reservationNo);
