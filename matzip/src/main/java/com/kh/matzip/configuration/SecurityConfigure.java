@@ -59,11 +59,6 @@ public class SecurityConfigure {
                 .requestMatchers(HttpMethod.PUT, "/api/review/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/review/**").authenticated()
                 .requestMatchers("/api/auth/**").permitAll()
-<<<<<<< HEAD
-                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/reservation/**").authenticated()
-=======
->>>>>>> ba0dc2d7256187d2aca86694a135b1bea9f55c14
                 .requestMatchers("/api/reservation/**").permitAll() 
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/owner/**").hasRole("OWNER")

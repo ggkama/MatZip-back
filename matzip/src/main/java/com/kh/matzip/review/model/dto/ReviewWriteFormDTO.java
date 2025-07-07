@@ -31,4 +31,6 @@ public class ReviewWriteFormDTO {
     private double storeGrade;
 
     private List<String> imageUrls;
+
+    private String reviewDate;
 }
