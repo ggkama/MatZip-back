@@ -19,6 +19,7 @@ public enum ResponseCode {
     OWNER_DETAIL_SUCCESS("S208"),
     OWNER_APPROVE("S209"),
     OWNER_REJECT("S210"),
+    OAUTH_SIGNUP("S211"),
     
     DUPLICATED_ID("E100"),
     DUPLICATED_NICKNAME("E101"),

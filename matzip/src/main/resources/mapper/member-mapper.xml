@@ -25,6 +25,10 @@
 
 
     <insert id="signUp" parameterType="com.kh.matzip.member.model.dto.MemberDTO">
+    	<selectKey resultType="long" keyProperty="userNo" order="BEFORE">
+        	SELECT SEQ_USER_NO.NEXTVAL FROM DUAL
+    	</selectKey>
+    	
     	INSERT INTO 
         	TB_USER (
 				USER_NO,
@@ -34,7 +38,7 @@
             	USER_NICKNAME,
             	USER_PHONE
         	) VALUES (
-				SEQ_USER_NO.NEXTVAL,
+				#{userNo},
             	#{userId},
             	#{userPw},
             	#{userName},
