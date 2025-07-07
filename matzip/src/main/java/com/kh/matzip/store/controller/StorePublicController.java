@@ -24,23 +24,23 @@ public class StorePublicController {
 
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> getStoreList(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "15") int size,
-        @RequestParam(required = false) String search
+        @RequestParam(defaultValue = "0", name = "page") int page,
+        @RequestParam(defaultValue = "15", name = "size") int size,
+        @RequestParam(required = false, name = "search") String search
     ) {
         Map<String, Object> result = storeService.getStoreList(page, size, search);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/detail/{storeNo}")
-    public ResponseEntity<StoreDTO> getStoreDetail(@PathVariable Long storeNo) {
+    public ResponseEntity<StoreDTO> getStoreDetail(@PathVariable(name = "storeNo") Long storeNo) {
         StoreDTO dto = storeService.getStoreDetail(storeNo);
     return ResponseEntity.ok(dto);
     }
 
     // 네이버 블로그 검색
     @GetMapping("/{storeName}/naver-blog")
-    public ResponseEntity<String> getNaverBlog(@PathVariable String storeName) {
+    public ResponseEntity<String> getNaverBlog(@PathVariable(name = "storeName") String storeName) {
         
         System.out.println("storeName 넘어오냐?" + storeName);
             

@@ -8,9 +8,23 @@ import com.kh.matzip.mypage.model.dto.MyProfileDTO;
 
 @Mapper
 public interface MyProfileMapper {
-    MyProfileDTO selectMyprofile(Long userNo);
 
-    void updateMyProfile(MyProfileDTO MyProfile);
+    MyProfileDTO selectMyProfile(Long userNo);
 
-    void changePassword(Map<String, Object> changeRequest);
+    void updateUserProfile(MyProfileDTO dto);
+
+    String findImageByUserNo(Long userNo);
+
+    void insertProfileImage(Map<String, Object> imageData);
+
+    void updateProfileImage(Map<String, Object> imageData);
+
+     // 현재 비밀번호 가져오기
+    String findPasswordByUserNo(Long userNo);
+
+    // 비밀번호 변경
+    int updatePassword(Map<String, Object> param);
+
+    // 회원탈퇴
+    void deleteUser(Long userNo);
 }

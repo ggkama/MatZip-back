@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NaverSearchApiService {
     
-    @Value("${naver.client-id}")
+    @Value("${naver.client.id}")
     private String clientId;
 
-    @Value("${naver.client-secret}")
+    @Value("${naver.client.secret}")
     private String clientSecret;
 
     private final RestTemplate restTemplate = new RestTemplate();

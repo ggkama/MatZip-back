@@ -55,6 +55,7 @@ public class SecurityConfigure {
                 .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/review/write").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/reservation/**").authenticated()
                 .requestMatchers("/api/reservation/**").permitAll() 
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
@@ -71,7 +72,7 @@ public class SecurityConfigure {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
