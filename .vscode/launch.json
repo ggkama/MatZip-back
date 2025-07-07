@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MatzipApplication<matzip>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.kh.matzip.MatzipApplication",
+            "projectName": "matzip",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
