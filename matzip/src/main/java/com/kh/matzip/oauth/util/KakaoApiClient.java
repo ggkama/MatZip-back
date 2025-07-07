@@ -56,7 +56,7 @@ public class KakaoApiClient {
                     tokenUri, HttpMethod.POST, request, String.class
             );
             
-            log.info("🟢 access token 요청 응답: {}", response.getBody());
+            log.info("access token 요청 응답: {}", response.getBody());
 
             // JSON 파싱 (access_token 추출)
             Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), Map.class);
@@ -70,7 +70,7 @@ public class KakaoApiClient {
 	}
 	
 	 public Map<String, Object> getUserInfo(String accessToken) {
-		 	log.info("🟢 사용자 정보 요청할 accessToken: {}", accessToken);
+		 	log.info("사용자 정보 요청할 accessToken: {}", accessToken);
 	        String userInfoUri = "https://kapi.kakao.com/v2/user/me";
 
 	        HttpHeaders headers = new HttpHeaders();
@@ -82,7 +82,7 @@ public class KakaoApiClient {
 	            ResponseEntity<String> response = restTemplate.exchange(
 	                    userInfoUri, HttpMethod.GET, request, String.class
 	            );
-	            log.info("🟣 사용자 정보 응답: {}", response.getBody());
+	            log.info("사용자 정보 응답: {}", response.getBody());
 
 	            Map<String, Object> userInfo = objectMapper.readValue(response.getBody(), Map.class);
 	            return userInfo;

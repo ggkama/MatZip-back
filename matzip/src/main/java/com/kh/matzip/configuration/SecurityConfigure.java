@@ -47,7 +47,6 @@ public class SecurityConfigure {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
-            	.requestMatchers(HttpMethod.POST, "/api/auth/login/kakao").permitAll()
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
@@ -56,6 +55,7 @@ public class SecurityConfigure {
                 .requestMatchers("/api/reservation/**").permitAll() 
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
+                .requestMatchers("/api/auth/logout").authenticated()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -65,7 +65,7 @@ public class SecurityConfigure {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
