@@ -19,6 +19,9 @@ public interface ReservationMapper {
 
     void createReservation(ReservationDTO reservation);
 
+    // 인원수 체크
+    Long getAvailablePersonCount(Map<String, Object> param);
+
     List<ReservationDTO> getReservationUserNo(Long userNo);
 
     ReservationDTO findByReservationNo(Long reservationNo);

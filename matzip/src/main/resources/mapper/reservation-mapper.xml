@@ -24,6 +24,9 @@
         FROM TB_STORE
         WHERE STORE_NO = #{storeNo}
     </select>
+
+
+
     <insert id="createReservation" parameterType="com.kh.matzip.reservation.model.dto.ReservationDTO">
     INSERT INTO TB_RESERVATION (
         RESERVATION_NO,
@@ -51,6 +54,7 @@
             R.RESERVATION_NO,
             R.STORE_NO,
             S.STORE_NAME,
+            S.IS_DELETED AS isDeleted,
             R.RESERVATION_DATE,
             R.RESERVATION_TIME,
             R.PERSON_COUNT,
@@ -92,6 +96,25 @@
         JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
         WHERE R.RESERVATION_NO = #{reservationNo}
     </select>
+
+    <select id="getAvailablePersonCount" resultType="java.lang.Long">
+        SELECT 
+            s.COUNT - NVL(SUM(
+                CASE 
+                    WHEN r.RESERVATION_DATE = TO_DATE(#{reservationDate}, 'YYYY-MM-DD')
+                    AND r.RESERVATION_TIME = #{reservationTime}
+                    AND TRIM(r.STATUS) = 'Y'
+                    THEN NVL(r.PERSON_COUNT, 0)
+                    ELSE 0
+                END
+            ), 0) AS availablePerson
+        FROM TB_STORE s
+        LEFT JOIN TB_RESERVATION r
+            ON r.STORE_NO = s.STORE_NO
+        WHERE s.STORE_NO = #{storeNo}
+        GROUP BY s.COUNT
+    </select>
+
 
     
 

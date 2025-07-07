@@ -27,4 +27,9 @@ public interface MyProfileMapper {
 
     // 회원탈퇴
     void deleteUser(Long userNo);
+
+    // 사장님탈퇴시 가게 isDelet - Y 처리 
+    int deleteStore(Long userNo);
+
+    String getUserRole(Long userNo);
 }

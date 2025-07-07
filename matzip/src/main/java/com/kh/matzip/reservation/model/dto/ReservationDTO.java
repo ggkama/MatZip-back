@@ -22,7 +22,7 @@ public class ReservationDTO {
     private String storeName;
     private Date reservationDate;
     private String reservationTime;
-    private int  personCount;
+    private Long personCount;
     private Date createDate;
     private String status;
     private String storePhone;
@@ -32,6 +32,7 @@ public class ReservationDTO {
     private String isReview;
     private String userName;
     private String userPhone;
+    private String isDeleted;
 
 
     // 예약 가능한 조건들 (가게 관련 정보)

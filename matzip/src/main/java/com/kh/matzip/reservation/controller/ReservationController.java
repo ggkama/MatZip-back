@@ -1,5 +1,6 @@
 package com.kh.matzip.reservation.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,23 @@ public class ReservationController {
     public ResponseEntity<?> createReservation(@RequestBody ReservationDTO reservation) {
         reservationService.createReservation(reservation);
         return ResponseEntity.ok().build();
+    }
+
+    // 예약가능인원수 체크
+    @GetMapping("/available-person")
+    public ResponseEntity<Long> getAvailablePersonCount(
+            @RequestParam("storeNo") Long storeNo,
+            @RequestParam("reservationDate") String reservationDate,
+            @RequestParam("reservationTime") String reservationTime) {
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("storeNo", storeNo);
+        param.put("reservationDate", reservationDate);
+        param.put("reservationTime", reservationTime);
+
+        Long availableCount = reservationService.getAvailablePersonCount(param);
+
+        return ResponseEntity.ok(availableCount);
     }
 
     @GetMapping("/mypage/{userNo}")

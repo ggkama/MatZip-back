@@ -13,7 +13,7 @@ public class Reservation {
     private Long storeNo;
     private Date reservationDate;
     private String reservationTime; 
-    private int personCount;
+    private Long personCount;
     private Date createDate; 
     private String status; 
 

@@ -12,6 +12,6 @@ public interface MyProfileService {
 
     void updatePassword(Long userNo, String currentPw, String newPw);
 
-    void deleteUser(Long userNo);
+    void deleteUser(Long userNo, String inputPw);
 
 }
