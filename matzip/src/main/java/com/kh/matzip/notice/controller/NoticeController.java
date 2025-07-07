@@ -46,7 +46,7 @@ public class NoticeController {
 
     // 공지사항 상세조회
     @GetMapping("/{noticeNo}")
-    public ResponseEntity<List<NoticeDTO>> getNoticeDetail(@PathVariable Long noticeNo) {
+    public ResponseEntity<List<NoticeDTO>> getNoticeDetail(@PathVariable(name="noticeNo") Long noticeNo) {
         return ResponseEntity.ok(noticeService.selectNoticeDetail(noticeNo));
         }   
 

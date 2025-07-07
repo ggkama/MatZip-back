@@ -2,12 +2,11 @@ package com.kh.matzip.global.error.exceptions;
 
 import com.kh.matzip.global.enums.ResponseCode;
 
-public class InvalidAccessException extends RuntimeException {
-    
-    private ResponseCode code;
+public class InvalidPasswordException extends RuntimeException {
 
-    
-    public InvalidAccessException(ResponseCode code, String message) {
+    private final ResponseCode code;
+
+    public InvalidPasswordException(ResponseCode code, String message) {
         super(message);
         this.code = code;
     }

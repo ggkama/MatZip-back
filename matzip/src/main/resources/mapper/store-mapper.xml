@@ -171,6 +171,7 @@
     WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
   </select>
 
+
   <!-- 가게 상세조회도 같이씀 -->
   <select id="selectStoreByStoreNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
     SELECT 

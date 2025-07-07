@@ -47,8 +47,10 @@ public class SecurityConfigure {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
+                .requestMatchers(HttpMethod.OPTIONS, "/api/reservation/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/detail/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/*/naver-blog").permitAll()
@@ -57,13 +59,14 @@ public class SecurityConfigure {
                 .requestMatchers(HttpMethod.PUT, "/api/review/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/review/**").authenticated()
                 .requestMatchers("/api/auth/**").permitAll()
+<<<<<<< HEAD
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/reservation/**").authenticated()
+=======
+>>>>>>> ba0dc2d7256187d2aca86694a135b1bea9f55c14
                 .requestMatchers("/api/reservation/**").permitAll() 
-                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/owner/**").hasRole("OWNER")
-                .requestMatchers("/api/reservation/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -74,7 +77,7 @@ public class SecurityConfigure {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
