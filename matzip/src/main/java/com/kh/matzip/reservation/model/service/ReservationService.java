@@ -1,6 +1,7 @@
 package com.kh.matzip.reservation.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;
 import com.kh.matzip.reservation.model.dto.ReservationDTO;
@@ -12,9 +13,19 @@ public interface ReservationService {
 
     void createReservation(ReservationDTO reservation);
 
-    List<ReservationDTO> getReservationUserNo(Long userNo);
+    Map<String, Object> getReservationsByUserNo(Long userNo, int page, int size);
 
     ReservationDTO findByReservationNo(Long reservationNo);
 
     void cancelReservation(ReservationCancelDTO dto);
+
+    void updateIsReviewYet();
+
+    void updateIsReviewComplete(Long reservationNo);
+
+   public Map<String, Object> getReservationsByStoreNo(Long storeNo, int page, int size);
+
+    ReservationDTO getReservationDetailByNo(Long reservationNo);
+
+    void cancelReservationOwner(ReservationCancelDTO dto);
 }

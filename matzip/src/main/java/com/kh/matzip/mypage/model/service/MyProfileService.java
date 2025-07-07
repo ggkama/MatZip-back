@@ -1,16 +1,17 @@
 package com.kh.matzip.mypage.model.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kh.matzip.mypage.model.dto.MyProfileDTO;
-import com.kh.matzip.mypage.model.dto.PasswordDTO;
 
 public interface MyProfileService {
-    
-     MyProfileDTO selectMyProfile();
 
-    /* void updateMyProfile(MyProfileDTO myProfile);
+    MyProfileDTO selectMyProfile(Long userNo);
 
-    void changePassword(PasswordDTO changePassword); */
+    void updateMyProfile(MyProfileDTO dto, MultipartFile profileImage);
 
-    
-    
+    void updatePassword(Long userNo, String currentPw, String newPw);
+
+    void deleteUser(Long userNo);
+
 }
