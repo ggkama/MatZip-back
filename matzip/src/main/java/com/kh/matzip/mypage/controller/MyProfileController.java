@@ -1,5 +1,7 @@
 package com.kh.matzip.mypage.controller;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,12 +80,14 @@ public class MyProfileController  {
     }
     
     @PutMapping("/delete")
-    public ResponseEntity<String> deleteUser() {
+    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> payload) {
         CustomUserDetails userDetails = (CustomUserDetails)
             SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userNo = userDetails.getUserNo();
+        String inputPw = payload.get("userPw");
 
-        myProfileService.deleteUser(userNo);
+        myProfileService.deleteUser(userNo, inputPw);
+
         return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
     }
 

@@ -28,5 +28,5 @@ public class MyProfileDTO {
 
     private String profileImage;
 
-
+    private String userRole;
 }

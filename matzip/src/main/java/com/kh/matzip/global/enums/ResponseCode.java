@@ -41,7 +41,7 @@ public enum ResponseCode {
     USER_NOT_FOUND("E117"),
     USER_UPDATE_FAIL("E118"),
     INVALID_PASSWORD("E119"),
-    
+    INVALID_RESERVATION("E120"),
     SERVER_ERROR("500"),
 
     STORE_SAVE_FAIL("E300"), 

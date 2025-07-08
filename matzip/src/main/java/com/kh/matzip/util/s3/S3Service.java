@@ -1,7 +1,6 @@
 package com.kh.matzip.util.s3;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 
@@ -49,17 +48,22 @@ public class S3Service {
 	
 	public void deleteFile(String fileUrl) {
         try {
-            URL url = new URL(fileUrl);
-            String path = url.getPath().substring(1);
+            String key;
+
+            if (fileUrl.startsWith("http")) {
+                URL url = new URL(fileUrl);
+                key = url.getPath().substring(1);
+            } else {
+                key = fileUrl.startsWith("/") ? fileUrl.substring(1) : fileUrl;
+            }
 
             DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(path)
+                    .key(key)
                     .build();
-            
+
             s3Client.deleteObject(deleteRequest);
-            
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             throw new RuntimeException("S3 파일 삭제 실패", e);
         }
     }
