@@ -1,6 +1,5 @@
 package com.kh.matzip.util.file;
 import java.io.IOException;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -74,24 +73,39 @@ public class FileService {
 	}
 	
 	public void delete(String url) {
-		
-		if (storageType.equals("s3")) {
-            log.info("S3 파일 삭제 중: {}", url);
-            s3Service.deleteFile(url);
-        } else {
-        	
-        	try {
-        		// URL에서 파일 이름만 추출 (예: "/uploads/ep_202504291105_123.jpg" → "ep_202504291105_123.jpg")
-        		String filename = Paths.get(url).getFileName().toString();
-        		Path targetPath = this.fileLocation.resolve(filename);
+		if (url == null || url.isEmpty()) return;
 
-        		Files.deleteIfExists(targetPath);
-        		log.info("파일 삭제 완료: {}", filename);
-        	} catch (IOException e) {
-        		log.error("파일 삭제 실패", e);
-        		throw new RuntimeException("파일 삭제 실패: " + url, e);
-        	}
-        }
+		if (storageType.equals("s3")) {
+			
+			if (url.startsWith("http")) {
+				log.info("S3 파일 삭제 중: {}", url);
+				s3Service.deleteFile(url);
+			} else {
+				
+				try {
+					String filename = Paths.get(url).getFileName().toString();
+					Path targetPath = this.fileLocation.resolve(filename);
+
+					Files.deleteIfExists(targetPath);
+					log.info("로컬 파일 삭제 완료: {}", filename);
+				} catch (IOException e) {
+					log.error("로컬 파일 삭제 실패", e);
+					throw new RuntimeException("파일 삭제 실패: " + url, e);
+				}
+			}
+		} else {
+			try {
+				String filename = Paths.get(url).getFileName().toString();
+				Path targetPath = this.fileLocation.resolve(filename);
+
+				Files.deleteIfExists(targetPath);
+				log.info("로컬 파일 삭제 완료: {}", filename);
+			} catch (IOException e) {
+				log.error("로컬 파일 삭제 실패", e);
+				throw new RuntimeException("파일 삭제 실패: " + url, e);
+			}
+		}
 	}
+
 
 }
