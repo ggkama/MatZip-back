@@ -3,25 +3,23 @@ package com.kh.matzip.mypage.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.kh.matzip.mypage.model.service.MyProfileService;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.matzip.global.enums.ResponseCode;
 import com.kh.matzip.global.response.ApiResponse;
 import com.kh.matzip.member.model.vo.CustomUserDetails;
 import com.kh.matzip.mypage.model.dto.MyProfileDTO;
 import com.kh.matzip.mypage.model.dto.PasswordDTO;
+import com.kh.matzip.mypage.model.service.MyProfileService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 
 @RestController

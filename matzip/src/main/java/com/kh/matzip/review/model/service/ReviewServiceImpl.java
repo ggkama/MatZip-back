@@ -103,7 +103,7 @@ public class ReviewServiceImpl implements ReviewService {
         if (alreadyWritten) throw new IllegalStateException("이미 해당 예약에 리뷰를 작성했습니다.");
 
         if (files == null || files.size() == 0)
-            throw new IllegalArgumentException("이미지는 1장 이상 필수입니다.");
+            throw new IllegalArgumentException("이미지는 2장 이상 필수입니다.");
         // Review insert
         Review review = new Review();
         review.setReservationNo(form.getReservationNo());
@@ -137,7 +137,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         if (files == null || files.size() == 0)
-            throw new IllegalArgumentException("이미지는 1장 이상 필수입니다.");
+            throw new IllegalArgumentException("이미지는 2장 이상 필수입니다.");
 
 
         Review review = new Review();
