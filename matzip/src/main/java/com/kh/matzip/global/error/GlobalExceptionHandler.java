@@ -17,6 +17,7 @@ import com.kh.matzip.global.error.exceptions.FileStreamException;
 import com.kh.matzip.global.error.exceptions.FileTypeNotAllowedException;
 import com.kh.matzip.global.error.exceptions.InvalidAccessException;
 import com.kh.matzip.global.error.exceptions.InvalidPasswordException;
+import com.kh.matzip.global.error.exceptions.InvalidReservationException;
 import com.kh.matzip.global.error.exceptions.InvalidValueException;
 import com.kh.matzip.global.error.exceptions.NoticeNotFoundException;
 import com.kh.matzip.global.error.exceptions.OAuthUserNotFoundException;
@@ -175,10 +176,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleInvalidPasswordException(InvalidPasswordException e) {
         return makeResponseEntity(ResponseCode.INVALID_PASSWORD, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    
+    // 예약 요청 파라미터 오류
+    @ExceptionHandler(InvalidReservationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidReservationException(InvalidReservationException e) {
+        return makeResponseEntity(ResponseCode.INVALID_RESERVATION, e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(OAuthUserNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleOAuthUserNotFoundException(OAuthUserNotFoundException e) {
         return makeResponseEntity(ResponseCode.USER_NOT_FOUND, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-    
 }

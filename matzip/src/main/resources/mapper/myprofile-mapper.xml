@@ -72,5 +72,19 @@
           WHERE USER_NO = #{userNo}
      </update>
 
+     <!-- 사장님 탈퇴시 매장삭제 -->
+     <update id="deleteStore" parameterType="long">
+          UPDATE TB_STORE
+          SET IS_DELETED = 'Y',
+               MODIFIED_DATE = SYSDATE
+          WHERE USER_NO = #{userNo}
+     </update>
+
+     <select id="getUserRole" resultType="string">
+          SELECT USER_ROLE
+          FROM TB_USER
+          WHERE USER_NO = #{userNo}
+     </select>
+
 
 </mapper>

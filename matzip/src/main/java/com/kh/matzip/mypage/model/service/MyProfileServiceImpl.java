@@ -11,6 +11,7 @@ import com.kh.matzip.global.error.exceptions.InvalidPasswordException;
 import com.kh.matzip.global.error.exceptions.UpdateFailedException;
 import com.kh.matzip.mypage.model.dao.MyProfileMapper;
 import com.kh.matzip.mypage.model.dto.MyProfileDTO;
+import com.kh.matzip.store.model.dao.StoreMapper;
 import com.kh.matzip.util.file.FileService;
 
 import jakarta.transaction.Transactional;
@@ -87,10 +88,27 @@ public class MyProfileServiceImpl implements MyProfileService {
         myProfileMapper.updatePassword(param);
     }
 
-    @Override
-    public void deleteUser(Long userNo) {
+   @Override
+    public void deleteUser(Long userNo, String inputPw) {
+        // 1. DB에서 사용자 비밀번호 조회
+        String encodedPw = myProfileMapper.findPasswordByUserNo(userNo);
+        
+        // 2. 비밀번호 불일치 시 예외 던지기
+        if (!passwordEncoder.matches(inputPw, encodedPw)) {
+           throw new InvalidPasswordException(ResponseCode.INVALID_PASSWORD, "비밀번호가 일치하지 않습니다.");
+
+        }
+
+        // 3. 사용자 탈퇴 처리
         myProfileMapper.deleteUser(userNo);
+
+        // 4. 사장님일 경우 가게도 삭제
+        String role = myProfileMapper.getUserRole(userNo);
+        if ("ROLE_OWNER".equals(role)) {
+            myProfileMapper.deleteStore(userNo);
+        }
     }
+
 
     
 }

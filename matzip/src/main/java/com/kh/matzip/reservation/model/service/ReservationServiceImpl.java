@@ -1,5 +1,8 @@
 package com.kh.matzip.reservation.model.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.kh.matzip.global.error.exceptions.InvalidReservationException;
 import com.kh.matzip.reservation.model.dao.ReservationMapper;
 import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;
 import com.kh.matzip.reservation.model.dto.ReservationDTO;
@@ -75,6 +79,44 @@ public class ReservationServiceImpl implements ReservationService {
 
         return result;
     }
+
+    // 예약가능 인원수 체크
+
+   @Override
+    public Long getAvailablePersonCount(Map<String, Object> param) {
+        // 1. 필수 파라미터 유효성 체크
+        if (!param.containsKey("storeNo") || !param.containsKey("reservationDate") || !param.containsKey("reservationTime")) {
+            throw new InvalidReservationException("필수 파라미터가 누락되었습니다.");
+        }
+
+        Long storeNo;
+        String dateStr;
+        String timeStr;
+
+        try {
+            storeNo = Long.parseLong(String.valueOf(param.get("storeNo")));
+            dateStr = String.valueOf(param.get("reservationDate"));
+            timeStr = String.valueOf(param.get("reservationTime"));
+        } catch (Exception e) {
+            throw new InvalidReservationException("파라미터 형식이 올바르지 않습니다.");
+        }
+
+        // 2. 날짜/시간 포맷 확인
+        try {
+            LocalDate.parse(dateStr); // yyyy-MM-dd 형식
+            LocalTime.parse(timeStr); // HH:mm 형식
+        } catch (DateTimeParseException e) {
+            throw new InvalidReservationException("날짜 또는 시간 형식이 잘못되었습니다.");
+        }
+
+        // 3. Mapper 호출
+        Long result = reservationMapper.getAvailablePersonCount(param);
+
+        // 4. 결과 반환 (null 방지)
+        return result != null ? result : 0L;
+    }
+
+
 
     @Override
     public ReservationDTO findByReservationNo(Long reservationNo) {
