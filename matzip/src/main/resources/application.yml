@@ -26,6 +26,20 @@ spring:
           timeout: 5000
           writetimeout: 5000
           connectiontimeout: 5000
+
+cloud:
+  aws:
+    credentials:
+      access-key:
+      secret-key: 
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: deploy-matzip
+
+file:
+  storage: s3
+
 server:
   port: 8080
 
