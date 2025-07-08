@@ -19,6 +19,13 @@
      WHERE u.USER_NO = #{userNo}
      </select>
 
+     <!-- 이미지 존재 여부 체크 -->
+     <select id="existsProfileImage" resultType="boolean">
+     SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+     FROM TB_PROFILE_IMAGE
+     WHERE USER_NO = #{userNo}
+     </select>
+
     <!-- 기본 정보 수정 -->
     <update id="updateUserProfile" parameterType="MyProfileDTO">
           UPDATE TB_USER
