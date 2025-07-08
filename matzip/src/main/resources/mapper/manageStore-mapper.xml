@@ -33,4 +33,13 @@
 			TB_STORE
 	</select>
 	
+	<update id="deleteStore">
+		UPDATE
+			TB_STORE
+		SET
+			IS_DELETED = 'Y'
+		WHERE
+			STORE_NO = #{storeNo}
+	</update>
+	
 </mapper>

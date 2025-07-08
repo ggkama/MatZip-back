@@ -16,4 +16,7 @@ public interface ManageStoreMapper {
 	/* 총 가게 수 조회 */
 	int countAllStore();
 	
+	/* 가게 정보 삭제 */
+	int deleteStore(Long storeNo);
+	
 }

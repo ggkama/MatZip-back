@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.kh.matzip.admin.manageStore.model.dao.ManageStoreMapper;
 import com.kh.matzip.admin.manageStore.model.dto.ManageStoreListDTO;
+import com.kh.matzip.global.enums.ResponseCode;
+import com.kh.matzip.global.error.exceptions.DuplicateDataException;
+import com.kh.matzip.global.error.exceptions.EntityNotFoundException;
 import com.kh.matzip.util.pagenation.PagenationService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,5 +43,17 @@ public class ManageStoreServiceImpl implements ManageStoreService {
 
         return result;
 	}
+
+	@Override
+	public void deleteStore(Long storeNo) {
+		int result = managestoreMapper.deleteStore(storeNo);
+		
+		if (result == 0) {
+            throw new EntityNotFoundException(ResponseCode.ENTITY_NOT_FOUND, "해당 매장이 존재하지 않습니다.");
+        }
+		
+	}
+	
+	
 }
     
