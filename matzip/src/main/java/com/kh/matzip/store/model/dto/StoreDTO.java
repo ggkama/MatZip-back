@@ -19,7 +19,7 @@ public class StoreDTO {
     private Long userNo; 
     private String storeName;
     private String storePhone;
-    private String storeAddress1;
+    private String storeAddress1; 
     private String storeAddress2;
     private String categoryAddress;
     private String categoryFoodtype;
@@ -42,5 +42,5 @@ public class StoreDTO {
     private Long count;
     private String storeImg;
 
-
+    private double star;
 }

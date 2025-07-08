@@ -52,11 +52,16 @@ public class SecurityConfigure {
                 .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/detail/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/store/*/naver-blog").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/review/write").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/reservation/**").authenticated()
                 .requestMatchers("/api/reservation/**").permitAll() 
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/owner/**").hasRole("OWNER")
-                .requestMatchers("/api/auth/logout").authenticated()
+                .requestMatchers("/api/owner/**").hasAnyRole("OWNER", "ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -67,7 +72,7 @@ public class SecurityConfigure {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

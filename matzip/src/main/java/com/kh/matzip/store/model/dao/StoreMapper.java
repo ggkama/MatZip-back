@@ -55,4 +55,6 @@ public interface StoreMapper {
     // 스토어 디테일 조회
     StoreDTO selectStoreByStoreNo(Long storeNo);
     StoreDTO getStoreDetail(Long storeNo);
+    
+    Double selectAvgStarByStoreNo(Long storeNo);
 }

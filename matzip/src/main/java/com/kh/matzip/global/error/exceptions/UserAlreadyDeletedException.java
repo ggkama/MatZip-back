@@ -1,6 +1,7 @@
 package com.kh.matzip.global.error.exceptions;
 
 import com.kh.matzip.global.enums.ResponseCode;
+
 import lombok.Getter;
 
 @Getter
@@ -11,5 +12,9 @@ public class UserAlreadyDeletedException extends RuntimeException {
     public UserAlreadyDeletedException(ResponseCode responseCode, String message) {
         super(message);
         this.responseCode = responseCode;
+    }
+
+    public ResponseCode getResponseCode() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

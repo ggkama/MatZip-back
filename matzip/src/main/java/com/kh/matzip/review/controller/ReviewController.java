@@ -35,9 +35,8 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final FileService fileService;
-    
 
-    //내 리뷰 리스트 조회
+    // 내 리뷰 리스트 조회
     @GetMapping("/myreview")
     public ResponseEntity<Map<String, Object>> getMyReviews(
         @AuthenticationPrincipal CustomUserDetails user,
@@ -48,65 +47,66 @@ public class ReviewController {
         return ResponseEntity.ok(result);
     }
 
-    //내 리뷰 상세 조회
+    // 내 리뷰 상세 조회
     @GetMapping("/myreview/detail/{reviewNo}")
     public ResponseEntity<List<ReviewDTO>> getMyReviewDetail(
         @AuthenticationPrincipal CustomUserDetails user,
-        @PathVariable Long reviewNo
+        @PathVariable("reviewNo") Long reviewNo
     ) {
-        List<ReviewDTO> detail = reviewService.selectMyReviewDetail(reviewNo);
+        // 자기리뷰인지 체크
+        List<ReviewDTO> detail = reviewService.selectMyReviewDetailAuth(user.getUserNo(), reviewNo); 
         return ResponseEntity.ok(detail);
     }
 
-    //storeDeatil에서 리뷰 조회
+    // 매장 상세페이지 리뷰 출력 
     @GetMapping("/store/{storeNo}")
-    public ResponseEntity<List<ReviewDTO>> getStoreReviews(@PathVariable Long storeNo) {
+    public ResponseEntity<List<ReviewDTO>> getStoreReviews(@PathVariable ("storeNo") Long storeNo) {
         List<ReviewDTO> reviews = reviewService.selectReviewDetail(storeNo);
         return ResponseEntity.ok(reviews);
     }
 
-    //리뷰 작성
-    //@PreAuthorize("hasRole('USER')")
+    // 리뷰 작성
     @PostMapping("/write")
     public ResponseEntity<String> writeReview(
         @AuthenticationPrincipal CustomUserDetails user,
-        //@RequestPart("data") @Valid ReviewWriteFormDTO form,
         @ModelAttribute @Valid ReviewWriteFormDTO form,
-        @RequestParam(name = "files", required = false) List<MultipartFile> files
+        @RequestParam(name = "files") List<MultipartFile> files
     ) {
-        if (files != null && files.size() > 5) {
-            return ResponseEntity.badRequest().body("이미지는 최대 5장까지 업로드 가능합니다.");
+        try {
+            reviewService.insertReview(user.getUserNo(), form, files); // 권한체크 userno로
+            return ResponseEntity.status(HttpStatus.CREATED).body("리뷰 작성 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
-        // log.info("user 정보: {}", user);
-        reviewService.insertReview(user.getUserNo(), form, files);
-        return ResponseEntity.status(HttpStatus.CREATED).body("리뷰 작성 완료");
     }
 
-
-
-    //리뷰 수정
+    // 리뷰 수정
     @PutMapping("/{reviewNo}")
     public ResponseEntity<String> updateReview(
         @AuthenticationPrincipal CustomUserDetails user,
-        @PathVariable Long reviewNo,
+        @PathVariable(name = "reviewNo") Long reviewNo,
         @ModelAttribute @Valid ReviewWriteFormDTO form,
         @RequestParam(name = "files", required = false) List<MultipartFile> files
     ) {
-        if (files != null && files.size() > 5) {
-            return ResponseEntity.badRequest().body("이미지는 최대 5장까지 업로드 가능합니다.");
+        try {
+            reviewService.updateReview(user.getUserNo(), reviewNo, form, files); // 얘도 권한체크
+            return ResponseEntity.ok("리뷰 수정 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
-
-        reviewService.updateReview(user.getUserNo(), reviewNo, form, files);
-        return ResponseEntity.ok("리뷰 수정 완료");
     }
 
-    //리뷰 삭제
+    // 리뷰 삭제
     @DeleteMapping("/delete/{reviewNo}")
     public ResponseEntity<String> deleteReview(
         @AuthenticationPrincipal CustomUserDetails user,
-        @PathVariable Long reviewNo
+        @PathVariable(name = "reviewNo") Long reviewNo
     ) {
-        reviewService.deleteReview(user.getUserNo(), reviewNo);
-        return ResponseEntity.ok("리뷰 삭제 완료");
+        try {
+            reviewService.deleteReview(user.getUserNo(), reviewNo); // 권한체크 추가
+            return ResponseEntity.ok("리뷰 삭제 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 }

@@ -1,16 +1,12 @@
 package com.kh.matzip.store.model.service;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -100,13 +96,25 @@ public class StoreServiceImpl implements StoreService {
                             List<MultipartFile> changedNewImages) {
         try {
             Long userNo = user.getUserNo();
-            storeDto.setUserNo(userNo);
-            StoreDTO existingStore = storeMapper.selectStoreByUserNo(userNo);
-            if (existingStore == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "등록된 매장이 없습니다.");
+            
+            // 관리자도 접근할 수 있도록 수정
+            String role = user.getUserRole();
+            Long storeNo;
+            
+            if(role.equals("ROLE_ADMIN")) {
+            	storeNo = storeDto.getStoreNo();
+            	if(storeNo == null) {
+            		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "등록된 매장이 없습니다.");
+            	}
+            } else {
+            	StoreDTO existingStore = storeMapper.selectStoreByUserNo(userNo);
+            	if (existingStore == null) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "등록된 매장이 없습니다.");
+                }
+                storeNo = existingStore.getStoreNo();
+                storeDto.setUserNo(userNo);
+                storeDto.setStoreNo(storeNo);
             }
-            Long storeNo = existingStore.getStoreNo();
-            storeDto.setStoreNo(storeNo);
 
             storeMapper.updateStore(storeDto);
             updateConveniences(storeNo, storeDto.getCategoryConvenience());
@@ -239,7 +247,13 @@ public class StoreServiceImpl implements StoreService {
         if (shutdown != null && !shutdown.isEmpty()) {
             store.setStartDate((Date) shutdown.get("START_DATE"));
             store.setEndDate((Date) shutdown.get("END_DATE"));
+
+        Double avgStar = storeMapper.selectAvgStarByStoreNo(storeNo);
+        if (avgStar == null) avgStar = 0.0;
+        store.setStar(avgStar);
+
         }
+
         return store;
     }
 

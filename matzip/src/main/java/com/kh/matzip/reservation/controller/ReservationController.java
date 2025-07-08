@@ -62,16 +62,18 @@ public class ReservationController {
 
     @GetMapping("/mypage/{userNo}")
     public ResponseEntity<Map<String, Object>> getMyReservations(
-            @PathVariable("userNo") Long userNo,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+
+            @PathVariable(name = "userNo") Long userNo,
+            @RequestParam(defaultValue = "0", name = "page") int page,
+            @RequestParam(defaultValue = "10", name = "size") int size) {
 
         Map<String, Object> result = reservationService.getReservationsByUserNo(userNo, page, size);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/mypage/detail/{reservationNo}")
-    public ResponseEntity<ReservationDTO> findByReservationNo(@PathVariable Long reservationNo) {
+    public ResponseEntity<ReservationDTO> findByReservationNo(@PathVariable(name = "reservationNo") Long reservationNo) {
+
         ReservationDTO detail = reservationService.findByReservationNo(reservationNo);
         if (detail == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
