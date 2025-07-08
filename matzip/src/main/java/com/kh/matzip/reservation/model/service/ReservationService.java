@@ -1,5 +1,6 @@
 package com.kh.matzip.reservation.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.kh.matzip.reservation.model.dto.ReservationCancelDTO;

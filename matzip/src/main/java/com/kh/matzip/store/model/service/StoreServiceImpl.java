@@ -235,12 +235,13 @@ public class StoreServiceImpl implements StoreService {
         if (shutdown != null && !shutdown.isEmpty()) {
             store.setStartDate((Date) shutdown.get("START_DATE"));
             store.setEndDate((Date) shutdown.get("END_DATE"));
-            
-        }
 
         Double avgStar = storeMapper.selectAvgStarByStoreNo(storeNo);
         if (avgStar == null) avgStar = 0.0;
         store.setStar(avgStar);
+
+        }
+
         return store;
     }
 

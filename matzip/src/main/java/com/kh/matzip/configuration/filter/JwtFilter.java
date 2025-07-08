@@ -39,7 +39,14 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+    	String uri = request.getRequestURI();
+    	if(uri.startsWith("/api/auth")) {
+    		filterChain.doFilter(request, response);
+    		
+    		return;
+    	}
         String authorization = request.getHeader("Authorization");
+        
         if (authorization != null && authorization.startsWith("Bearer ")) {
             String token = authorization.substring(7);
 

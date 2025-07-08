@@ -1,5 +1,6 @@
 package com.kh.matzip.reservation.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,7 @@ public class ReservationController {
 
     @GetMapping("/mypage/{userNo}")
     public ResponseEntity<Map<String, Object>> getMyReservations(
+
             @PathVariable(name = "userNo") Long userNo,
             @RequestParam(defaultValue = "0", name = "page") int page,
             @RequestParam(defaultValue = "10", name = "size") int size) {
@@ -53,6 +55,7 @@ public class ReservationController {
 
     @GetMapping("/mypage/detail/{reservationNo}")
     public ResponseEntity<ReservationDTO> findByReservationNo(@PathVariable(name = "reservationNo") Long reservationNo) {
+
         ReservationDTO detail = reservationService.findByReservationNo(reservationNo);
         if (detail == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
