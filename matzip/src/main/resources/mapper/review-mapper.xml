@@ -5,65 +5,59 @@
 
 <mapper namespace="com.kh.matzip.review.model.dao.ReviewMapper">
 
-    <!-- 공통 셀렉문 -->
-    <sql id="reviewSelect">
-        SELECT
-            R.REVIEW_NO      reviewNo,
-            R.RESERVATION_NO reservationNo,
-            R.STORE_NO       storeNo,
-            R.USER_NO        userNo,
-            U.USER_NICKNAME  userName,  
-            R.REVIEW_CONTENT reviewContent,
-            R.STORE_GRADE    storeGrade,
-            R.REVIEW_DATE    createDate,
-            RI.IMAGE         reviewImageUrl,
-            RI.IMAGE_NO      imageNo
-        FROM TB_REVIEW R
-        LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
-        JOIN TB_USER U ON R.USER_NO = U.USER_NO
-    </sql>
 
     <!-- 내 리뷰 리스트 조회 -->
     <select id="selectMyReviewList" resultType="com.kh.matzip.review.model.dto.ReviewDTO" parameterType="map">
         SELECT 
             R.REVIEW_NO      reviewNo,
+            R.RESERVATION_NO reservationNo,
+            R.STORE_NO       storeNo,
+            R.USER_NO        userNo,
+            U.USER_NICKNAME  userName,
+            S.STORE_NAME     storeName,
             R.REVIEW_CONTENT reviewContent,
             R.STORE_GRADE    storeGrade,
-            R.REVIEW_DATE    createDate,
-            S.STORE_NAME     storeName,
-            RI.IMAGE         reviewImageUrl
+            R.REVIEW_DATE    createDate
         FROM TB_REVIEW R
         JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
-        LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
+        JOIN TB_USER U ON R.USER_NO = U.USER_NO
         WHERE R.USER_NO = #{userNo}
-            AND R.IS_DELETED = 'N'
+          AND R.IS_DELETED = 'N'
         ORDER BY R.REVIEW_DATE DESC
     </select>
     
-    <!-- 내 리뷰 상세페이지 조회 -->
+    <!-- 내 리뷰 상세 조회 -->
     <select id="selectMyReviewDetail" parameterType="long" resultType="com.kh.matzip.review.model.dto.ReviewDTO">
         SELECT
             R.REVIEW_NO      reviewNo,
             R.RESERVATION_NO reservationNo,
             R.STORE_NO       storeNo,
             R.USER_NO        userNo,
+            U.USER_NICKNAME  userName,
             S.STORE_NAME     storeName,
             R.REVIEW_CONTENT reviewContent,
             R.STORE_GRADE    storeGrade,
-            R.REVIEW_DATE    createDate,
-            RI.IMAGE         reviewImageUrl
+            R.REVIEW_DATE    createDate
         FROM TB_REVIEW R
         JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
-        LEFT JOIN TB_REVIEW_IMAGE RI ON R.REVIEW_NO = RI.REVIEW_NO
+        JOIN TB_USER U ON R.USER_NO = U.USER_NO
         WHERE R.REVIEW_NO = #{reviewNo}
           AND R.IS_DELETED = 'N'
     </select>
 
-    <!-- 스토어 상세 페이지 리뷰 리스트 (유저 이름 포함) -->
-    <select id="selectReviewDetail"
-            parameterType="long"
-            resultType="com.kh.matzip.review.model.dto.ReviewDTO">
-        <include refid="reviewSelect"/>
+    <!-- 스토어 상세 페이지 리뷰 리스트 -->
+    <select id="selectReviewDetail" parameterType="long" resultType="com.kh.matzip.review.model.dto.ReviewDTO">
+        SELECT
+            R.REVIEW_NO      reviewNo,
+            R.RESERVATION_NO reservationNo,
+            R.STORE_NO       storeNo,
+            R.USER_NO        userNo,
+            U.USER_NICKNAME  userName,
+            R.REVIEW_CONTENT reviewContent,
+            R.STORE_GRADE    storeGrade,
+            R.REVIEW_DATE    createDate
+        FROM TB_REVIEW R
+        JOIN TB_USER U ON R.USER_NO = U.USER_NO
         WHERE R.STORE_NO = #{storeNo}
           AND R.IS_DELETED = 'N'
         ORDER BY R.REVIEW_DATE DESC
@@ -78,6 +72,13 @@
         WHERE USER_NO = #{userNo}
     </select>
 
+    <!-- 리뷰 이미지 url만 리스트로 조회 -->
+    <select id="selectReviewImageUrls" resultType="string">
+        SELECT IMAGE
+        FROM TB_REVIEW_IMAGE
+        WHERE REVIEW_NO = #{reviewNo}
+    </select>
+    
     <!-- 리뷰 작성 -->
     <insert id="insertReview"
             parameterType="com.kh.matzip.review.model.vo.Review">
@@ -115,7 +116,7 @@
         WHERE REVIEW_NO   = #{reviewNo}
     </update>
 
-    <!-- 리뷰 삭제 -->
+    <!-- 리뷰 삭제 (소프트딜리트) -->
     <update id="deleteReview" parameterType="long">
         UPDATE TB_REVIEW
         SET IS_DELETED = 'Y'
@@ -131,13 +132,6 @@
         WHERE REVIEW_NO = #{reviewNo}
     </select>
 
-    <!-- 이미지 url 조회 -->
-    <select id="selectReviewImageUrls" resultType="string">
-        SELECT IMAGE
-        FROM TB_REVIEW_IMAGE
-        WHERE REVIEW_NO = #{reviewNo}
-    </select>
-
     <!-- 기존 이미지 삭제 -->
     <delete id="deleteReviewImages"
             parameterType="long">
@@ -147,23 +141,21 @@
 
     <!-- 예약자 검증 -->
     <select id="existsUserReservation" resultType="boolean">
-    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-        FROM TB_RESERVATION
-    WHERE USER_NO = #{userNo}
-    AND STORE_NO = #{storeNo}
-    AND RESERVATION_NO = #{reservationNo}
-    AND STATUS = 'Y'
+      SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+      FROM TB_RESERVATION
+      WHERE USER_NO = #{userNo}
+        AND STORE_NO = #{storeNo}
+        AND RESERVATION_NO = #{reservationNo}
+        AND STATUS = 'Y'
     </select>
-
 
     <!-- 동일 예약에 리뷰 중복 작성 금지 -->
     <select id="existsReviewByReservation" resultType="int">
-    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
-    FROM TB_REVIEW
-    WHERE RESERVATION_NO = #{reservationNo}
-    AND IS_DELETED = 'N'
+      SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+      FROM TB_REVIEW
+      WHERE RESERVATION_NO = #{reservationNo}
+        AND IS_DELETED = 'N'
     </select>
-
 
     <!-- 리뷰 작성자 확인 -->
     <select id="selectReviewOwner" parameterType="long" resultType="com.kh.matzip.review.model.dto.ReviewDTO">

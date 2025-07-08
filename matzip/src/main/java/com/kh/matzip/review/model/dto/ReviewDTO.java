@@ -24,6 +24,7 @@ public class ReviewDTO {
     private String storeName;
     private String reviewImageUrl;
     private String userNickName;
+    private String userName;
 
     @NotBlank
     private String reviewContent;
