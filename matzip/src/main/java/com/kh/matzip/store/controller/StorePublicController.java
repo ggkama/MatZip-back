@@ -1,5 +1,6 @@
 package com.kh.matzip.store.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,9 @@ public class StorePublicController {
         String result = naverSearchApiService.searchBlog(storeName);
         return ResponseEntity.ok(result);
     }
-
+    @GetMapping("/latest")
+    public ResponseEntity<List<StoreDTO>> getLatestStores() {
+        List<StoreDTO> latestStores = storeService.findLatestStores();
+        return ResponseEntity.ok(latestStores);
+    }
 }

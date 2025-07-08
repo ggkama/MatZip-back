@@ -225,6 +225,23 @@
       AND IS_DELETED = 'N'
   </select>
 
+    <select id="findLatestStores" resultType="StoreDTO">
+      SELECT
+    S.STORE_NO,
+    S.STORE_NAME,
+    (
+      SELECT I.IMAGE
+      FROM TB_STORE_IMAGE I
+      WHERE I.STORE_NO = S.STORE_NO
+      AND ROWNUM = 1
+    ) AS storeImg, 
+    S.CREATE_DATE
+  FROM TB_STORE S
+  WHERE S.IS_DELETED = 'N'
+  ORDER BY S.CREATE_DATE DESC
+  FETCH FIRST 6 ROWS ONLY
+    </select>
+
 
 
 </mapper>

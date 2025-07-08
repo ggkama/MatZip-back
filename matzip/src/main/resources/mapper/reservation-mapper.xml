@@ -225,5 +225,6 @@
         VALUES (#{reservationNo}, #{cancelReason}, SYSDATE)
     </insert>
 
+  
 
 </mapper>
