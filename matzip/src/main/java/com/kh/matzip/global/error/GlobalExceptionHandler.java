@@ -176,16 +176,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleInvalidPasswordException(InvalidPasswordException e) {
         return makeResponseEntity(ResponseCode.INVALID_PASSWORD, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-<<<<<<< HEAD
+    
     // 예약 요청 파라미터 오류
     @ExceptionHandler(InvalidReservationException.class)
     public ResponseEntity<ApiResponse<Void>> handleInvalidReservationException(InvalidReservationException e) {
         return makeResponseEntity(ResponseCode.INVALID_RESERVATION, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-    
-=======
 
->>>>>>> 3e204323d0e4d0d747bf4a59476613f557d41c9d
     @ExceptionHandler(OAuthUserNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleOAuthUserNotFoundException(OAuthUserNotFoundException e) {
         return makeResponseEntity(ResponseCode.USER_NOT_FOUND, e.getMessage(), HttpStatus.BAD_REQUEST);
