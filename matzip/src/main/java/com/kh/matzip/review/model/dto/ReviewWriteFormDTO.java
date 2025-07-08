@@ -11,6 +11,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 
+
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,7 +21,10 @@ import lombok.ToString;
 @ToString
 public class ReviewWriteFormDTO {
 
+    
     private Long reservationNo;
+
+    
     private Long storeNo;
 
     @NotBlank
@@ -28,4 +33,6 @@ public class ReviewWriteFormDTO {
     private double storeGrade;
 
     private List<String> imageUrls;
+
+    private String reviewDate;
 }

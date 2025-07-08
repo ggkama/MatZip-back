@@ -175,8 +175,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleInvalidPasswordException(InvalidPasswordException e) {
         return makeResponseEntity(ResponseCode.INVALID_PASSWORD, e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-    
-    
+
     @ExceptionHandler(OAuthUserNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleOAuthUserNotFoundException(OAuthUserNotFoundException e) {
         return makeResponseEntity(ResponseCode.OAUTH_NOTFOUND, e.getMessage(), HttpStatus.BAD_REQUEST);
