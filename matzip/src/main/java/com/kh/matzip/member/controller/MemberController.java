@@ -69,4 +69,6 @@ public class MemberController {
         return ResponseEntity.ok(ApiResponse.success(ResponseCode.LOGOUT_SUCESS, "로그아웃이 완료되었습니다."));
     }
     
+    
+
 }

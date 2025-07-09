@@ -37,6 +37,10 @@ public class CustomUserDetails implements UserDetails {
 		return userPw;
 	}
 
+	public String getUserRole() {
+        return userRole;
+    }
+
 	@Override
 	public String getUsername() {
 		return userId;
@@ -56,5 +60,8 @@ public class CustomUserDetails implements UserDetails {
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
+	
+	
+
 
 }
