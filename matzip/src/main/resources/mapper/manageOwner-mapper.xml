@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.kh.matzip.admin.manageOwner.model.dao.ManageOwnerMapper">
+
+	<!-- 사장님 권한 신청 리스트 조회 -> 회원 상세 페이지 -> 권한 부여 처리 -->
+	<select id="selectOwnerList" resultType="com.kh.matzip.admin.manageOwner.model.dto.ManageOwnerListDTO">
+		SELECT
+			U.USER_NO,
+			U.USER_NAME,
+			U.USER_ID,
+			O.REGISTER_NO,
+			O.REQUEST_DATE,
+			O.STATUS
+		FROM
+			TB_USER U
+		  JOIN
+			TB_OWNER O
+		  ON
+		  	U.USER_NO = O.USER_NO
+		ORDER BY
+			O.REQUEST_DATE DESC
+		OFFSET
+			#{startIndex}
+		  ROWS FETCH NEXT
+			#{size}
+			ROWS ONLY
+	</select>
+	
+	<select id="countAllStores">
+		SELECT
+			COUNT(REGISTER_NO)
+		FROM
+			TB_OWNER
+	</select>
+	
+	<select id="selectOwnerDetail" resultType="com.kh.matzip.admin.manageOwner.model.dto.ManageOwnerDetailDTO">
+		SELECT
+			U.USER_NO,
+			U.USER_NAME,
+			U.USER_ID,
+			O.REGISTER_NO,
+			O.BUSINESS_NO,
+			O.STORE_NAME,
+			O.REQUEST_DATE,
+			O.IMAGE,
+			O.STATUS
+		FROM
+			TB_USER U
+		  JOIN
+			TB_OWNER O
+		  ON
+		  	U.USER_NO = O.USER_NO
+		  WHERE
+		  	REGISTER_NO = #{registerNo}
+	</select>
+	
+	<select id="findStatusByRegisterNo" resultType="String">
+    	SELECT 
+    		STATUS
+    	FROM 
+    		TB_OWNER
+    	WHERE 
+    		REGISTER_NO = #{registerNo}
+	</select>
+	
+	<update id="updateStatusOwner" parameterType="Long">
+		UPDATE
+			TB_OWNER
+		SET
+			STATUS = 'Y'
+		WHERE
+			REGISTER_NO = #{registerNo}
+	</update>
+	
+	<update id="updateUserRoleByRegisterNo" parameterType="Long">
+		UPDATE
+			TB_USER
+		SET
+			USER_ROLE = 'ROLE_OWNER'
+		WHERE
+			USER_NO = (
+				SELECT
+					USER_NO
+				FROM
+					TB_OWNER
+				WHERE
+					REGISTER_NO = #{registerNo}
+			)
+	</update>
+	
+	
+
+</mapper>

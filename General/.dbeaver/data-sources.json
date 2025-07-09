@@ -1,0 +1,49 @@
+{
+	"folders": {},
+	"connections": {
+		"oracle_thin-1979a95852f-1cf012eb6e6860b2": {
+			"provider": "oracle",
+			"driver": "oracle_thin",
+			"name": "MATZIP",
+			"save-password": true,
+			"configuration": {
+				"host": "112.221.156.34",
+				"port": "12345",
+				"database": "XE",
+				"url": "jdbc:oracle:thin:@//112.221.156.34:12345/XE",
+				"configurationType": "MANUAL",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"provider-properties": {
+					"@dbeaver-connection-type@": "BASIC",
+					"@dbeaver-sid-service@": "SERVICE"
+				},
+				"auth-model": "oracle_native"
+			},
+			"filters": [
+				{
+					"type": "org.jkiss.dbeaver.ext.oracle.model.OracleSchema",
+					"enabled": true,
+					"include": ["C##MATZIP"]
+				}
+			]
+		}
+	},
+	"virtual-models": {"oracle_thin-1979a95852f-1cf012eb6e6860b2":{"C##MATZIP":{"@properties":{"erd.diagram.state":{"serialized":"\u003cdiagram version\u003d\"1\" name\u003d\"empty\" time\u003d\"202506301007\"\u003e\u003centities\u003e\u003cdata-source id\u003d\"oracle_thin-1979a95852f-1cf012eb6e6860b2\"\u003e\u003centity id\u003d\"1\" name\u003d\"TB_CONVENIENCE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_CONVENIENCE\" order\u003d\"0\" x\u003d\"544\" y\u003d\"568\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"2\" name\u003d\"TB_EMAIL_CODE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_EMAIL_CODE\" order\u003d\"1\" x\u003d\"224\" y\u003d\"697\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"3\" name\u003d\"TB_MENU\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_MENU\" order\u003d\"2\" x\u003d\"544\" y\u003d\"732\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"4\" name\u003d\"TB_NOTICE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_NOTICE\" order\u003d\"3\" x\u003d\"786\" y\u003d\"40\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"5\" name\u003d\"TB_OAUTH_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_OAUTH_USER\" order\u003d\"4\" x\u003d\"786\" y\u003d\"265\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"6\" name\u003d\"TB_OFF_DAY\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_OFF_DAY\" order\u003d\"5\" x\u003d\"544\" y\u003d\"896\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"7\" name\u003d\"TB_OWNER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_OWNER\" order\u003d\"6\" x\u003d\"786\" y\u003d\"529\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"8\" name\u003d\"TB_PROFILE_IMAGE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_PROFILE_IMAGE\" order\u003d\"7\" x\u003d\"786\" y\u003d\"773\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"9\" name\u003d\"TB_REPORT\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_REPORT\" order\u003d\"8\" x\u003d\"40\" y\u003d\"55\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"10\" name\u003d\"TB_RESERVATION\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_RESERVATION\" order\u003d\"9\" x\u003d\"544\" y\u003d\"1368\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"11\" name\u003d\"TB_RESERVATION_CANCEL\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_RESERVATION_CANCEL\" order\u003d\"10\" x\u003d\"275\" y\u003d\"1408\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"12\" name\u003d\"TB_REVIEW\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_REVIEW\" order\u003d\"11\" x\u003d\"275\" y\u003d\"137\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"13\" name\u003d\"TB_REVIEW_IMAGE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_REVIEW_IMAGE\" order\u003d\"12\" x\u003d\"40\" y\u003d\"259\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"14\" name\u003d\"TB_SHUT_DOWN_DAY\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_SHUT_DOWN_DAY\" order\u003d\"13\" x\u003d\"544\" y\u003d\"1040\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"15\" name\u003d\"TB_STORE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_STORE\" order\u003d\"14\" x\u003d\"786\" y\u003d\"917\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"16\" name\u003d\"TB_STORE_IMAGE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_STORE_IMAGE\" order\u003d\"15\" x\u003d\"544\" y\u003d\"1204\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"17\" name\u003d\"TB_TOKEN\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_TOKEN\" order\u003d\"16\" x\u003d\"786\" y\u003d\"1301\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003centity id\u003d\"18\" name\u003d\"TB_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_USER\" order\u003d\"17\" x\u003d\"1045\" y\u003d\"649\"\u003e\u003cpath name\u003d\"C##MATZIP\"/\u003e\u003c/entity\u003e\u003c/data-source\u003e\u003c/entities\u003e\u003crelations\u003e\u003crelation name\u003d\"FK_RSVCAN_RSV\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_RESERVATION_CANCEL.FK_RSVCAN_RSV\" type\u003d\"fk\" pk-ref\u003d\"10\" fk-ref\u003d\"11\"/\u003e\u003crelation name\u003d\"FK_REVIEW_RSV\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_REVIEW.FK_REVIEW_RSV\" type\u003d\"fk\" pk-ref\u003d\"10\" fk-ref\u003d\"12\"/\u003e\u003crelation name\u003d\"FK_REPORT_REVIEW\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_REPORT.FK_REPORT_REVIEW\" type\u003d\"fk\" pk-ref\u003d\"12\" fk-ref\u003d\"9\"/\u003e\u003crelation name\u003d\"FK_RIMG_REVIEW\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_REVIEW_IMAGE.FK_RIMG_REVIEW\" type\u003d\"fk\" pk-ref\u003d\"12\" fk-ref\u003d\"13\"/\u003e\u003crelation name\u003d\"FK_CONV_STORE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_CONVENIENCE.FK_CONV_STORE\" type\u003d\"fk\" pk-ref\u003d\"15\" fk-ref\u003d\"1\"/\u003e\u003crelation name\u003d\"FK_MENU_STORE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_MENU.FK_MENU_STORE\" type\u003d\"fk\" pk-ref\u003d\"15\" fk-ref\u003d\"3\"/\u003e\u003crelation name\u003d\"FK_OFFDAY_STORE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_OFF_DAY.FK_OFFDAY_STORE\" type\u003d\"fk\" pk-ref\u003d\"15\" fk-ref\u003d\"6\"/\u003e\u003crelation name\u003d\"FK_RSV_STORE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_RESERVATION.FK_RSV_STORE\" type\u003d\"fk\" pk-ref\u003d\"15\" fk-ref\u003d\"10\"/\u003e\u003crelation name\u003d\"FK_SHUT_STORE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_SHUT_DOWN_DAY.FK_SHUT_STORE\" type\u003d\"fk\" pk-ref\u003d\"15\" fk-ref\u003d\"14\"/\u003e\u003crelation name\u003d\"FK_STIMG_STORE\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_STORE_IMAGE.FK_STIMG_STORE\" type\u003d\"fk\" pk-ref\u003d\"15\" fk-ref\u003d\"16\"/\u003e\u003crelation name\u003d\"FK_NOTICE_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_NOTICE.FK_NOTICE_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"4\"/\u003e\u003crelation name\u003d\"FK_OAUTH_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_OAUTH_USER.FK_OAUTH_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"5\"/\u003e\u003crelation name\u003d\"FK_OWNER_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_OWNER.FK_OWNER_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"7\"/\u003e\u003crelation name\u003d\"FK_PRIMG_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_PROFILE_IMAGE.FK_PRIMG_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"8\"/\u003e\u003crelation name\u003d\"FK_RSV_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_RESERVATION.FK_RSV_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"10\"/\u003e\u003crelation name\u003d\"FK_REVIEW_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_REVIEW.FK_REVIEW_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"12\"\u003e\u003cbend type\u003d\"abs\" x\u003d\"544\" y\u003d\"214\"/\u003e\u003cbend type\u003d\"abs\" x\u003d\"786\" y\u003d\"214\"/\u003e\u003c/relation\u003e\u003crelation name\u003d\"FK_STORE_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_STORE.FK_STORE_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"15\"/\u003e\u003crelation name\u003d\"FK_TOKEN_USER\" fq-name\u003d\"\u0026quot;C##MATZIP\u0026quot;.TB_TOKEN.FK_TOKEN_USER\" type\u003d\"fk\" pk-ref\u003d\"18\" fk-ref\u003d\"17\"/\u003e\u003c/relations\u003e\u003c/diagram\u003e"}}}}},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}

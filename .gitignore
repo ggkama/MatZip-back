@@ -19,4 +19,8 @@ Thumbs.db
 
 .uploads/
 
+node_modules/
+
 application-private.yml
+application.yml
+src/main/resources/application.yml

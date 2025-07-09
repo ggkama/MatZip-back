@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.matzip.reservation.model.dao.ReservationMapper">
+
+    <!-- 휴무일 리스트 조회 -->
+    <select id="selectDayOffByStoreNo" resultType="string">
+        SELECT OFF_DAY
+        FROM TB_OFF_DAY
+        WHERE STORE_NO = #{storeNo}
+    </select>
+
+    <!-- 임시휴무 시작/종료일 조회 -->
+    <select id="selectShutdownDayByStoreNo" resultType="map">
+        SELECT START_DATE, END_DATE
+        FROM TB_SHUT_DOWN_DAY
+        WHERE STORE_NO = #{storeNo}
+    </select>
+
+    <!-- 운영시간 조회 -->
+    <select id="selectOpenCloseTimeByStoreNo" resultType="map">
+        SELECT OPEN_TIME, CLOSE_TIME, STORE_NAME
+        FROM TB_STORE
+        WHERE STORE_NO = #{storeNo}
+    </select>
+
+
+
+    <insert id="createReservation" parameterType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+    INSERT INTO TB_RESERVATION (
+        RESERVATION_NO,
+        USER_NO,
+        STORE_NO,
+        RESERVATION_DATE,
+        RESERVATION_TIME,
+        PERSON_COUNT,
+        IS_REVIEW
+    ) VALUES (
+        SEQ_RESERVATION_NO.NEXTVAL,
+        #{userNo},
+        #{storeNo},
+        #{reservationDate},
+        #{reservationTime},
+        #{personCount},
+        'NO'
+    )
+    </insert>
+
+    <!-- 사용자용 예약 내역 조회 -->
+
+    <select id="getReservationUserNo" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+        SELECT
+            R.RESERVATION_NO,
+            R.STORE_NO,
+            S.STORE_NAME,
+            S.IS_DELETED AS isDeleted,
+            R.RESERVATION_DATE,
+            R.RESERVATION_TIME,
+            R.PERSON_COUNT,
+            R.STATUS,
+            R.IS_REVIEW AS isReview
+        FROM TB_RESERVATION R
+        JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+        WHERE R.USER_NO = #{userNo}
+        ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countReservationsByUserNo" resultType="int">
+        SELECT COUNT(RESERVATION_NO)
+        FROM TB_RESERVATION
+        WHERE USER_NO = #{userNo}
+    </select>
+
+   <select id="findByReservationNo" parameterType="long" resultType="ReservationDTO">
+        SELECT
+            R.RESERVATION_NO,
+            R.STORE_NO,
+            S.STORE_NAME,
+            S.STORE_ADDRESS_1 AS storeAddress1,
+            S.STORE_ADDRESS_2 AS storeAddress2,
+            S.STORE_PHONE AS storePhone,
+            (
+                SELECT IMAGE
+                FROM TB_STORE_IMAGE
+                WHERE STORE_NO = R.STORE_NO
+                AND ROWNUM = 1
+            ) AS storeImage,
+            R.RESERVATION_DATE,
+            R.RESERVATION_TIME,
+            R.PERSON_COUNT,
+            R.USER_NO,
+            R.STATUS         
+        FROM TB_RESERVATION R
+        JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+        WHERE R.RESERVATION_NO = #{reservationNo}
+    </select>
+
+    <select id="getAvailablePersonCount" resultType="java.lang.Long">
+        SELECT 
+            s.COUNT - NVL(SUM(
+                CASE 
+                    WHEN r.RESERVATION_DATE = TO_DATE(#{reservationDate}, 'YYYY-MM-DD')
+                    AND r.RESERVATION_TIME = #{reservationTime}
+                    AND TRIM(r.STATUS) = 'Y'
+                    THEN NVL(r.PERSON_COUNT, 0)
+                    ELSE 0
+                END
+            ), 0) AS availablePerson
+        FROM TB_STORE s
+        LEFT JOIN TB_RESERVATION r
+            ON r.STORE_NO = s.STORE_NO
+        WHERE s.STORE_NO = #{storeNo}
+        GROUP BY s.COUNT
+    </select>
+
+
+    
+
+
+    <!-- 1. 예약 상태 변경 -->
+    <update id="cancelReservationStatus" parameterType="long">
+    UPDATE TB_RESERVATION
+    SET STATUS = 'N'
+    WHERE RESERVATION_NO = #{reservationNo}
+    </update>
+
+    <!-- 2. 취소 사유 등록 -->
+    <insert id="insertCancelInfo" parameterType="ReservationCancelDTO">
+    INSERT INTO TB_RESERVATION_CANCEL (
+        RESERVATION_NO,
+        CANCEL_REASON,
+        CANCEL_DATE
+    ) VALUES (
+        #{reservationNo},
+        #{cancelReason},
+        SYSDATE
+    )
+    </insert>
+
+    <!-- 예약시간이 지난 예약이면 리뷰상태 변경 -->
+    <update id="updateIsReviewYet">
+        UPDATE TB_RESERVATION
+        SET IS_REVIEW = 'YET'
+        WHERE STATUS = 'Y'
+            AND IS_REVIEW = 'NO'
+            AND (
+                RESERVATION_DATE &lt; TRUNC(SYSDATE)
+                OR (
+                    RESERVATION_DATE = TRUNC(SYSDATE)
+                    AND TO_DATE(RESERVATION_TIME, 'HH24:MI') &lt;= TO_DATE(TO_CHAR(SYSDATE, 'HH24:MI'), 'HH24:MI')
+                )
+            )
+    </update>
+
+    <!-- 예약건들중 리뷰작성 완료된 상태 변경 -->
+
+   <update id="updateIsReviewComplete" parameterType="long">
+        UPDATE TB_RESERVATION R
+        SET R.IS_REVIEW = 'COM'
+        WHERE R.RESERVATION_NO = #{reservationNo}
+            AND EXISTS (
+                SELECT 1
+                FROM TB_REVIEW RV
+                WHERE RV.RESERVATION_NO = R.RESERVATION_NO
+                    AND RV.IS_DELETED = 'N'
+            )
+    </update>
+
+   <select id="getReservationsByStoreNo" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+    SELECT 
+        R.RESERVATION_NO,
+        R.USER_NO,
+        U.USER_NAME AS userName,
+        U.USER_PHONE AS userPhone,
+        R.RESERVATION_DATE,
+        R.RESERVATION_TIME,
+        R.PERSON_COUNT,
+        R.STATUS,
+        R.CREATED_DATE
+    FROM TB_RESERVATION R
+    JOIN TB_USER U ON R.USER_NO = U.USER_NO
+    WHERE R.STORE_NO = #{storeNo}
+    ORDER BY R.RESERVATION_DATE DESC, R.RESERVATION_TIME DESC
+    OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countReservationsByStoreNo" resultType="int">
+        SELECT COUNT(RESERVATION_NO)
+        FROM TB_RESERVATION
+        WHERE STORE_NO = #{storeNo}
+    </select>
+
+    <!-- 사장님 예약 상세조회 -->
+
+    <select id="getReservationDetailByNo" parameterType="long" resultType="com.kh.matzip.reservation.model.dto.ReservationDTO">
+    SELECT 
+        R.RESERVATION_NO,
+        R.USER_NO,
+        U.USER_NAME,
+        U.USER_PHONE,
+        R.STORE_NO,
+        S.STORE_NAME,
+        R.RESERVATION_DATE,
+        R.RESERVATION_TIME,
+        R.PERSON_COUNT,
+        R.STATUS,
+        R.CREATED_DATE
+    FROM TB_RESERVATION R
+    JOIN TB_USER U ON R.USER_NO = U.USER_NO
+    JOIN TB_STORE S ON R.STORE_NO = S.STORE_NO
+    WHERE R.RESERVATION_NO = #{reservationNo}
+    </select>
+
+    <!-- 사장님 예약취소 -->
+    <update id="updateReservationStatusToCancel" parameterType="long">
+        UPDATE TB_RESERVATION
+        SET STATUS = 'N'
+        WHERE RESERVATION_NO = #{reservationNo}
+    </update>
+
+    <insert id="insertReservationCancel" parameterType="map">
+        INSERT INTO TB_RESERVATION_CANCEL (RESERVATION_NO, CANCEL_REASON, CANCEL_DATE)
+        VALUES (#{reservationNo}, #{cancelReason}, SYSDATE)
+    </insert>
+
+  
+
+</mapper>

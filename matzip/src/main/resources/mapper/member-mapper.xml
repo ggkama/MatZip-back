@@ -1,28 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.ecolog.token.model.dao.TokenMapper">
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-    <select id="existByUserId" resultType="int">
-        SELECT
-            COUNT(*)
-        FROM
-            TB_USER
-        WHERE
-            userId = #{userId}
-    </select>
+<mapper namespace="com.kh.matzip.member.model.dao.MemberMapper">
 
-    <select id="existByUserNickName" resultType="int">
-        SELECT
-            COUNT(*)
-        FROM
-            TB_USER
-        WHERE
-            userNickName = #{userNickName}
-    </select>
+	<select id="existByUserId" parameterType="String" resultType="int">
+    	SELECT 
+    		COUNT(USER_ID) 
+    	FROM 
+    		TB_USER
+    	WHERE 
+    		USER_ID = #{userId}
+	</select>
 
-    <insert>
-    </insert>
+	<select id="existByUserNickName" parameterType="String" resultType="int">
+   		SELECT 
+   			COUNT(USER_NICKNAME) 
+    	FROM 
+    		TB_USER
+    	WHERE 
+    		USER_NICKNAME = #{userNickName}
+	</select>
+
+
+    <insert id="signUp" parameterType="com.kh.matzip.member.model.dto.MemberDTO">
+    	<selectKey resultType="long" keyProperty="userNo" order="BEFORE">
+        	SELECT SEQ_USER_NO.NEXTVAL FROM DUAL
+    	</selectKey>
+    	
+    	INSERT INTO 
+        	TB_USER (
+				USER_NO,
+            	USER_ID,
+            	USER_PW,
+            	USER_NAME,
+            	USER_NICKNAME,
+            	USER_PHONE
+        	) VALUES (
+				#{userNo},
+            	#{userId},
+            	#{userPw},
+            	#{userName},
+            	#{userNickName},
+            	#{userPhone}
+        	)
+	</insert>
+	
+	<select id="findByUserId" parameterType="String" resultType="com.kh.matzip.member.model.dto.MemberDTO">
+		SELECT
+			USER_NO,
+			USER_ID,
+			USER_PW,
+			USER_NAME,
+			USER_NICKNAME,
+			USER_ROLE,
+			IS_DELETED,
+			ENROLL_DATE
+		FROM
+			TB_USER
+		WHERE
+			USER_ID = #{userId}
+	</select>
+
 
 </mapper>

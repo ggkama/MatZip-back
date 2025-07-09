@@ -1,0 +1,42 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.matzip.owner.model.dao.RegisterOwnerMapper">
+
+	<select id="isOwnerRegister" resultType="int">
+		SELECT
+			COUNT(REGISTER_NO)
+		FROM
+			TB_OWNER
+		WHERE
+			USER_NO = #{userNo}
+	</select>
+	
+	<select id="isStoreRegister" resultType="int">
+		SELECT
+			COUNT(REGISTER_NO)
+		FROM
+			TB_OWNER
+		WHERE
+			BUSINESS_NO = #{businessNo}
+	</select>
+
+	<insert id="insertRegisterOwner" parameterType="com.kh.matzip.owner.model.dto.RegisterOwnerDTO">
+		INSERT INTO
+			TB_OWNER(
+				REGISTER_NO,
+				USER_NO,
+				BUSINESS_NO,
+				STORE_NAME,
+				IMAGE
+			) VALUES(
+				SEQ_REGISTER_NO.NEXTVAL,
+				#{userNo},
+				#{businessNo},
+				#{storeName},
+				#{image}
+			)
+	</insert>
+
+</mapper>

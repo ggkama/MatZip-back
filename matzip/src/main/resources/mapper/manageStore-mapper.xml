@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.kh.matzip.admin.manageStore.model.dao.ManageStoreMapper">
+
+	<select id="selectStoreList" resultType="com.kh.matzip.admin.manageStore.model.dto.ManageStoreListDTO">
+		SELECT 
+			S.STORE_NO,
+			S.STORE_NAME,
+			S.CATEGORY_ADDRESS,
+			ROUND(AVG(R.STORE_GRADE), 2) AS STORE_GRADE,
+			S.CREATE_DATE
+		FROM
+			TB_STORE S
+		  JOIN
+		  	TB_REVIEW R
+		  ON
+		  	S.STORE_NO = R.STORE_NO
+		GROUP BY
+        	S.STORE_NO, 
+        	S.STORE_NAME, 
+        	S.CATEGORY_ADDRESS, 
+        	S.CREATE_DATE
+		ORDER BY
+			S.CREATE_DATE DESC
+	</select>
+	
+	<select id="countAllStore" resultType="int">
+		SELECT
+			COUNT(STORE_NO)
+		FROM
+			TB_STORE
+	</select>
+	
+	<update id="deleteStore">
+		UPDATE
+			TB_STORE
+		SET
+			IS_DELETED = 'Y'
+		WHERE
+			STORE_NO = #{storeNo}
+	</update>
+	
+</mapper>

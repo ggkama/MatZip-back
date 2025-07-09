@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.matzip.store.model.dao.StoreMapper">
+
+  <!-- 매장 등록 -->
+  <insert id="insertStore" parameterType="com.kh.matzip.store.model.dto.StoreDTO">
+    <selectKey keyProperty="storeNo" resultType="long" order="BEFORE">
+      SELECT SEQ_STORE_NO.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO TB_STORE (
+      STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
+      CATEGORY_ADDRESS, CATEGORY_FOODTYPE, OPEN_TIME, CLOSE_TIME,
+      CREATE_DATE, MODIFIED_DATE, COUNT
+    ) VALUES (
+      #{storeNo}, #{userNo}, #{storeName}, #{storePhone}, #{storeAddress1}, #{storeAddress2},
+      #{categoryAddress}, #{categoryFoodtype}, #{openTime}, #{closeTime},
+      SYSDATE, SYSDATE, #{count}
+    )
+  </insert>
+
+  <!-- 이미지 관련 -->
+  <insert id="insertStoreImage" parameterType="map">
+    INSERT INTO TB_STORE_IMAGE (
+      IMAGE_NO, STORE_NO, IMAGE
+    ) VALUES (
+      SEQ_STORE_IMAGE.NEXTVAL, #{storeNo}, #{image}
+    )
+  </insert>
+
+  <select id="selectStoreImagesByStoreNo" resultType="string">
+    SELECT IMAGE FROM TB_STORE_IMAGE WHERE STORE_NO = #{storeNo}
+  </select>
+
+  <delete id="deleteStoreImageByPath" parameterType="map">
+    DELETE FROM TB_STORE_IMAGE WHERE STORE_NO = #{storeNo} AND IMAGE = #{image}
+  </delete>
+
+  <update id="updateStoreImage" parameterType="map">
+    UPDATE TB_STORE_IMAGE
+    SET IMAGE = #{newImage}
+    WHERE STORE_NO = #{storeNo} AND IMAGE = #{oldImage}
+  </update>
+
+  <!-- 편의시설 관련 -->
+  <insert id="insertStoreConvenience" parameterType="map">
+    INSERT INTO TB_CONVENIENCE (
+      CONVENIENCE_NO, STORE_NO, CONVENIENCE
+    ) VALUES (
+      SEQ_CONVENIENCE_NO.NEXTVAL, #{storeNo}, #{convenience}
+    )
+  </insert>
+
+  <select id="selectConveniencesByStoreNo" resultType="string">
+    SELECT CONVENIENCE FROM TB_CONVENIENCE WHERE STORE_NO = #{storeNo}
+  </select>
+
+  <delete id="deleteSingleConvenience" parameterType="map">
+    DELETE FROM TB_CONVENIENCE WHERE STORE_NO = #{storeNo} AND CONVENIENCE = #{convenience}
+  </delete>
+
+  <update id="updateStoreConvenience" parameterType="map">
+    UPDATE TB_CONVENIENCE
+    SET CONVENIENCE = #{newConvenience}
+    WHERE STORE_NO = #{storeNo} AND CONVENIENCE = #{oldConvenience}
+  </update>
+
+  <!-- 정기 휴무 관련 -->
+  <insert id="insertDayOff" parameterType="map">
+    INSERT INTO TB_OFF_DAY (
+      STORE_NO, OFF_DAY
+    ) VALUES (
+      #{storeNo}, #{offDay}
+    )
+  </insert>
+
+  <select id="selectDayOffByStoreNo" resultType="string">
+    SELECT OFF_DAY FROM TB_OFF_DAY WHERE STORE_NO = #{storeNo}
+  </select>
+
+  <delete id="deleteSingleDayOff" parameterType="map">
+    DELETE FROM TB_OFF_DAY WHERE STORE_NO = #{storeNo} AND OFF_DAY = #{offDay}
+  </delete>
+
+  <update id="updateDayOff" parameterType="map">
+    UPDATE TB_OFF_DAY
+    SET OFF_DAY = #{newOffDay}
+    WHERE STORE_NO = #{storeNo} AND OFF_DAY = #{oldOffDay}
+  </update>
+
+  <!-- 임시 휴무 관련 -->
+  <insert id="insertShutdownDay" parameterType="map">
+    INSERT INTO TB_SHUT_DOWN_DAY (
+      DAY_NO, STORE_NO, START_DATE, END_DATE
+    ) VALUES (
+      SEQ_SHUT_DOWN_NO.NEXTVAL, #{storeNo}, #{startDate}, #{endDate}
+    )
+  </insert>
+
+  <select id="selectShutdownDayByStoreNo" resultType="map">
+    SELECT DAY_NO, START_DATE, END_DATE FROM TB_SHUT_DOWN_DAY WHERE STORE_NO = #{storeNo}
+  </select>
+
+  <delete id="deleteShutdownDayByStoreNo">
+    DELETE FROM TB_SHUT_DOWN_DAY WHERE STORE_NO = #{storeNo}
+  </delete>
+
+  <update id="updateShutdownDay" parameterType="map">
+    UPDATE TB_SHUT_DOWN_DAY
+    SET START_DATE = #{startDate}, END_DATE = #{endDate}
+    WHERE STORE_NO = #{storeNo} AND DAY_NO = #{dayNo}
+  </update>
+
+  <!-- 메뉴 관련 -->
+  <insert id="insertMenu" parameterType="map">
+    INSERT INTO TB_MENU (
+      MENU_NO, STORE_NO, MENU
+    ) VALUES (
+      SEQ_MENU_NO.NEXTVAL, #{storeNo}, #{menuName}
+    )
+  </insert>
+
+  <select id="selectMenuByStoreNo" resultType="string">
+    SELECT MENU FROM TB_MENU WHERE STORE_NO = #{storeNo}
+  </select>
+
+  <delete id="deleteSingleMenu" parameterType="map">
+    DELETE FROM TB_MENU WHERE STORE_NO = #{storeNo} AND MENU = #{menuName}
+  </delete>
+
+  <update id="updateMenu" parameterType="map">
+    UPDATE TB_MENU
+    SET MENU = #{newMenu}
+    WHERE STORE_NO = #{storeNo} AND MENU = #{oldMenu}
+  </update>
+
+  <!-- 매장 관련 -->
+  <update id="updateStore" parameterType="com.kh.matzip.store.model.dto.StoreDTO">
+    UPDATE TB_STORE SET 
+      STORE_NAME = #{storeName},
+      STORE_PHONE = #{storePhone},
+      STORE_ADDRESS_1 = #{storeAddress1},
+      STORE_ADDRESS_2 = #{storeAddress2},
+      CATEGORY_ADDRESS = #{categoryAddress},
+      CATEGORY_FOODTYPE = #{categoryFoodtype},
+      OPEN_TIME = #{openTime},
+      CLOSE_TIME = #{closeTime},
+      COUNT = #{count},
+      MODIFIED_DATE = SYSDATE
+    WHERE STORE_NO = #{storeNo}
+  </update>
+
+  <select id="countStoreByOwnerAndName" parameterType="map" resultType="int">
+    SELECT COUNT(STORE_NO) FROM TB_STORE
+    WHERE USER_NO = #{userNo} AND STORE_NAME = #{storeName} AND IS_DELETED = 'N'
+  </select>
+
+  <select id="existsStoreByUserNo" parameterType="long" resultType="boolean">
+    SELECT CASE WHEN COUNT(1) > 0 THEN 1 ELSE 0 END FROM TB_STORE
+    WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
+  </select>
+
+  <select id="selectStoreByUserNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
+    SELECT 
+      STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
+      CATEGORY_ADDRESS, CATEGORY_FOODTYPE, OPEN_TIME, CLOSE_TIME,
+      CREATE_DATE, MODIFIED_DATE, COUNT
+    FROM TB_STORE
+    WHERE USER_NO = #{userNo} AND IS_DELETED = 'N'
+  </select>
+
+
+  <!-- 가게 상세조회도 같이씀 -->
+  <select id="selectStoreByStoreNo" parameterType="long" resultType="com.kh.matzip.store.model.dto.StoreDTO">
+    SELECT 
+      STORE_NO, USER_NO, STORE_NAME, STORE_PHONE, STORE_ADDRESS_1, STORE_ADDRESS_2,
+      CATEGORY_ADDRESS, CATEGORY_FOODTYPE, OPEN_TIME, CLOSE_TIME,
+      CREATE_DATE, MODIFIED_DATE, COUNT
+    FROM TB_STORE
+    WHERE STORE_NO = #{storeNo} AND IS_DELETED = 'N'
+  </select>
+
+  <!-- 가게 리스트 (검색, 페이징) -->
+  <select id="selectStoreList" resultType="com.kh.matzip.store.model.dto.StoreDTO" parameterType="map">
+    SELECT 
+        S.STORE_NO as storeNo,
+        S.STORE_NAME as storeName,
+        S.STORE_ADDRESS_1 as storeAddress1,
+        S.STORE_ADDRESS_2 as storeAddress2,
+        S.CATEGORY_ADDRESS as categoryAddress,
+        S.CATEGORY_FOODTYPE as categoryFoodtype,
+        S.IS_DELETED as isDeleted
+    FROM TB_STORE S
+    <where>
+        S.IS_DELETED = 'N'
+        <if test="search != null and search != ''">
+            AND S.STORE_NAME LIKE #{search}
+        </if>
+    </where>
+    ORDER BY S.CREATE_DATE DESC
+    OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+  </select>
+
+  <!-- 전체 개수 -->
+    <select id="selectStoreListCount" resultType="long" parameterType="map">
+      SELECT COUNT(*)
+      FROM TB_STORE S
+      <where>
+          S.IS_DELETED = 'N'
+          <if test="search != null and search != ''">
+              AND S.STORE_NAME LIKE #{search}
+          </if>
+      </where>
+    </select>
+
+    
+
+  <!-- 별점 평균 -->
+  <select id="selectAvgStarByStoreNo" resultType="double" parameterType="long">
+    SELECT NVL(AVG(STORE_GRADE), 0)
+    FROM TB_REVIEW
+    WHERE STORE_NO = #{storeNo}
+      AND IS_DELETED = 'N'
+  </select>
+
+    <select id="findLatestStores" resultType="StoreDTO">
+      SELECT
+    S.STORE_NO,
+    S.STORE_NAME,
+    (
+      SELECT I.IMAGE
+      FROM TB_STORE_IMAGE I
+      WHERE I.STORE_NO = S.STORE_NO
+      AND ROWNUM = 1
+    ) AS storeImg, 
+    S.CREATE_DATE
+  FROM TB_STORE S
+  WHERE S.IS_DELETED = 'N'
+  ORDER BY S.CREATE_DATE DESC
+  FETCH FIRST 6 ROWS ONLY
+    </select>
+
+
+
+</mapper>
