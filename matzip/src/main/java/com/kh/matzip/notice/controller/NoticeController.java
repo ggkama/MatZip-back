@@ -38,9 +38,15 @@ public class NoticeController {
     // 공지사항 리스트조회
     @GetMapping
     public ResponseEntity<Map<String, Object>> getNoticeList(
+        @AuthenticationPrincipal CustomUserDetails user,
         @RequestParam(name = "page", defaultValue="0") int page,
         @RequestParam(name = "size") int size) {
 
+        Map<String, Object> result = noticeService.selectNoticeList(page, size);
+
+    
+        String userRole = (user != null) ? user.getUserRole() : null;
+        result.put("currentUserRole", userRole);
         return ResponseEntity.ok(noticeService.selectNoticeList(page,size));
         }
 
