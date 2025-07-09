@@ -57,4 +57,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/ubuntu/deploy
-            docker-compose restart api
+            docker compose down
+            docker compose up -d
