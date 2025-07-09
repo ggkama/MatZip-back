@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/store")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://matzip.shop")
+@CrossOrigin(origins = "https://matzip.shop", allowedHeaders = "*")
 public class StorePublicController {
     private final StoreService storeService;
     private final NaverSearchApiService naverSearchApiService;
