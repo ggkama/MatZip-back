@@ -42,24 +42,18 @@ public class SecurityConfigure {
     }
 	
 	@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers(HttpMethod.OPTIONS, "/api/reservation/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/store/list").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/store/detail/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/store/*/naver-blog").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/review/write").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/reservation/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/uploads/**", "/api/store/**", "/api/notice/**", "/api/review/store/**"
+                								, "/api/store/*/naver-blog", "/api/review/store/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/review/write", "/api/reservation/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "api/review/write").authenticated()
                 .requestMatchers("/api/reservation/**").permitAll() 
+                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/owner/**").hasAnyRole("OWNER", "ADMIN")
                 .anyRequest().authenticated()
@@ -71,7 +65,7 @@ public class SecurityConfigure {
 	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080", "https://matzip.shop"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
