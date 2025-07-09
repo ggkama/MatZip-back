@@ -36,7 +36,7 @@ public class OAuthController {
 	        LoginDTO loginDTO = oauthService.kakaoLogin(code);
 
 	        String loginUrl = UriComponentsBuilder
-	                .fromUriString("http://localhost:5173/login/result")
+	                .fromUriString("https://matzip.shop/login/result")
 	                .queryParam("accessToken", loginDTO.getAccessToken())
 	                .queryParam("refreshToken", loginDTO.getRefreshToken())
 	                .queryParam("userNo", loginDTO.getUserNo())
@@ -49,7 +49,7 @@ public class OAuthController {
 	    } catch (OAuthUserNotFoundException e) {
 	        Map<String, Object> kakaoUser = e.getKakaoUser();
 	        String signupUrl = UriComponentsBuilder
-	                .fromUriString("http://localhost:5173/signup/kakao")
+	                .fromUriString("https://matzip.shop/signup/kakao")
 	                .queryParam("userId", kakaoUser.get("userId"))
 	                .queryParam("userNickname", kakaoUser.get("userNickname"))
 	                .queryParam("accessToken", e.getAccessToken())
