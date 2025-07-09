@@ -57,4 +57,7 @@ public interface StoreMapper {
     StoreDTO getStoreDetail(Long storeNo);
     
     Double selectAvgStarByStoreNo(Long storeNo);
+
+    // 메인페이지 최신 가게 등록
+    List<StoreDTO> findLatestStores();
 }

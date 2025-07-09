@@ -284,6 +284,10 @@ public class StoreServiceImpl implements StoreService {
         result.put("totalPages", (int)Math.ceil((double)totalCount / size));
         return result;
         }   
-
+    
+    @Override
+    public List<StoreDTO> findLatestStores() {
+        return storeMapper.findLatestStores();
+    }
 
 }

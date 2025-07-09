@@ -1,4 +1,5 @@
 package com.kh.matzip.mypage.model.service;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,16 +18,13 @@ import com.kh.matzip.util.file.FileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 public class MyProfileServiceImpl implements MyProfileService {
 
     private final PasswordEncoder passwordEncoder;
-    
     private final MyProfileMapper myProfileMapper;
     private final FileService fileService;
-
 
     @Override
     public MyProfileDTO selectMyProfile(Long userNo) {
@@ -37,15 +35,15 @@ public class MyProfileServiceImpl implements MyProfileService {
     @Transactional
     public void updateMyProfile(MyProfileDTO dto, MultipartFile profileImage) {
         // 1. 기본 정보 수정
-        int updated = updateUserInfo(dto);
-        if (updated == 0) {
-            throw new UpdateFailedException("회원 정보 수정 실패");
+        int updatedRows = myProfileMapper.updateUserProfile(dto);
+        if (updatedRows == 0) {
+            throw new UpdateFailedException("회원 정보 수정에 실패했습니다.");
         }
 
-        // 2. 프로필 이미지 처리
+        // 2. 프로필 이미지가 있을 경우에만 처리
         if (profileImage != null && !profileImage.isEmpty()) {
             String oldImageUrl = myProfileMapper.findImageByUserNo(dto.getUserNo());
-            String newImageUrl = fileService.store(profileImage); // 새 이미지 저장
+            String newImageUrl = fileService.store(profileImage); // 파일 저장 후 URL 반환
 
             Map<String, Object> imageData = Map.of(
                 "userNo", dto.getUserNo(),
@@ -53,25 +51,17 @@ public class MyProfileServiceImpl implements MyProfileService {
             );
 
             if (oldImageUrl != null) {
-                // 기존 이미지 삭제 + DB 업데이트
+                // 기존 이미지 삭제 + 업데이트
                 fileService.delete(oldImageUrl);
                 myProfileMapper.updateProfileImage(imageData);
             } else {
+                // 새 이미지 INSERT
                 myProfileMapper.insertProfileImage(imageData);
             }
         }
     }
 
-    private int updateUserInfo(MyProfileDTO dto) {
-        try {
-            myProfileMapper.updateUserProfile(dto);
-            return 1;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-   @Override
+    @Override
     public void updatePassword(Long userNo, String currentPw, String newPw) {
         String userPw = myProfileMapper.findPasswordByUserNo(userNo);
 
@@ -88,27 +78,22 @@ public class MyProfileServiceImpl implements MyProfileService {
         myProfileMapper.updatePassword(param);
     }
 
-   @Override
+    @Override
+    @Transactional
     public void deleteUser(Long userNo, String inputPw) {
-        // 1. DB에서 사용자 비밀번호 조회
+        // 1. 비밀번호 확인
         String encodedPw = myProfileMapper.findPasswordByUserNo(userNo);
-        
-        // 2. 비밀번호 불일치 시 예외 던지기
         if (!passwordEncoder.matches(inputPw, encodedPw)) {
-           throw new InvalidPasswordException(ResponseCode.INVALID_PASSWORD, "비밀번호가 일치하지 않습니다.");
-
+            throw new InvalidPasswordException(ResponseCode.INVALID_PASSWORD, "비밀번호가 일치하지 않습니다.");
         }
 
-        // 3. 사용자 탈퇴 처리
+        // 2. 사용자 탈퇴 처리
         myProfileMapper.deleteUser(userNo);
 
-        // 4. 사장님일 경우 가게도 삭제
+        // 3. 사장님일 경우 가게도 삭제 처리
         String role = myProfileMapper.getUserRole(userNo);
         if ("ROLE_OWNER".equals(role)) {
             myProfileMapper.deleteStore(userNo);
         }
     }
-
-
-    
 }
