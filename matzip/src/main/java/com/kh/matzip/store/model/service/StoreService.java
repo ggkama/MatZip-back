@@ -30,5 +30,5 @@ public interface StoreService {
     //  가게 상세 정보 - 가게번호로 조회
     StoreDTO getStoreDetail(Long storeNo);
 
-
+    List<StoreDTO> findLatestStores();
 }

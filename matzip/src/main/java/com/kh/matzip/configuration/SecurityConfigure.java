@@ -54,6 +54,7 @@ public class SecurityConfigure {
                 .requestMatchers(HttpMethod.GET, "/api/store/detail/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/store/*/naver-blog").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/store/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/review/store/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
