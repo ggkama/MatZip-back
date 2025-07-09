@@ -24,9 +24,11 @@ jobs:
         run: chmod +x ./matzip/gradlew
 
       - name: Build to Boot Project
+        working-directory: ./matzip
         run: ./gradlew BootJar -x test
 
       - name: Verify build jar
+        working-directory: ./matzip
         run: |
           ls -la build/libs/
           if [ ! -f build/libs/*.jar ]; then
@@ -42,7 +44,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "build/libs/*.jar"
+          source: "matzip/build/libs/*.jar"
           target: "/home/ubuntu/deploy/back"
           strip_components: 2
 
